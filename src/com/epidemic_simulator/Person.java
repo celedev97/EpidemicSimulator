@@ -27,11 +27,13 @@ public class Person {
         return Color.RED;
     }
 
-    public void Move(){
-        // Sintomatici e morti non possono muoversi.
-        if(symptoms || !alive) return;
-
-        //DOMOVE!
+    public void encounter(Person person2) {
+        if(this.canInfect && !person2.infected && !person2.immune){
+            person2.infected = true;
+        }
+        if(person2.canInfect && !this.infected && !this.immune){
+            this.infected = true;
+        }
     }
 
 }
