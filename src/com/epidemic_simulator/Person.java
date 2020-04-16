@@ -1,7 +1,6 @@
 package com.epidemic_simulator;
 
 import java.awt.*;
-import java.util.Random;
 
 public class Person {
     //#region DISEASE STATUS
@@ -12,9 +11,9 @@ public class Person {
     protected boolean immune       = false;
 
     //disease evolution
-    protected int diseaseDays = 0;
-    protected int willHaveSymptomps =-1;
-    protected int willDie =-1;
+    protected int daysSinceInfection = 0;
+    protected int symptomsDevelopmentDay =-1;
+    protected int deathDay =-1;
     //#endregion
 
     protected boolean canMove = true;
@@ -33,19 +32,25 @@ public class Person {
         return Color.RED;
     }
 
-
-    protected void tryInfect(int infectivity, int symptomaticity, int lethality, int incubation, int duration){
+    protected void tryInfect(int infectionRate, int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay){
         if(immune) return;
+
         //check infectivity
-        if((Simulator.random.nextInt(100)+1) > infectivity) return;
+        if(Utils.randomBool(infectionRate)){
+            infect(symptomsRate, deathRate, incubation, maxDayForSymptomsDevelopment, healDay);
+        }
+    }
+
+    protected void infect(int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay) {
         infected = true;
+
         //check symptomaticity
-        if((Simulator.random.nextInt(100)+1) > symptomaticity) return;
-        willHaveSymptomps = incubation + Simulator.random.nextInt(duration - incubation);
+        if(!Utils.randomBool(symptomsRate)) return;
+        symptomsDevelopmentDay = Utils.random(incubation, maxDayForSymptomsDevelopment);
+
         //check death
-        if((Simulator.random.nextInt(100)+1) > lethality) return;
-        System.out.println(100);
-        willDie = willHaveSymptomps + Simulator.random.nextInt((duration+1) - willHaveSymptomps);
+        if(!Utils.randomBool(deathRate)) return;
+        deathDay = Utils.random(symptomsDevelopmentDay, healDay-1);
     }
 
     public void setCanMove(boolean canMove) {

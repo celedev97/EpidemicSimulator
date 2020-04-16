@@ -1,64 +1,68 @@
 package com.epidemic_simulator;
 
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalField;
+import jdk.jshell.execution.Util;
+
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class Simulator {
-    public static Random random;
-
-    //#region Simulation data
-    private int startingPopulation;
-    public int getStartingPopulation(){return startingPopulation;}
-    public int resources;
-    public int testPrice;
-    public int averageEncounterRate;
-
-    public ArrayList<Person> population;
-
-    private ArrayList<Person> alivePopulation;
+    //#region Simulation parameters
+    private final int startingPopulation;
+    private int resources;
+    private final int testPrice;
+    private final int averageEncountersPerDay;
     //#endregion
 
     //#region Disease data
-    public int infectivity;
-    public int symptomaticity;
-    public int lethality;
+    public final int infectionRate;
+    public final int symptomsRate;
+    public final int deathRate;
 
-    public int duration;
-    public int incubation;
+    public final int healDay;
+    public final int canInfectDay;
+    public final int developSymptomsMaxDay;
     //#endregion
 
+    //simulation status
+    public ArrayList<Person> population;
+    private ArrayList<Person> alivePopulation;
+
+    public enum Outcomes{
+        NOTHING,
+        ALL_HEALED,
+        ALL_DEAD,
+        ECONOMIC_COLLAPSE
+    }
+
     //constructor
-    public Simulator(int startingPopulation, int resources, int testPrice, int averageEncounterRate, int infectivity, int symptomaticity, int lethality, int duration) throws InvalidSimulationException {
+    public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
+        if(resources >= (startingPopulation*testPrice)) throw new InvalidSimulationException("Condition not met: R < P ∗ C\nThe resources are enough to test the whole population!");
+        if(resources >= (startingPopulation*diseaseDuration)) throw new InvalidSimulationException("Condition not met: R < P ∗ D");
+
+        //population/state data
         this.startingPopulation = startingPopulation;
         this.resources = resources;
         this.testPrice = testPrice;
-        this.averageEncounterRate = averageEncounterRate;
-        this.infectivity = infectivity;
-        this.symptomaticity = symptomaticity;
-        this.lethality = lethality;
-        this.duration = duration;
-        this.incubation = duration/6;
-
-        if(resources >= (testPrice*startingPopulation)) throw new InvalidSimulationException();
+        this.averageEncountersPerDay = averageEncountersPerDay;
+        //rateos
+        this.infectionRate = infectionRate;
+        this.symptomsRate = symptomsRate;
+        this.deathRate = deathRate;
+        //disease evolution data
+        this.healDay                = diseaseDuration;
+        this.canInfectDay           = diseaseDuration/6;
+        this.developSymptomsMaxDay = diseaseDuration/3;
 
         population = new ArrayList<>();
         for (int i = 0; i < startingPopulation; i++) {
             population.add(new Person());
         }
-        //creating first person
-        population.get(0).infected = true;
-        population.get(0).willHaveSymptomps = duration/2;
-        population.get(0).willDie = (int)(duration * .75);
+        //infecting first person
+        population.get(0).infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay,healDay);
 
         alivePopulation = (ArrayList<Person>) population.clone();
-
-        random = new Random(LocalDateTime.now().getNano());
     }
 
-    public void executeDay(){
+    public Outcomes executeDay(){
         for (Person person : population){
             if(!person.alive) continue;
 
@@ -68,12 +72,12 @@ public class Simulator {
                 resources--;
             }else {
                 //person abilitated to move (and not dead or sick)
-                for (int i = 0; i < averageEncounterRate; i++) {
+                for (int i = 0; i < averageEncountersPerDay; i++) {
                     Person randomPerson = null;
                     if(alivePopulation.size() == 1) break;
 
                     while(randomPerson == null || randomPerson == person){
-                        randomPerson = alivePopulation.get(random.nextInt(alivePopulation.size()));
+                        randomPerson = alivePopulation.get(Utils.random(alivePopulation.size()));
                     }
 
                     encounter(person, randomPerson);
@@ -81,28 +85,29 @@ public class Simulator {
             }
             //#endregion
 
-            //#region
+            //#region prosecuzione malattia
             if(!person.infected) continue;
 
-            person.diseaseDays++;
+            person.daysSinceInfection++;
 
-            if(!person.canInfect && person.diseaseDays >= incubation){
+            if(!person.canInfect && person.daysSinceInfection >= canInfectDay){
                 //è verde ma è infetto, e sono i passati i giorni dell'incubazione, quindi diventa giallo
                 person.canInfect = true;
             }
 
-            if(person.diseaseDays == person.willHaveSymptomps){
+            if(person.daysSinceInfection == person.symptomsDevelopmentDay){
                 //è giallo ed oggi è il giorno in cui sviluppa sintomi
                 person.symptoms = true;
             }
 
-            if(person.diseaseDays == person.willDie){
+            if(person.daysSinceInfection == person.deathDay){
                 //è rosso può morire
                 alivePopulation.remove(person);
                 person.alive = false;
+                continue;
             }
 
-            if(person.diseaseDays == duration){
+            if(person.daysSinceInfection == healDay){
                 //se è rosso/giallo può guarire
                 person.immune = true;
                 person.canMove = true;
@@ -113,16 +118,19 @@ public class Simulator {
 
             //#endregion
         }
-
-        System.out.println("");
+        int alive = alivePopulation.size();
+        if(alive == 0) return Outcomes.ALL_DEAD;
+        if(alivePopulation.stream().filter(person -> person.immune).count() == alive) return Outcomes.ALL_HEALED;
+        if(resources == 0) return  Outcomes.ECONOMIC_COLLAPSE;
+        return Outcomes.NOTHING;
     }
 
     private void encounter(Person person1, Person person2) {
         if(person1.canInfect && !person2.infected){
-            person2.tryInfect(infectivity, symptomaticity, lethality, incubation, duration);
+            person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, healDay);
         }
         if(person2.canInfect && !person1.infected){
-            person1.tryInfect(infectivity, symptomaticity, lethality, incubation, duration);
+            person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, healDay);
         }
     }
 
