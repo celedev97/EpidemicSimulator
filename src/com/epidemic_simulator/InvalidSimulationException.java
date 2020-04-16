@@ -5,7 +5,7 @@ public class InvalidSimulationException extends Exception{
 
     @Override
     public String getMessage() {
-        return super.getMessage();
+        return message;
     }
 
     public InvalidSimulationException(String message) {
