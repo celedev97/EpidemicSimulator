@@ -126,7 +126,7 @@ public class Simulator {
         }
         int alive = alivePopulation.size();
         if(alive == 0) return Outcomes.ALL_DEAD;
-        if(alivePopulation.stream().filter(person -> person.immune).count() == alive) return Outcomes.ALL_HEALED;
+        if(alivePopulation.stream().filter(person -> person.infected).count() == 0) return Outcomes.ALL_HEALED;
         if(resources <= 0) return  Outcomes.ECONOMIC_COLLAPSE;
         return Outcomes.NOTHING;
     }
