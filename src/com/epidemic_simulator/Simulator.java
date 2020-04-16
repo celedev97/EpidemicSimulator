@@ -7,8 +7,13 @@ import java.util.ArrayList;
 public class Simulator {
     //#region Simulation parameters
     private final int startingPopulation;
-    private final Strategy strategy;
+    protected Strategy strategy;
     private int resources;
+
+    public int getResources() {
+        return resources;
+    }
+
     private final int testPrice;
     private final int averageEncountersPerDay;
     //#endregion
@@ -26,10 +31,23 @@ public class Simulator {
     //simulation status
     public ArrayList<Person> population;
     private ArrayList<Person> alivePopulation;
+
     private int day = 0;
 
     public int getDay() {
         return day;
+    }
+
+    public void heal(Person person) {
+        heal(person,true);
+    }
+
+    private void heal(Person person, boolean payHealing){
+        if(payHealing) resources -= 3 * testPrice;
+
+        boolean hadSymtomps = person.symptoms;
+        person.setImmune(true);
+        if(hadSymtomps && strategy != null) strategy.personClean(person);
     }
 
     public enum Outcomes{
@@ -40,11 +58,9 @@ public class Simulator {
     }
 
     //constructor
-    public Simulator(Strategy strategy, int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
+    public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
         if(resources >= (startingPopulation*testPrice)) throw new InvalidSimulationException("Condition not met: R < P ∗ C\nThe resources are enough to test the whole population!");
         if(resources >= (startingPopulation*diseaseDuration)) throw new InvalidSimulationException("Condition not met: R < P ∗ D");
-
-        this.strategy = strategy;
 
         //population/state data
         this.startingPopulation = startingPopulation;
@@ -107,6 +123,7 @@ public class Simulator {
             if(person.daysSinceInfection == person.symptomsDevelopmentDay){
                 //è giallo ed oggi è il giorno in cui sviluppa sintomi
                 person.symptoms = true;
+                if(strategy != null) strategy.personHasSymptoms(person);
             }
 
             if(person.daysSinceInfection == person.deathDay){
@@ -118,20 +135,21 @@ public class Simulator {
 
             if(person.daysSinceInfection == healDay){
                 //se è rosso/giallo può guarire
-                person.immune = true;
-                person.canMove = true;
-                person.infected = false;
-                person.canInfect = false;
-                person.symptoms = false;
+                heal(person,false);
             }
 
             //#endregion
         }
+
+        if(strategy!=null) strategy.afterExecuteDay();
+
+        //#region simulation status return
         int alive = alivePopulation.size();
         if(alive == 0) return Outcomes.ALL_DEAD;
         if(alivePopulation.stream().filter(person -> person.infected).count() == 0) return Outcomes.ALL_HEALED;
         if(resources <= 0) return  Outcomes.ECONOMIC_COLLAPSE;
         return Outcomes.NOTHING;
+        //#endregion
     }
 
     private void encounter(Person person1, Person person2) {
@@ -148,7 +166,6 @@ public class Simulator {
         if(person.symptoms) return true;
 
         //otherwise i do the test
-        //TODO: ROBA
         resources -= testPrice;
         if(person.canInfect) return true;
         return false;
