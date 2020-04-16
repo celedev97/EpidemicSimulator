@@ -25,6 +25,11 @@ public class Simulator {
     //simulation status
     public ArrayList<Person> population;
     private ArrayList<Person> alivePopulation;
+    private int day = 0;
+
+    public int getDay() {
+        return day;
+    }
 
     public enum Outcomes{
         NOTHING,
@@ -63,6 +68,7 @@ public class Simulator {
     }
 
     public Outcomes executeDay(){
+        day++;
         for (Person person : population){
             if(!person.alive) continue;
 
@@ -121,7 +127,7 @@ public class Simulator {
         int alive = alivePopulation.size();
         if(alive == 0) return Outcomes.ALL_DEAD;
         if(alivePopulation.stream().filter(person -> person.immune).count() == alive) return Outcomes.ALL_HEALED;
-        if(resources == 0) return  Outcomes.ECONOMIC_COLLAPSE;
+        if(resources <= 0) return  Outcomes.ECONOMIC_COLLAPSE;
         return Outcomes.NOTHING;
     }
 
