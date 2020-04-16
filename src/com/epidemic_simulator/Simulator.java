@@ -46,7 +46,12 @@ public class Simulator {
         if(payHealing) resources -= 3 * testPrice;
 
         boolean hadSymtomps = person.symptoms;
-        person.setImmune(true);
+
+        person.immune = true;
+        person.infected = false;
+        person.canInfect = false;
+        person.symptoms = false;
+
         if(hadSymtomps && strategy != null) strategy.personClean(person);
     }
 
