@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Simulator {
     //#region Simulation parameters
     private final int startingPopulation;
+    private final Strategy strategy;
     private int resources;
     private final int testPrice;
     private final int averageEncountersPerDay;
@@ -39,9 +40,11 @@ public class Simulator {
     }
 
     //constructor
-    public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
+    public Simulator(Strategy strategy, int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
         if(resources >= (startingPopulation*testPrice)) throw new InvalidSimulationException("Condition not met: R < P ∗ C\nThe resources are enough to test the whole population!");
         if(resources >= (startingPopulation*diseaseDuration)) throw new InvalidSimulationException("Condition not met: R < P ∗ D");
+
+        this.strategy = strategy;
 
         //population/state data
         this.startingPopulation = startingPopulation;
