@@ -1,9 +1,16 @@
+import com.epidemic_simulator.*;
+import jdk.jshell.spi.ExecutionControl;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Parameter;
+import java.net.URISyntaxException;
 
 public class SimulatorSettings extends JFrame implements ActionListener {
     private JPanel contentPane;
@@ -16,6 +23,15 @@ public class SimulatorSettings extends JFrame implements ActionListener {
 
     //menu stuff
     private JMenuBar menu;
+    private JSpinner spinner1;
+    private JSpinner spinner2;
+    private JSpinner spinner3;
+    private JSpinner spinner4;
+    private JSpinner spinner5;
+    private JSpinner spinner6;
+    private JSpinner spinner7;
+    private JSpinner spinner8;
+    private JComboBox strategy;
     private JTextField population;
     private JTextField resources;
     private JTextField testPrice;
@@ -29,7 +45,7 @@ public class SimulatorSettings extends JFrame implements ActionListener {
     private JFileChooser fileChooser;
 
 
-    public SimulatorSettings(){
+    public SimulatorSettings() throws IOException, URISyntaxException {
 
         //#region Menu
         //>file>
@@ -66,7 +82,7 @@ public class SimulatorSettings extends JFrame implements ActionListener {
 
         //size ()
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension windowSize = new Dimension((int)(screenSize.width * .75), (int)(screenSize.height * .90));
+        Dimension windowSize = new Dimension(600, (int)(screenSize.height * .90));
         setSize(windowSize);
 
         //closeButton
@@ -76,24 +92,54 @@ public class SimulatorSettings extends JFrame implements ActionListener {
         setLocation((screenSize.width/2 - windowSize.width/2), (screenSize.height/2 - windowSize.height/2));
         //#endregion
 
+        //file load and save
         fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Simulator config", "simconf"));
+
+
+        //populate strategies combobox
+        String packageName = "strategies";
+        strategy.addItem(new SelectableStrategy(null));
+        for(Class clas : Utils.getClassesForPackage(packageName)){
+            strategy.addItem(new SelectableStrategy(clas));
+        }
+        strategy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    generateStrategyGUI(((SelectableStrategy)((JComboBox)e.getSource()).getSelectedItem()).getValue().getDeclaredConstructors()[0].getParameters());
+                } catch (ExecutionControl.NotImplementedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                //new Simulator(population.getText(),resources.getText(),testPrice.getText(),encountersPerDay.getText(),)
             }
         });
     }
 
-    public static void main(String[] args) {
+    private void generateStrategyGUI(Parameter[] parameters) throws ExecutionControl.NotImplementedException {
+        for (int i = 1; i < parameters.length; i++) {
+            Class type = parameters[i].getType();
+            String name = Utils.javaNameToUserString(parameters[i].getName());
+            JOptionPane.showMessageDialog(this,name);
+            if(type == int.class){
+
+            }else{
+                throw new ExecutionControl.NotImplementedException("PARAMETER TYPE: "+type.toString()+" NOT SUPPORTED!!!");
+            }
+
+        }
+    }
+
+    public static void main(String[] args) throws IOException, URISyntaxException {
         new SimulatorSettings();
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -118,4 +164,26 @@ public class SimulatorSettings extends JFrame implements ActionListener {
     }
 
 
+}
+
+class SelectableStrategy{
+    private Class value;
+    private String humanReadableClassName;
+    public Class getValue() {
+        return value;
+    }
+
+    public SelectableStrategy(Class value) {
+        this.value = value;
+        if(value == null){
+            humanReadableClassName = "No strategy";
+            return;
+        }
+        this.humanReadableClassName = Utils.javaNameToUserString(value.toString());
+    }
+
+    @Override
+    public String toString() {
+        return humanReadableClassName;
+    }
 }
