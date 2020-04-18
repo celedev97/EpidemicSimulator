@@ -11,8 +11,12 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public class SimulatorSettings extends JFrame implements ActionListener {
+    //constants
+    private final int PARAMETERS_PER_ROW = 4;
+
     private JPanel contentPane;
     private JPanel menuPanel;
     private JPanel centerPanel;
@@ -23,19 +27,16 @@ public class SimulatorSettings extends JFrame implements ActionListener {
 
     //menu stuff
     private JMenuBar menu;
-    private JSpinner spinner1;
-    private JSpinner spinner2;
-    private JSpinner spinner3;
-    private JSpinner spinner4;
+    private JSpinner population;
+    private JSpinner resources;
+    private JSpinner testPrice;
+    private JSpinner encountersPerDay;
     private JSpinner spinner5;
     private JSpinner spinner6;
     private JSpinner spinner7;
     private JSpinner spinner8;
     private JComboBox strategy;
-    private JTextField population;
-    private JTextField resources;
-    private JTextField testPrice;
-    private JTextField encountersPerDay;
+    private JPanel strategyPanel;
     private JMenu file;
     private JMenuItem openButton;
     private JMenuItem saveButton;
@@ -43,6 +44,9 @@ public class SimulatorSettings extends JFrame implements ActionListener {
 
     //dialogue
     private JFileChooser fileChooser;
+
+    //strategy parameters
+    private ArrayList<JComponent> strategyParameters;
 
 
     public SimulatorSettings() throws IOException, URISyntaxException {
@@ -98,6 +102,8 @@ public class SimulatorSettings extends JFrame implements ActionListener {
 
 
         //populate strategies combobox
+        strategyParameters = new ArrayList<>();
+
         String packageName = "strategies";
         strategy.addItem(new SelectableStrategy(null));
         for(Class clas : Utils.getClassesForPackage(packageName)){
@@ -123,23 +129,60 @@ public class SimulatorSettings extends JFrame implements ActionListener {
     }
 
     private void generateStrategyGUI(Parameter[] parameters) throws ExecutionControl.NotImplementedException {
-        for (int i = 1; i < parameters.length; i++) {
-            Class type = parameters[i].getType();
-            String name = Utils.javaNameToUserString(parameters[i].getName());
-            JOptionPane.showMessageDialog(this,name);
-            if(type == int.class){
+        int paramsLengthExcludingSimulator = parameters.length-1;
+        //clearing GUI
+        strategyPanel.removeAll();
 
+        //recreating gui
+        //calculating necessary rows (4 parameters per column)
+        //TODO: comment this in a decent way, you are gonna forget this in like 2 days
+        int rows = (paramsLengthExcludingSimulator / PARAMETERS_PER_ROW + (paramsLengthExcludingSimulator%PARAMETERS_PER_ROW == 0 ? 0 : 1))*2;
+
+        //populating the layout with panels from a matrix (for ease of use later)
+        strategyPanel.setLayout(new GridLayout(rows,PARAMETERS_PER_ROW));
+        JPanel holderPanels[][] = new JPanel[rows][PARAMETERS_PER_ROW];
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < PARAMETERS_PER_ROW; x++) {
+                holderPanels[y][x] = new JPanel();
+                holderPanels[y][x].setLayout(new BorderLayout());
+                strategyPanel.add(holderPanels[y][x]);
+            }
+        }
+
+        //populating the component matrix with labels and parameters according to the parameters data
+        for (int i = 0; i < paramsLengthExcludingSimulator; i++) {
+            //getting parameter data
+            Class type = parameters[i+1].getType();
+            String parameterName = Utils.javaNameToUserString(parameters[i+1].getName());
+
+            int parameterIndexExcludingSimulator = i-1;
+
+            //calculating y and x for this parameter label
+            int x = (i % PARAMETERS_PER_ROW);
+            int y = i/PARAMETERS_PER_ROW;
+
+            //creating the label
+            System.out.println("setting ["+y+"]["+x+"] to: "+parameterName);
+            holderPanels[y][x].add(new JLabel(parameterName));
+
+            //generating the component
+            JComponent generatedComponent = null;
+            if(type == int.class){
+                generatedComponent = new JSpinner();
+                holderPanels[y+1][x].add(generatedComponent);
+                System.out.println("setting ["+(y+1)+"]["+x+"] to: "+parameters[i+1].toString());
             }else{
                 throw new ExecutionControl.NotImplementedException("PARAMETER TYPE: "+type.toString()+" NOT SUPPORTED!!!");
             }
-
+            strategyParameters.add(generatedComponent);
         }
+        strategyPanel.revalidate();
+        strategyPanel.repaint();
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         new SimulatorSettings();
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -149,7 +192,7 @@ public class SimulatorSettings extends JFrame implements ActionListener {
             return;
         }else if(source == openButton){
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                writeFile(fileChooser.getSelectedFile());
+                readFile(fileChooser.getSelectedFile());
             }
         }else if(source == saveButton){
             if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -159,10 +202,13 @@ public class SimulatorSettings extends JFrame implements ActionListener {
 
     }
 
-    private void writeFile(File file) {
+    private void readFile(File selectedFile) {
 
     }
 
+    private void writeFile(File file) {
+
+    }
 
 }
 
