@@ -10,10 +10,11 @@ public class Person {
     protected boolean symptoms     = false;
     protected boolean immune       = false;
 
-    //disease evolution
+    //#region DISEASE EVOLUTION
     protected int daysSinceInfection = 0; //Numero giorni passati dal contagio.
     protected int symptomsDevelopmentDay =-1; //Numero giorni entro cui eventualmente presenterà sintomi,-1 dato che la persona potrebbe non svilupparli.
     protected int deathDay =-1; //Numero giorni entro cui eventualmente la persona in questione morirà,-1 dato che la persona potrebbe anche non morire.
+    //#endregion
     //#endregion
 
     protected boolean canMove = true; //All'inizio tutti gli individui possono muoversi
