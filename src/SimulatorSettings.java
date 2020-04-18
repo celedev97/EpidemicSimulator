@@ -109,15 +109,15 @@ public class SimulatorSettings extends JFrame implements ActionListener {
         for(Class clas : Utils.getClassesForPackage(packageName)){
             strategy.addItem(new SelectableStrategy(clas));
         }
-        strategy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    //TODO: NULLPO, GAH!
-                    generateStrategyGUI(((SelectableStrategy)((JComboBox)e.getSource()).getSelectedItem()).getValue().getDeclaredConstructors()[0].getParameters());
-                } catch (ExecutionControl.NotImplementedException ex) {
-                    ex.printStackTrace();
-                }
+        strategy.addActionListener(e -> {
+            try {
+                Class strategyClass = ((SelectableStrategy)((JComboBox)e.getSource()).getSelectedItem()).getValue();
+
+                if(strategyClass == null) return;
+                generateStrategyGUI(strategyClass.getDeclaredConstructors()[0].getParameters());
+
+            } catch (ExecutionControl.NotImplementedException ex) {
+                ex.printStackTrace();
             }
         });
         //#endregion
