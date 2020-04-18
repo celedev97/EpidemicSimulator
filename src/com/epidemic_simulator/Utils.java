@@ -39,8 +39,14 @@ public class Utils {
         return random(0,100) < truePercentage;
     }
 
+    /**
+     * Get the list of classes from a package (inside this same project)
+     * @param pkgName the name of the package that should be scanned
+     * @return a list of classes
+     * @throws IOException shouldn't be thrown theoretically... ??? TODO: research better on this
+     * @throws URISyntaxException could be thrown if the package name is wrong
+     */
     public static List<Class> getClassesForPackage(final String pkgName) throws IOException, URISyntaxException {
-        //TODO: write this shit in a better way please, if i read this again i'm gonna kill myself
         //(and comment it, and PLS JAVADOC)
         final ArrayList<Class> allClasses = new ArrayList<>();
 
