@@ -108,6 +108,7 @@ public class Utils {
                 output += " ";
             output += charAtI;
         }
+
         //removing first space
         if(output.indexOf(' ') == 0)
             output = output.substring(1);
