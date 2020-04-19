@@ -1,6 +1,5 @@
 package com.epidemic_simulator;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Simulator {
@@ -60,12 +59,8 @@ public class Simulator {
             population.add(new Person());
         }
         //Creazione della prima persona infetta che va in giro,il suo canMove=true resta invariato->Un infetto per il momento giallo
-        Person p= population.get(0);
-        p.canInfect=true;
-        p.infected=true;
-        p.infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay,healDay);
+        population.get(0).infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay,healDay);
         alivePopulation = (ArrayList<Person>) population.clone(); //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
-        System.out.println(canInfectDay+" "+developSymptomsMaxDay);
     }
 
     public int getDay() {

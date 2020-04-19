@@ -11,7 +11,7 @@ import com.epidemic_simulator.Strategy;
  *
  */
 public class PreemptiveLockdownAndHeal extends Strategy {
-    public PreemptiveLockdownAndHeal(Simulator simulator, int lockDownPercentage) {
+    public PreemptiveLockdownAndHeal(Simulator simulator, int lockDownPercentage, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10) {
         super(simulator);
         initialLockDown(lockDownPercentage);
     }
