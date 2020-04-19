@@ -17,9 +17,6 @@ import java.util.*;
 
 //XML IMPORTS
 import org.w3c.dom.*;
-import org.w3c.dom.xpath.XPathResult;
-import org.xml.sax.SAXException;
-
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -66,21 +63,18 @@ public class SimulatorSettings extends JFrame {
     //#region strategy
     private JComboBox strategyCombobox;
 
-    private JPanel strategyParametersColumns[];
+    private JPanel[] strategyParametersColumns;
     private ArrayList<JComponent> strategyParameters;
 
     private JPanel strategyPanel;
     //#endregion
-
-    private JButton startButton;
-
     //dialogue
     private JFileChooser fileChooser;
 
     //#endregion
 
 
-    public SimulatorSettings() throws IOException, URISyntaxException {
+    public SimulatorSettings(){
         //#region JFrame setup
         //title
         setTitle("Epidemic simulator");
@@ -213,18 +207,24 @@ public class SimulatorSettings extends JFrame {
 
         String packageName = "strategies";
         strategyCombobox.addItem(new SelectableStrategy(null));
-        for(Class clas : Utils.getClassesForPackage(packageName)){
-            strategyCombobox.addItem(new SelectableStrategy(clas));
+        try{
+            for(Class clas : Utils.getClassesForPackage(packageName)){
+                strategyCombobox.addItem(new SelectableStrategy(clas));
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,"There was an error while trying to get the list of the strategies.", "Error",JOptionPane.ERROR_MESSAGE);
         }
+
         //#endregion
 
 
         //#endregion
 
         //#region Strategy Parameters Panel
-        GridLayout stategyDataGridLayout = new GridLayout(2,4);
-        stategyDataGridLayout.setHgap(10);//TODO: FIND OUT WHY THIS IS NOT WORKING!!!
-        strategyPanel = new JPanel(stategyDataGridLayout);
+        GridLayout strategyDataGridLayout = new GridLayout(2,4);
+        strategyDataGridLayout.setHgap(10);//TODO: FIND OUT WHY THIS IS NOT WORKING!!!
+        strategyPanel = new JPanel(strategyDataGridLayout);
         northPanel.add(strategyPanel);
 
         //#region strategy dynamic GUI preparation
@@ -243,7 +243,7 @@ public class SimulatorSettings extends JFrame {
 
         //#endregion
 
-        startButton = new JButton("Start Simulation");
+        JButton startButton = new JButton("Start Simulation");
         contentPane.add(startButton, BorderLayout.SOUTH);
 
         //#endregion
@@ -283,6 +283,22 @@ public class SimulatorSettings extends JFrame {
 
 
     //#region event listeners
+
+    private ActionListener startButtonListener = e -> {
+        try {
+            //creating simulator
+            Simulator sim = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
+            //creating strategy
+            //TODO:SISTEMARE ((SelectableStrategy)strategyCombobox.getSelectedItem()).getValue().getConstructors()[0].newInstance()
+
+            //creating simulator GUI and closing configurator
+            new SimulatorGUI(sim,1000);
+            this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    };
 
     private ActionListener strategyComboboxListener = e -> {
         try {
@@ -336,17 +352,6 @@ public class SimulatorSettings extends JFrame {
         //force redraw of the strategy panel
         strategyPanel.revalidate();
         strategyPanel.repaint();
-    };
-
-    private ActionListener startButtonListener = e -> {
-        try {
-            Simulator sim = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
-            new SimulatorGUI(sim,1000);
-            this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
-        }
     };
 
     private ActionListener openButtonListener = e -> {
