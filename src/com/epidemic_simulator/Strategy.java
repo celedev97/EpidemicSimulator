@@ -1,9 +1,5 @@
 package com.epidemic_simulator;
-
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.stream.Stream;
 
 public abstract class Strategy {
     protected Simulator simulator;
