@@ -1,5 +1,6 @@
 package com.epidemic_simulator;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Simulator {
