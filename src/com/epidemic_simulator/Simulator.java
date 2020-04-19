@@ -62,7 +62,6 @@ public class Simulator {
         }
         //Creazione della prima persona infetta che va in giro,il suo canMove=true resta invariato->Un infetto per il momento giallo
         population.get(0).infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay,healDay);
-
         alivePopulation = (ArrayList<Person>) population.clone(); //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
     }
 
@@ -72,10 +71,10 @@ public class Simulator {
 
     //Richiamo il metodo 'heal/guarigione' su una Person rossa passata
     public void heal(Person person) {
-        heal(person,true);
+        heal(person,true); //Se payHealing=True la Persona è guarita con un costo
     }
 
-    private void heal(Person person, boolean payHealing){
+    private void heal(Person person, boolean payHealing){ //Se payHealing=False la Persona è guarita da sola smaltendo il virus
         if(payHealing) resources -= 3 * testPrice;
 
         boolean hadSymtomps = person.symptoms;
@@ -85,6 +84,7 @@ public class Simulator {
         person.infected = false;
         person.canInfect = false;
         person.symptoms = false;
+        //person.canMove=true;
 
         if(hadSymtomps && strategy != null) strategy.personClean(person);
     }
@@ -99,9 +99,21 @@ public class Simulator {
 
     public Outcomes executeDay(){//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
         day++;//Variabile contatrice dei giorni
+        int black   = (int) population.stream().filter(person -> person.getColor() == Color.BLACK).count();
+        int green   = (int) population.stream().filter(person -> person.getColor() == Color.GREEN).count();
+        int yellow  = (int) population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
+        int red     = (int) population.stream().filter(person -> person.getColor() == Color.RED).count();
+        int blue    = (int) population.stream().filter(person -> person.getColor() == Color.BLUE).count();
+
+        System.out.println("green : "+green );
+        System.out.println("yellow: "+yellow);
+        System.out.println("red   : "+red   );
+        System.out.println("blue  : "+blue  );
+        System.out.println("black : "+black );
+        System.out.println("resources : "+resources );
 
         //Per ogni giorno prendiamo tutte le 'n' persone VIVE
-        for (Person person : population){//
+        for (Person person : population){
             if(!person.alive) continue;//Se è un morto passiamo avanti alla prossima...
 
             //#region movimento
@@ -150,17 +162,16 @@ public class Simulator {
                 //se è rosso/giallo può guarire
                 heal(person,false);
             }
-
             //#endregion
         }
 
-        if(strategy!=null) strategy.afterExecuteDay();
+        if(strategy!=null) strategy.afterExecuteDay(); //Eseguiamo il giorno sulla strategia
         //#region simulation status return
-        int alive = alivePopulation.size();
-        if(alive == 0) return Outcomes.ALL_DEAD;
-        if(alivePopulation.stream().filter(person -> person.infected).count() == 0) return Outcomes.ALL_HEALED;
-        if(resources <= 0) return  Outcomes.ECONOMIC_COLLAPSE;
-        return Outcomes.NOTHING;
+        int alive = alivePopulation.size(); //Controlliamo quante persone vive rimangono al giorno 'x'
+        if(alive == 0) return Outcomes.ALL_DEAD; //AlivePopulation==0-->Outcomes=All Dead(Not big surprise)
+        if(alivePopulation.stream().filter(person -> person.infected).count() == 0) return Outcomes.ALL_HEALED; //Se di tutte le persone in vita gli infetti sono 0-->Outcames=All Healed
+        if(resources <= 0) return  Outcomes.ECONOMIC_COLLAPSE;//Se le risorse raggiungono lo 0-->Outcomes=Economic Collapse
+        return Outcomes.NOTHING; //Altrimenti ritorniamo NOTHING per continuare l'esecuzione...(il ciclo di continuazione è nel Main)
         //#endregion
     }
 

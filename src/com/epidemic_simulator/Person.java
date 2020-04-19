@@ -15,6 +15,7 @@ public class Person {
     protected int symptomsDevelopmentDay =-1; //Numero giorni entro cui eventualmente presenterà sintomi,-1 dato che la persona potrebbe non svilupparli.
     protected int deathDay =-1; //Numero giorni entro cui eventualmente la persona in questione morirà,-1 dato che la persona potrebbe anche non morire.
     //#endregion
+    
     //#endregion
 
     protected boolean canMove = true; //All'inizio tutti gli individui possono muoversi
@@ -28,7 +29,9 @@ public class Person {
         //verde, che rappresenta un individuo sano o con carica batterica non rilevabile e comunque non contagioso con CanInfect=false
         if(!canInfect) return Color.GREEN;
         //giallo, che indica un individuo contagioso ma asintomatico con symptoms=false
+
         if(!symptoms) return Color.YELLOW;
+
         //rosso un individuo sintomatico
         return Color.RED;
     }
