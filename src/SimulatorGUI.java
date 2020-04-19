@@ -10,9 +10,12 @@ public class SimulatorGUI extends JFrame {
         JPanel canvasPanel = new JPanel();
         canvas = new Canvas();
         canvasPanel.add(canvas);
+
         setContentPane(canvasPanel);
 
-        
+        setVisible(true);
+
+
     }
 
 }

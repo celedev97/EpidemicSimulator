@@ -1,11 +1,9 @@
 import com.epidemic_simulator.*;
 import jdk.jshell.spi.ExecutionControl;
-import netscape.javascript.JSObject;
 
 
 //GUI IMPORTS
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,10 +12,14 @@ import java.awt.event.*;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
+import java.text.ParseException;
 import java.util.*;
 
 //XML IMPORTS
 import org.w3c.dom.*;
+import org.w3c.dom.xpath.XPathResult;
+import org.xml.sax.SAXException;
+
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -25,6 +27,27 @@ import javax.xml.transform.stream.*;
 
 public class SimulatorSettings extends JFrame {
     private final int PARAMETERS_PER_ROW = 4;
+
+    private static final String CONF_EXTENSION = "simconf";
+    private static final String DEFAULT_CONF_FILE = "./configuration."+CONF_EXTENSION;
+
+    //constants for XML
+    private static final String XML_ROOT                = "simulator";
+
+    private static final String XML_STATE               = "state";
+    private static final String XML_POPULATION          = "population";
+    private static final String XML_RESOURCES           = "resources";
+    private static final String XML_TEST_PRICE          = "test_price";
+    private static final String XML_ENCOUNTERS_PER_DAY  = "encounters_per_day";
+
+    private static final String XML_DISEASE             = "disease";
+    private static final String XML_INFECTIVITY         = "infectivity";
+    private static final String XML_SYMPTOMATICITY      = "symptomaticity";
+    private static final String XML_LETHALITY           = "lethality";
+    private static final String XML_DURATION            = "duration";
+
+
+    //#region class fields
 
     //#region state
     private JSpinner population;
@@ -54,8 +77,7 @@ public class SimulatorSettings extends JFrame {
     //dialogue
     private JFileChooser fileChooser;
 
-    //strategy parameters
-
+    //#endregion
 
 
     public SimulatorSettings() throws IOException, URISyntaxException {
@@ -63,11 +85,9 @@ public class SimulatorSettings extends JFrame {
         //title
         setTitle("Epidemic simulator");
 
-        //visibility
-        setVisible(true);
-
         //size ()
         Dimension windowSize = new Dimension(600, 450);
+        //TODO: change window size at the end of the project, accordingly to the most complex strategy
         setSize(windowSize);
         setMinimumSize(windowSize);
 
@@ -84,9 +104,20 @@ public class SimulatorSettings extends JFrame {
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
 
+        //Panel containing all the north panels
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BoxLayout(northPanel,BoxLayout.Y_AXIS));
+        contentPane.add(northPanel, BorderLayout.NORTH);
 
         //#region Menu
+        FlowLayout menuFlowLayout = new FlowLayout(FlowLayout.LEFT);
+        menuFlowLayout.setVgap(0);
+        menuFlowLayout.setHgap(0);
+        JPanel menuContainerPanel = new JPanel(menuFlowLayout);
+
         JMenuBar menu = new JMenuBar();
+        menuContainerPanel.add(menu);
+        northPanel.add(menuContainerPanel);
 
         //>file>
         JMenu file = new JMenu("File");
@@ -106,16 +137,7 @@ public class SimulatorSettings extends JFrame {
         //>file>quit
         JMenuItem quitButton = new JMenuItem("Quit");
         file.add(quitButton);
-
-        openButton.addActionListener(openButtonListener);
-        saveButton.addActionListener(saveButtonListener);
-        quitButton.addActionListener(e -> this.dispose());
         //#endregion
-
-        //Panel containing all the north panels
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new BoxLayout(northPanel,BoxLayout.Y_AXIS));
-        contentPane.add(northPanel, BorderLayout.NORTH);
 
         //#region State Data Panel
         GridLayout stateDataGridLayout = new GridLayout(2,4);
@@ -196,14 +218,13 @@ public class SimulatorSettings extends JFrame {
         }
         //#endregion
 
-        strategyCombobox.addActionListener(strategyComboboxListener);
 
         //#endregion
 
         //#region Strategy Parameters Panel
         GridLayout stategyDataGridLayout = new GridLayout(2,4);
+        stategyDataGridLayout.setHgap(10);//TODO: FIND OUT WHY THIS IS NOT WORKING!!!
         strategyPanel = new JPanel(stategyDataGridLayout);
-        stategyDataGridLayout.setHgap(100);//TODO: FIND OUT WHY THIS IS NOT WORKING!!!
         northPanel.add(strategyPanel);
 
         //#region strategy dynamic GUI preparation
@@ -227,12 +248,41 @@ public class SimulatorSettings extends JFrame {
 
         //#endregion
 
+        //#region UI event binding
+
+        //Window event binding
+        addWindowListener(windowAdapter);
+
+        //Menu binding
+        openButton.addActionListener(openButtonListener);
+        saveButton.addActionListener(saveButtonListener);
+        quitButton.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
+
+        //Strategy selector binding
+        strategyCombobox.addActionListener(strategyComboboxListener);
+
+        //Start Button binding
+        startButton.addActionListener(startButtonListener);
+
+        //#endregion
+
+        //Show JFrame
+        setVisible(true);
+
         //file load and save
         fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Simulator config", "simconf"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Simulator config", CONF_EXTENSION));
 
-        startButton.addActionListener(startButtonListener);
+        //setting default parameters
+        setDefaultParameters();
+
+        //try to read configuration file if present
+        readConfig(new File(DEFAULT_CONF_FILE));
+
     }
+
+
+    //#region event listeners
 
     private ActionListener strategyComboboxListener = e -> {
         try {
@@ -288,95 +338,199 @@ public class SimulatorSettings extends JFrame {
         strategyPanel.repaint();
     };
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        new SimulatorSettings();
-    }
-
     private ActionListener startButtonListener = e -> {
         try {
-            new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
-        } catch (InvalidSimulationException ex) {
+            Simulator sim = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
+            new SimulatorGUI(sim,1000);
+            this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
     };
 
     private ActionListener openButtonListener = e -> {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            readFile(fileChooser.getSelectedFile());
+            readConfig(fileChooser.getSelectedFile());
         }
     };
 
     private ActionListener saveButtonListener = e -> {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            writeFile(fileChooser.getSelectedFile());
+            writeConfig(fileChooser.getSelectedFile());
         }
     };
 
-    private void readFile(File selectedFile) {
+    private WindowAdapter windowAdapter = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            writeConfig(new File(DEFAULT_CONF_FILE));
+            ((JFrame)e.getSource()).dispose();
+        }
+    };
+    //#endregion
 
+    public void forceJSpinnerCommit() {
+        forceJSpinnerCommit(this);
     }
 
-    private void writeFile(File file) {
+    public void forceJSpinnerCommit(Container container) {
+        for (Component component : container.getComponents()) {
+            if(component instanceof JSpinner) {
+                try {
+                    ((JSpinner) component).commitEdit();
+                    System.out.println("COM: "+component.toString());
+                } catch (ParseException e) {
+                    //TODO: investigate on this!!!
+                    e.printStackTrace();
+                }
+            }else if (component instanceof Container){
+                forceJSpinnerCommit((Container) component);
+            }
+        }
+    }
+
+
+    private void setDefaultParameters() {
+        population.setValue(1000);
+        resources.setValue(20000);
+        testPrice.setValue(100);
+        encountersPerDay.setValue(3);
+
+        infectivity.setValue(50);
+        symptomaticity.setValue(50);
+        lethality.setValue(50);
+        duration.setValue(40);
+    }
+
+    private void readConfig(File file)  {
+        if(!file.exists()) return;
+
+        //forcing all the JSpinner to validate any possible input not yet validated (otherwise they can't be written into)
+        forceJSpinnerCommit();
+
+        //saving current parameter to some vars so i can restore them later if something goes wrong
+        int populationVal       = (int) population.getValue();
+        int resourcesVal        = (int) resources.getValue();
+        int testPriceVal        = (int) testPrice.getValue();
+        int encountersPerDayVal = (int) encountersPerDay.getValue();
+
+        int infectivityVal      = (int) infectivity.getValue();
+        int symptomaticityVal   = (int) symptomaticity.getValue();
+        int lethalityVal        = (int) lethality.getValue();
+        int durationVal         = (int) duration.getValue();
+
         try {
-            //i swear this isn't confused at all, good fucking job java, that's how to make thing simple.
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = builder.parse(file);
+
+            //state data
+            population.setValue(Integer.parseInt(doc.getElementsByTagName(XML_POPULATION).item(0).getTextContent()));
+            resources.setValue(Integer.parseInt(doc.getElementsByTagName(XML_RESOURCES).item(0).getTextContent()));
+            testPrice.setValue(Integer.parseInt(doc.getElementsByTagName(XML_TEST_PRICE).item(0).getTextContent()));
+            encountersPerDay.setValue(Integer.parseInt(doc.getElementsByTagName(XML_ENCOUNTERS_PER_DAY).item(0).getTextContent()));
+
+            //disease data
+            infectivity.setValue(Integer.parseInt(doc.getElementsByTagName(XML_INFECTIVITY).item(0).getTextContent()));
+            symptomaticity.setValue(Integer.parseInt(doc.getElementsByTagName(XML_SYMPTOMATICITY).item(0).getTextContent()));
+            lethality.setValue(Integer.parseInt(doc.getElementsByTagName(XML_LETHALITY).item(0).getTextContent()));
+            duration.setValue(Integer.parseInt(doc.getElementsByTagName(XML_DURATION).item(0).getTextContent()));
+
+            /*((JSpinner.DefaultEditor) duration.getEditor()).getTextField().setForeground(Color.red);
+            duration.revalidate();
+            duration.repaint();*/
+
+        } catch (Exception e) {
+            //TODO: message the user about the error
+            e.printStackTrace();
+
+            population.setValue(populationVal);
+            resources.setValue(resourcesVal);
+            testPrice.setValue(testPriceVal);
+            encountersPerDay.setValue(encountersPerDayVal);
+
+            infectivity.setValue(infectivityVal);
+            symptomaticity.setValue(symptomaticityVal);
+            lethality.setValue(lethalityVal);
+            duration.setValue(durationVal);
+
+        }
+    }
+
+    private void writeConfig(File file) {
+        try {
+            //i swear this isn't confused at all, good fucking job java, that's how to make thing simple. TODO: remove this comment, not now, i love it, but... you'll have to sooner or later
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
             // root element
-            Element root = document.createElement("simulator");
-            document.appendChild(root);
+            Element simulator = document.createElement(XML_ROOT);
+            document.appendChild(simulator);
 
-            // employee element
-            Element employee = document.createElement("employee");
+            //#region State data
+            Element state = document.createElement(XML_STATE);
+            simulator.appendChild(state);
 
-            root.appendChild(employee);
+            //population
+            Element population = document.createElement(XML_POPULATION);
+            population.appendChild(document.createTextNode(this.population.getValue().toString()));
+            state.appendChild(population);
 
-            // set an attribute to staff element
-            Attr attr = document.createAttribute("id");
-            attr.setValue("10");
-            employee.setAttributeNode(attr);
+            //resources
+            Element resources = document.createElement(XML_RESOURCES);
+            resources.appendChild(document.createTextNode(this.resources.getValue().toString()));
+            state.appendChild(resources);
 
-            //you can also use staff.setAttribute("id", "1") for this
+            //testPrice
+            Element testPrice = document.createElement(XML_TEST_PRICE);
+            testPrice.appendChild(document.createTextNode(this.testPrice.getValue().toString()));
+            state.appendChild(testPrice);
 
-            // firstname element
-            Element firstName = document.createElement("firstname");
-            firstName.appendChild(document.createTextNode("James"));
-            employee.appendChild(firstName);
+            //encountersPerDay
+            Element encountersPerDay = document.createElement(XML_ENCOUNTERS_PER_DAY);
+            encountersPerDay.appendChild(document.createTextNode(this.encountersPerDay.getValue().toString()));
+            state.appendChild(encountersPerDay);
 
-            // lastname element
-            Element lastname = document.createElement("lastname");
-            lastname.appendChild(document.createTextNode("Harley"));
-            employee.appendChild(lastname);
+            //#endregion
 
-            // email element
-            Element email = document.createElement("email");
-            email.appendChild(document.createTextNode("james@example.org"));
-            employee.appendChild(email);
+            //#region Disease data
+            Element disease = document.createElement(XML_DISEASE);
+            simulator.appendChild(disease);
 
-            // department elements
-            Element department = document.createElement("department");
-            department.appendChild(document.createTextNode("Human Resources"));
-            employee.appendChild(department);
+            //infectivity
+            Element infectivity = document.createElement(XML_INFECTIVITY);
+            infectivity.appendChild(document.createTextNode(this.infectivity.getValue().toString()));
+            disease.appendChild(infectivity);
+
+            //infectivity
+            Element symptomaticity = document.createElement(XML_SYMPTOMATICITY);
+            symptomaticity.appendChild(document.createTextNode(this.symptomaticity.getValue().toString()));
+            disease.appendChild(symptomaticity);
+
+            //infectivity
+            Element lethality = document.createElement(XML_LETHALITY);
+            lethality.appendChild(document.createTextNode(this.lethality.getValue().toString()));
+            disease.appendChild(lethality);
+
+            //duration
+            Element duration = document.createElement(XML_DURATION);
+            duration.appendChild(document.createTextNode(this.duration.getValue().toString()));
+            disease.appendChild(duration);
+            //#endregion
 
             // create the xml file
-            //transform the DOM Object to an XML File
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = null;
-            transformer = transformerFactory.newTransformer();
-
-            DOMSource domSource = new DOMSource(document);
-            StreamResult streamResult = new StreamResult(file);
-
-            // If you use
-            // StreamResult result = new StreamResult(System.out);
-            // the output will be pushed to the standard output ...
-            // You can use that for debugging
-
-            transformer.transform(domSource, streamResult);
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(new DOMSource(document), new StreamResult(file));
 
             System.out.println("Done creating XML File");
         } catch (Exception e) {
+            //TODO: message the user about the error
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        new SimulatorSettings();
     }
 
 }
