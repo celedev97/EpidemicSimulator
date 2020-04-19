@@ -24,7 +24,12 @@ public abstract class Strategy {
 
     public abstract void afterExecuteDay();
 
-    public abstract void personClean(Person person);
+    public void personClean(Person person) {
+        //if the person is now clean from the virus i allow him to move again
+        person.setCanMove(true);
+    }
 
     public abstract void personHasSymptoms(Person person);
+
+
 }
