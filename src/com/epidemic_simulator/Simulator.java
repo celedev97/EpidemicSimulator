@@ -3,9 +3,11 @@ package com.epidemic_simulator;
 import java.util.ArrayList;
 
 public class Simulator {
+
+    protected Strategy strategy;//Oggetto Strategy per i vari richiami sulle strategie
+
     //#region Simulation parameters
     private final int startingPopulation;
-    protected Strategy strategy;//Oggetto Strategy per i vari richiami sulle strategie
     private int resources;//Numero risorse disponibili
 
     public int getResources() {
@@ -126,7 +128,7 @@ public class Simulator {
 
             person.daysSinceInfection++;//Altrimenti comincio a contare i giorni entro cui,anche se infetta,l'individuo non può infettare
 
-            if(!person.canInfect && person.daysSinceInfection >= canInfectDay){
+            if(!person.canInfect && person.daysSinceInfection == canInfectDay){
                 //è verde ma è infetto, e sono i passati i giorni dell'incubazione, quindi diventa giallo
                 person.canInfect = true;
             }
