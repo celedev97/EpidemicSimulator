@@ -1,4 +1,5 @@
-import com.epidemic_simulator.*;
+package com.epidemic_simulator;
+
 import jdk.jshell.spi.ExecutionControl;
 
 
@@ -14,6 +15,9 @@ import java.lang.reflect.*;
 import java.net.*;
 import java.text.ParseException;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 //XML IMPORTS
 import org.w3c.dom.*;
@@ -77,7 +81,7 @@ public class SimulatorSettings extends JFrame {
     public SimulatorSettings(){
         //#region JFrame setup
         //title
-        setTitle("Epidemic simulator");
+        setTitle("Epidemic simulator - Settings");
 
         //size ()
         Dimension windowSize = new Dimension(600, 450);
@@ -124,6 +128,13 @@ public class SimulatorSettings extends JFrame {
         //>file>save
         JMenuItem saveButton = new JMenuItem("Save");
         file.add(saveButton);
+
+        //>file>-------
+        file.addSeparator();
+
+        //>file>default
+        JMenuItem defaultButton = new JMenuItem("Load default");
+        file.add(defaultButton);
 
         //>file>-------
         file.addSeparator();
@@ -256,6 +267,7 @@ public class SimulatorSettings extends JFrame {
         //Menu binding
         openButton.addActionListener(openButtonListener);
         saveButton.addActionListener(saveButtonListener);
+        defaultButton.addActionListener(e -> setDefaultParameters());
         quitButton.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 
         //Strategy selector binding
@@ -284,15 +296,23 @@ public class SimulatorSettings extends JFrame {
 
     //#region event listeners
 
-    private ActionListener startButtonListener = e -> {
+    public final ActionListener startButtonListener = e -> {
         try {
             //creating simulator
-            Simulator sim = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
+            Simulator simulator = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
+
+            //fetching parameters from JSpinners
+            List<Object> parametersList  = strategyParameters.stream().map(par -> {return ((JSpinner)par).getValue();}).collect(Collectors.toList());
+            //adding the simulator as the first parameter
+            parametersList.add(0,simulator);
+
             //creating strategy
-            //TODO:SISTEMARE ((SelectableStrategy)strategyCombobox.getSelectedItem()).getValue().getConstructors()[0].newInstance()
+            Class choosenStrategy = ((com.epidemic_simulator.SelectableStrategy)strategyCombobox.getSelectedItem()).getValue();
+            if(choosenStrategy != null)
+                choosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
 
             //creating simulator GUI and closing configurator
-            new SimulatorGUI(sim,1000);
+            new SimulatorGUI(simulator,1000);
             this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
@@ -325,7 +345,6 @@ public class SimulatorSettings extends JFrame {
                     int x = (i-1) % PARAMETERS_PER_ROW;
 
                     //creating the label
-                    System.out.println("setting ["+x+"] to: "+parameterName);
                     JLabel label = new JLabel(parameterName);
                     label.setAlignmentX(Component.LEFT_ALIGNMENT);
                     strategyParametersColumns[x].add(label);
@@ -336,7 +355,6 @@ public class SimulatorSettings extends JFrame {
                         generatedComponent = new JSpinner();
                         generatedComponent.setAlignmentX(Component.LEFT_ALIGNMENT);
                         strategyParametersColumns[x].add(generatedComponent);
-                        System.out.println("setting ["+x+"] to: "+parameters[i].toString());
                     }else{
                         throw new ExecutionControl.NotImplementedException("PARAMETER TYPE: "+type.toString()+" NOT SUPPORTED!!!");
                     }
@@ -384,7 +402,6 @@ public class SimulatorSettings extends JFrame {
             if(component instanceof JSpinner) {
                 try {
                     ((JSpinner) component).commitEdit();
-                    System.out.println("COM: "+component.toString());
                 } catch (ParseException e) {
                     //TODO: investigate on this!!!
                     e.printStackTrace();
@@ -526,7 +543,7 @@ public class SimulatorSettings extends JFrame {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(new DOMSource(document), new StreamResult(file));
 
-            System.out.println("Done creating XML File");
+            System.out.println("Done creating XML File ("+file.getName()+")");
         } catch (Exception e) {
             //TODO: message the user about the error
             e.printStackTrace();
