@@ -446,7 +446,6 @@ public class SimulatorSettings extends JFrame {
             duration.repaint();*/
 
         } catch (Exception e) {
-            //TODO: message the user about the error
             e.printStackTrace();
 
             population.setValue(populationVal);

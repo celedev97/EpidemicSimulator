@@ -46,10 +46,12 @@ public class Simulator {
         this.resources = resources;
         this.testPrice = testPrice;
         this.averageEncountersPerDay = averageEncountersPerDay;
+
         //Dati sanitari
         this.infectionRate = infectionRate;
         this.symptomsRate = symptomsRate;
         this.deathRate = deathRate;
+
         //Dati evoluzione della malattia
         this.healDay                = diseaseDuration;
         this.canInfectDay           = diseaseDuration/6;
@@ -63,7 +65,10 @@ public class Simulator {
         }
         //Creazione della prima persona infetta che va in giro,il suo canMove=true resta invariato->Un infetto per il momento giallo
         population.get(0).infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay,healDay);
-        alivePopulation = (ArrayList<Person>) population.clone(); //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
+        population.get(0).canInfect = true;
+
+        //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
+        alivePopulation = (ArrayList<Person>) population.clone();
     }
 
     public int getDay() {
