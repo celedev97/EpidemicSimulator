@@ -3,6 +3,8 @@ import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 import strategies.PreemptiveLockdownAndStopSpread;
 
+import java.awt.*;
+
 public class Main {
 
     public static void main(String[] args){
@@ -22,19 +24,20 @@ public class Main {
         while ((outcome = sim.executeDay())== Simulator.Outcomes.NOTHING){
             System.out.println();
             System.out.println("DAY "+sim.getDay());
+
+            int black   = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLACK).count();
+            int green   = (int) sim.population.stream().filter(person -> person.getColor() == Color.GREEN).count();
+            int yellow  = (int) sim.population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
+            int red     = (int) sim.population.stream().filter(person -> person.getColor() == Color.RED).count();
+            int blue    = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLUE).count();
+
+            System.out.println("green : "+green );
+            System.out.println("yellow: "+yellow);
+            System.out.println("red   : "+red   );
+            System.out.println("blue  : "+blue  );
+            System.out.println("black : "+black );
+            System.out.println("resources : "+sim.getResources());
         }
         System.out.println(sim.getDay() +"d "+ outcome.toString());
-/*
-        int black   = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLACK).count();
-        int green   = (int) sim.population.stream().filter(person -> person.getColor() == Color.GREEN).count();
-        int yellow  = (int) sim.population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
-        int red     = (int) sim.population.stream().filter(person -> person.getColor() == Color.RED).count();
-        int blue    = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLUE).count();
-
-        System.out.println("green : "+green );
-        System.out.println("yellow: "+yellow);
-        System.out.println("red   : "+red   );
-        System.out.println("blue  : "+blue  );
-        System.out.println("black : "+black );*/
     }
 }

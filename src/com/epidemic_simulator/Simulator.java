@@ -1,6 +1,5 @@
 package com.epidemic_simulator;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Simulator {
@@ -105,18 +104,6 @@ public class Simulator {
 
     public Outcomes executeDay(){//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
         day++;//Variabile contatrice dei giorni
-        int black   = (int) population.stream().filter(person -> person.getColor() == Color.BLACK).count();
-        int green   = (int) population.stream().filter(person -> person.getColor() == Color.GREEN).count();
-        int yellow  = (int) population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
-        int red     = (int) population.stream().filter(person -> person.getColor() == Color.RED).count();
-        int blue    = (int) population.stream().filter(person -> person.getColor() == Color.BLUE).count();
-
-        System.out.println("green : "+green );
-        System.out.println("yellow: "+yellow);
-        System.out.println("red   : "+red   );
-        System.out.println("blue  : "+blue  );
-        System.out.println("black : "+black );
-        System.out.println("resources : "+resources );
 
         //Per ogni giorno prendiamo tutte le 'n' persone VIVE
         for (Person person : population){
