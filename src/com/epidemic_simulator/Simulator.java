@@ -15,7 +15,7 @@ public class Simulator {
     }
 
     private final int testPrice;//Costi per le cure
-    private final int averageEncountersPerDay;//Velocità di incontro media per individuo/numero medio di individui che giornalmente una persona incontra
+    private final double averageEncountersPerDay;//Velocità di incontro media per individuo/numero medio di individui che giornalmente una persona incontra
     //#endregion
 
     //#region Disease data
@@ -105,6 +105,11 @@ public class Simulator {
     public Outcomes executeDay(){//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
         day++;//Variabile contatrice dei giorni
 
+        //Vd calculation
+        int canMoveCount = (int)alivePopulation.stream().filter(person -> person.canMove).count();
+        double encountersThisDay = averageEncountersPerDay * canMoveCount / population.size();
+        int intEncountersThisDay = encountersThisDay == (int)encountersThisDay ? (int)encountersThisDay : (int)encountersThisDay + 1;
+
         //Per ogni giorno prendiamo tutte le 'n' persone VIVE
         for (Person person : population){
             if(!person.alive) continue;//Se è un morto passiamo avanti alla prossima...
@@ -115,7 +120,7 @@ public class Simulator {
                 resources--;
             }else {
                 //Se la persona è abilitata al movimento,vuol dire che giornalmente incontra 'n' altre persone Random
-                for (int i = 0; i < averageEncountersPerDay; i++) {
+                for (int i = 0; i < intEncountersThisDay; i++) {
                     Person randomPerson = null;
                     if(alivePopulation.size() == 1) break;//Se rimane un solo soggetto in vita non può incontrare nessuno...
 
@@ -160,8 +165,7 @@ public class Simulator {
 
         if(strategy!=null) strategy.afterExecuteDay(); //Eseguiamo il giorno sulla strategia
         //#region simulation status return
-        int alive = alivePopulation.size(); //Controlliamo quante persone vive rimangono al giorno 'x'
-        if(alive == 0) return Outcomes.ALL_DEAD; //AlivePopulation==0-->Outcomes=All Dead(Not big surprise)
+        if(alivePopulation.size() == 0) return Outcomes.ALL_DEAD; //AlivePopulation==0-->Outcomes=All Dead(Not big surprise)
         if(alivePopulation.stream().filter(person -> person.infected).count() == 0) return Outcomes.ALL_HEALED; //Se di tutte le persone in vita gli infetti sono 0-->Outcames=All Healed
         if(resources <= 0) return  Outcomes.ECONOMIC_COLLAPSE;//Se le risorse raggiungono lo 0-->Outcomes=Economic Collapse
         return Outcomes.NOTHING; //Altrimenti ritorniamo NOTHING per continuare l'esecuzione...(il ciclo di continuazione è nel Main)
