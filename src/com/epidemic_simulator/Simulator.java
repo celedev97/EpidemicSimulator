@@ -15,6 +15,7 @@ public class Simulator {
     }
 
     private final int testPrice;//Costi per le cure
+    private final int cureCost;
     private final double averageEncountersPerDay;//Velocità di incontro media per individuo/numero medio di individui che giornalmente una persona incontra
     //#endregion
 
@@ -44,6 +45,7 @@ public class Simulator {
         this.startingPopulation = startingPopulation; //Numero popolazione iniziale/al lancio del simulatore
         this.resources = resources;
         this.testPrice = testPrice;
+        this.cureCost  = testPrice*3;
         this.averageEncountersPerDay = averageEncountersPerDay;
 
         //Dati sanitari
@@ -153,6 +155,9 @@ public class Simulator {
                 person.symptoms = true;
                 if(strategy != null) strategy.personHasSymptoms(person);
             }
+
+            if(person.symptoms)
+                resources -= cureCost;
 
             if(person.daysSinceInfection == person.deathDay){
                 //è rosso può morire
