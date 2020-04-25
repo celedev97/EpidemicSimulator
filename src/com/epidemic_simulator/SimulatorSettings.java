@@ -415,9 +415,9 @@ public class SimulatorSettings extends JFrame {
 
     private void setDefaultParameters() {
         population.setValue(1000);
-        resources.setValue(20000);
+        resources.setValue(35000);
         testPrice.setValue(100);
-        encountersPerDay.setValue(3);
+        encountersPerDay.setValue(5);
 
         infectivity.setValue(50);
         symptomaticity.setValue(50);
