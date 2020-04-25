@@ -23,7 +23,7 @@ public class Simulator {
     public final int symptomsRate;//Percentuale di sintomaticità
     public final int deathRate;//Percentuale di letalità
 
-    public final int healDay;
+    public final int diseaseDuration;
     public final int canInfectDay;//Numero giorni di incubazione
     public final int developSymptomsMaxDay;
     //#endregion
@@ -52,7 +52,7 @@ public class Simulator {
         this.deathRate = deathRate;
 
         //Dati evoluzione della malattia
-        this.healDay                = diseaseDuration;
+        this.diseaseDuration = diseaseDuration;
         this.canInfectDay           = diseaseDuration/6;
         this.developSymptomsMaxDay  = diseaseDuration/3;
 
@@ -63,7 +63,7 @@ public class Simulator {
             population.add(new Person());
         }
         //Creazione della prima persona infetta che va in giro,il suo canMove=true resta invariato->Un infetto per il momento giallo
-        population.get(0).infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay,healDay);
+        population.get(0).infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay, this.diseaseDuration);
         population.get(0).canInfect = true;
 
         //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
@@ -109,6 +109,11 @@ public class Simulator {
         int canMoveCount = (int)alivePopulation.stream().filter(person -> person.canMove).count();
         double encountersThisDay = averageEncountersPerDay * canMoveCount / population.size();
         int intEncountersThisDay = encountersThisDay == (int)encountersThisDay ? (int)encountersThisDay : (int)encountersThisDay + 1;
+
+        //R0 calculation
+        double R0 = encountersThisDay * diseaseDuration * (infectionRate/100.0);
+        if(R0<1)
+            throw new RuntimeException("R0<1, unexpected behavior");
 
         //Per ogni giorno prendiamo tutte le 'n' persone VIVE
         for (Person person : population){
@@ -156,7 +161,7 @@ public class Simulator {
                 continue;
             }
 
-            if(person.daysSinceInfection == healDay){
+            if(person.daysSinceInfection == diseaseDuration){
                 //se è rosso/giallo può guarire
                 heal(person,false);
             }
@@ -175,10 +180,10 @@ public class Simulator {
     //Funzione per la simulazione dell'incontro tra due persone
     private void encounter(Person person1, Person person2) {
         if(person1.canInfect && !person2.infected){//Se persona1 è un giallo/infetto e persona2 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona2
-            person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, healDay);
+            person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
         if(person2.canInfect && !person1.infected){//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
-            person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, healDay);
+            person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
     }
 
