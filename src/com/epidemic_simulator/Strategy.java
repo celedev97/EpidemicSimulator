@@ -25,7 +25,9 @@ public abstract class Strategy {
         person.setCanMove(true);
     }
 
-    public abstract void personHasSymptoms(Person person);
+    public void personHasSymptoms(Person person){
+        person.setCanMove(false);
+    }
 
 
 }
