@@ -21,6 +21,7 @@ public class Simulator {
 
     //#region Disease data
     public final int infectionRate;//Percentuale di infettività
+    private final double doubleInfectionRate;
     public final int symptomsRate;//Percentuale di sintomaticità
     public final int deathRate;//Percentuale di letalità
 
@@ -32,6 +33,8 @@ public class Simulator {
     //simulation status
     public ArrayList<Person> population;
     private ArrayList<Person> alivePopulation;
+
+    public double r0;
 
     private int day = 0;
 
@@ -50,8 +53,11 @@ public class Simulator {
 
         //Dati sanitari
         this.infectionRate = infectionRate;
+        this.doubleInfectionRate = (infectionRate/100.0);
         this.symptomsRate = symptomsRate;
         this.deathRate = deathRate;
+
+        this.r0 = averageEncountersPerDay * diseaseDuration * doubleInfectionRate;
 
         //Dati evoluzione della malattia
         this.diseaseDuration = diseaseDuration;
@@ -93,9 +99,9 @@ public class Simulator {
         int intEncountersThisDay = encountersThisDay == (int)encountersThisDay ? (int)encountersThisDay : (int)encountersThisDay + 1;
 
         //R0 calculation
-        double R0 = encountersThisDay * diseaseDuration * (infectionRate/100.0);
-        if(R0<1)
-            throw new RuntimeException("R0<1, unexpected behavior");
+        r0 = encountersThisDay * diseaseDuration * doubleInfectionRate;
+        /*if(R0<1)
+            throw new RuntimeException("R0<1, unexpected behavior");*/
 
         //Per ogni giorno prendiamo tutte le 'n' persone VIVE
         for (Person person : population){
