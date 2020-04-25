@@ -21,6 +21,11 @@ public class PreemptiveLockdownAndStopSpread extends Strategy {
     }
 
     @Override
+    protected void initialLockDown(int lockDownPercentage) {
+        super.initialLockDown(lockDownPercentage);
+    }
+
+    @Override
     public void afterExecuteDay() {
         if(simulator.getDay()%(simulator.diseaseDuration /stopSpreadFrequency) == 0){
             System.out.println("TESTING AND RESTRAINING!");
@@ -40,7 +45,12 @@ public class PreemptiveLockdownAndStopSpread extends Strategy {
 
     @Override
     public void personHasSymptoms(Person person) {
-        person.setCanMove(false);
+        super.personHasSymptoms(person);
+
+        for (Person contact : findEncounters(person,10)){
+            System.out.println(contact);
+        }
+        System.exit(1);
     }
 
 

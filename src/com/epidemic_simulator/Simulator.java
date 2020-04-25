@@ -36,7 +36,7 @@ public class Simulator {
 
     public double r0;
 
-    private int day = 0;
+    protected int day = 0;
 
     //constructor
     public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
@@ -183,6 +183,7 @@ public class Simulator {
         if(person2.canInfect && !person1.infected){//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
             person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
+        if(strategy != null) strategy.registerEncounter(person1, person2);
     }
 
     public boolean testVirus(Person person){

@@ -1,7 +1,5 @@
 package com.epidemic_simulator;
 
-import com.epidemic_simulator.Simulator;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
