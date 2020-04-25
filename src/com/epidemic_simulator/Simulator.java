@@ -76,26 +76,6 @@ public class Simulator {
         return day;
     }
 
-    //Richiamo il metodo 'heal/guarigione' su una Person rossa passata
-    public void heal(Person person) {
-        heal(person,true); //Se payHealing=True la Persona è guarita con un costo
-    }
-
-    private void heal(Person person, boolean payHealing){ //Se payHealing=False la Persona è guarita da sola smaltendo il virus
-        if(payHealing) resources -= 3 * testPrice;
-
-        boolean hadSymtomps = person.symptoms;
-
-        //La persona è guarita
-        person.immune = true;
-        person.infected = false;
-        person.canInfect = false;
-        person.symptoms = false;
-        //person.canMove=true;
-
-        if(hadSymtomps && strategy != null) strategy.personClean(person);
-    }
-
     //Possibili finali della simulazione
     public enum Outcomes{
         NOTHING,
@@ -167,8 +147,15 @@ public class Simulator {
             }
 
             if(person.daysSinceInfection == diseaseDuration){
-                //se è rosso/giallo può guarire
-                heal(person,false);
+                boolean hadSymtomps = person.symptoms;
+
+                person.immune = true;
+                person.infected = false;
+                person.canInfect = false;
+                person.symptoms = false;
+                //person.canMove=true; DISABLED, THE STRATEGY SHOULD MANAGE THIS!!!
+
+                if(hadSymtomps && strategy != null) strategy.personClean(person);
             }
             //#endregion
         }
