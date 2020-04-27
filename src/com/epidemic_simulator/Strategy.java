@@ -63,19 +63,6 @@ public abstract class Strategy {
 
 
     /**
-     * Find the encounters of a person from the encounter dictionary of a day
-     * NOTE: It's equal to encounterDictionary.get(person), but it performs some additional error checking
-     * @param encounterDictionary The encounter dictionary in wich the person should be searched
-     * @param person The person to search
-     * @return The list of the people that this person has met
-     */
-    private List<Person> findEncounters(HashMap<Person, List<Person>> encounterDictionary, Person person) {
-        if(!encounterDictionary.containsKey(person)) return encounterDictionary.put(person, new ArrayList<>());
-        return encounterDictionary.get(person);
-    }
-
-
-    /**
      * Find the list of people that a person has met in the last days
      * @param person The person that should be used for the research
      * @param previousDays The number of days that should be looked up (NOTE: if days = 1 you will only search today)
@@ -96,16 +83,40 @@ public abstract class Strategy {
     }
 
 
+    //#region private overload of findEncounters for internal use
+
+    /**
+     * Find the encounters of a person from the encounter dictionary of a day
+     * NOTE: It's equal to encounterDictionary.get(person), but it performs some additional error checking
+     * @param encounterDictionary The encounter dictionary in which the person should be searched
+     * @param person The person to search
+     * @return The list of the people that this person has met
+     */
+    private List<Person> findEncounters(HashMap<Person, List<Person>> encounterDictionary, Person person) {
+        if(!encounterDictionary.containsKey(person)){
+            ArrayList<Person> temp = new ArrayList<>();
+            encounterDictionary.put(person, temp);
+            return temp;
+        }
+        return encounterDictionary.get(person);
+    }
+
     /**
      * Find the dictionary of the encounters for a single day
      * NOTE: this is the same as doing encounters.get(dayNum), but it performs some additional error checking
      * @param dayNum the number of the day that should be looked up
      * @return
      */
-    protected HashMap<Person,List<Person>> findEncounters(int dayNum){
+    private HashMap<Person,List<Person>> findEncounters(int dayNum){
         //if this day doesn't exists in the encounters dictionary i add it
-        if(!encounters.containsKey(dayNum)) return encounters.put(dayNum, new HashMap<>());
+        if(!encounters.containsKey(dayNum)){
+            HashMap<Person,List<Person>> temp = new HashMap<>();
+            encounters.put(dayNum, temp);
+            return temp;
+        }
         return encounters.get(dayNum);
     }
+
+    //#endregion
 
 }
