@@ -14,7 +14,7 @@ public class Simulator {
         return resources;
     }
 
-    private final int testPrice;//Costi per le cure
+    public final int testPrice;//Costi per le cure
     private final int cureCost;
     private final double averageEncountersPerDay;//Velocità di incontro media per individuo/numero medio di individui che giornalmente una persona incontra
     //#endregion
@@ -32,7 +32,7 @@ public class Simulator {
 
     //simulation status
     public ArrayList<Person> population;
-    private ArrayList<Person> alivePopulation;
+    public ArrayList<Person> alivePopulation;
 
     public double r0;
 
@@ -81,6 +81,7 @@ public class Simulator {
     public int getDay() {
         return day;
     }
+
 
     //Possibili finali della simulazione
     public enum Outcomes{
@@ -187,10 +188,6 @@ public class Simulator {
     }
 
     public boolean testVirus(Person person){
-        //if it has symptoms then it has the virus, no need to waste resources.
-        if(person.symptoms) return true;
-
-        //otherwise i do the test
         resources -= testPrice;
         if(person.canInfect) return true;
         return false;

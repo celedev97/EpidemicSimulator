@@ -107,7 +107,7 @@ public abstract class Strategy {
      * @param dayNum the number of the day that should be looked up
      * @return
      */
-    private HashMap<Person,List<Person>> findEncounters(int dayNum){
+    protected HashMap<Person,List<Person>> findEncounters(int dayNum){
         //if this day doesn't exists in the encounters dictionary i add it
         if(!encounters.containsKey(dayNum)){
             HashMap<Person,List<Person>> temp = new HashMap<>();
