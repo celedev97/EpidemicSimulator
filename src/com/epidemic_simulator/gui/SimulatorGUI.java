@@ -1,4 +1,6 @@
-package com.epidemic_simulator;
+package com.epidemic_simulator.gui;
+
+import com.epidemic_simulator.Simulator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +19,9 @@ public class SimulatorGUI extends JFrame {
         setTitle("Epidemic simulator - Simulation");
 
         //size
-        setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
+        
         setResizable(false);
 
         //closeButton

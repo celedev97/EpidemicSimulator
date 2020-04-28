@@ -1,5 +1,7 @@
-package com.epidemic_simulator;
+package com.epidemic_simulator.gui;
 
+import com.epidemic_simulator.Simulator;
+import com.epidemic_simulator.Utils;
 import jdk.jshell.spi.ExecutionControl;
 
 
@@ -16,7 +18,6 @@ import java.net.*;
 import java.text.ParseException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 //XML IMPORTS
@@ -307,7 +308,7 @@ public class SimulatorSettings extends JFrame {
             parametersList.add(0,simulator);
 
             //creating strategy
-            Class choosenStrategy = ((com.epidemic_simulator.SelectableStrategy)strategyCombobox.getSelectedItem()).getValue();
+            Class choosenStrategy = ((SelectableStrategy)strategyCombobox.getSelectedItem()).getValue();
             if(choosenStrategy != null)
                 choosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
 

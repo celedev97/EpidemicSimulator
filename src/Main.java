@@ -48,8 +48,9 @@ public class Main {
         int yellow  = (int) sim.population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
         int red     = (int) sim.population.stream().filter(person -> person.getColor() == Color.RED).count();
         int blue    = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLUE).count();
-//        int R0 = (sim.averageEncountersPerDay * sim.healDay * sim.infectionRate)/100;
-        //TODO: dear Cencia, is this R0 useful??
+        //int R0 = (sim.averageEncountersPerDay * sim.healDay * sim.infectionRate)/100;
+        // NOTA: non ricalcolare R0! è già calcolato in sim.R0, ed è anche calcolato con il Vd, non con il V
+        //TODO: dear Cencia, is this R0 useful?? <= <3
 
         System.out.println("green : "+green );
         System.out.println("yellow: "+yellow);
