@@ -38,22 +38,26 @@ public class Simulator {
 
     protected int day = 0;
 
+    private boolean firstRed = false;
+
     //constructor
     public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
         //Condizioni necessarie per verificare la validità dei dati inseriti in funzione del requisito.
-        if(resources >= (10*startingPopulation*testPrice)) throw new InvalidSimulationException("Condition not met: R < 10 * P ∗ C");
-        if(resources >= (startingPopulation*diseaseDuration)) throw new InvalidSimulationException("Condition not met: R < P ∗ D");
+        if (resources >= (10 * startingPopulation * testPrice))
+            throw new InvalidSimulationException("Condition not met: R < 10 * P ∗ C");
+        if (resources >= (startingPopulation * diseaseDuration))
+            throw new InvalidSimulationException("Condition not met: R < P ∗ D");
 
         //Dati popolazione/stato
         this.startingPopulation = startingPopulation; //Numero popolazione iniziale/al lancio del simulatore
         this.resources = resources;
         this.testPrice = testPrice;
-        this.cureCost  = testPrice*3;
+        this.cureCost = testPrice * 3;
         this.averageEncountersPerDay = averageEncountersPerDay;
 
         //Dati sanitari
         this.infectionRate = infectionRate;
-        this.doubleInfectionRate = (infectionRate/100.0);
+        this.doubleInfectionRate = (infectionRate / 100.0);
         this.symptomsRate = symptomsRate;
         this.deathRate = deathRate;
 
@@ -61,8 +65,8 @@ public class Simulator {
 
         //Dati evoluzione della malattia
         this.diseaseDuration = diseaseDuration;
-        this.canInfectDay           = diseaseDuration/6;
-        this.developSymptomsMaxDay  = diseaseDuration/3;
+        this.canInfectDay = diseaseDuration / 6;
+        this.developSymptomsMaxDay = diseaseDuration / 3;
 
         population = new ArrayList<>();//Lista persona
 
@@ -71,7 +75,7 @@ public class Simulator {
             population.add(new Person());
         }
         //Creazione della prima persona infetta che va in giro,il suo canMove=true resta invariato->Un infetto per il momento giallo
-        population.get(0).infect(symptomsRate,deathRate,canInfectDay,developSymptomsMaxDay, this.diseaseDuration);
+        population.get(0).infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
         population.get(0).canInfect = true;
 
         //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
@@ -83,41 +87,42 @@ public class Simulator {
     }
 
     //Possibili finali della simulazione
-    public enum Outcomes{
+    public enum Outcomes {
         NOTHING,
         ALL_HEALED,
         ALL_DEAD,
         ECONOMIC_COLLAPSE
     }
 
-    public Outcomes executeDay(){//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
+    public Outcomes executeDay() {//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
         day++;//Variabile contatrice dei giorni
 
         //Vd calculation
-        int canMoveCount = (int)alivePopulation.stream().filter(person -> person.canMove).count();
+        int canMoveCount = (int) alivePopulation.stream().filter(person -> person.canMove).count();
         double encountersThisDay = averageEncountersPerDay * canMoveCount / population.size();
-        int intEncountersThisDay = encountersThisDay == (int)encountersThisDay ? (int)encountersThisDay : (int)encountersThisDay + 1;
+        int intEncountersThisDay = encountersThisDay == (int) encountersThisDay ? (int) encountersThisDay : (int) encountersThisDay + 1;
 
         //R0 calculation
         r0 = encountersThisDay * diseaseDuration * doubleInfectionRate;
-        /*if(R0<1)
-            throw new RuntimeException("R0<1, unexpected behavior");*/
+        if (r0 < 1)
+            System.out.println("Desease has been eradicated");
 
         //Per ogni giorno prendiamo tutte le 'n' persone VIVE
-        for (Person person : population){
-            if(!person.alive) continue;//Se è un morto passiamo avanti alla prossima...
+        for (Person person : population) {
+            if (!person.alive) continue;//Se è un morto passiamo avanti alla prossima...
 
             //#region movimento
             if (!person.canMove || person.symptoms) {
                 //Se non è abilitata a muoversi o presenta sintomi il soggetto consuma una delle risorse disponibili
                 resources--;
-            }else {
+            } else {
                 //Se la persona è abilitata al movimento,vuol dire che giornalmente incontra 'n' altre persone Random
                 for (int i = 0; i < intEncountersThisDay; i++) {
                     Person randomPerson = null;
-                    if(alivePopulation.size() == 1) break;//Se rimane un solo soggetto in vita non può incontrare nessuno...
+                    if (alivePopulation.size() == 1)
+                        break;//Se rimane un solo soggetto in vita non può incontrare nessuno...
 
-                    while(randomPerson == null || randomPerson == person){
+                    while (randomPerson == null || randomPerson == person) {
                         randomPerson = alivePopulation.get(Utils.random(alivePopulation.size()));//Estraiamo un'altra persona...che non sia se stessa
                     }
                     //Sperimentiamo l'incontro
@@ -127,32 +132,33 @@ public class Simulator {
             //#endregion
 
             //#region prosecuzione malattia
-            if(!person.infected) continue;//Controlliamo se la persona è stata effettivamente infettata
+            if (!person.infected) continue;//Controlliamo se la persona è stata effettivamente infettata
 
             person.daysSinceInfection++;//Altrimenti comincio a contare i giorni entro cui,anche se infetta,l'individuo non può infettare
 
-            if(!person.canInfect && person.daysSinceInfection == canInfectDay){
+            if (!person.canInfect && person.daysSinceInfection == canInfectDay) {
                 //è verde ma è infetto, e sono i passati i giorni dell'incubazione, quindi diventa giallo
                 person.canInfect = true;
             }
 
-            if(person.daysSinceInfection == person.symptomsDevelopmentDay){
+            if (person.daysSinceInfection == person.symptomsDevelopmentDay) {
                 //è giallo ed oggi è il giorno in cui sviluppa sintomi
                 person.symptoms = true;
-                if(strategy != null) strategy.personHasSymptoms(person);
+                firstRed = true; //flag per il primo sintomatico per iniziare a tracciare gli incontri
+                if (strategy != null) strategy.personHasSymptoms(person);
             }
 
-            if(person.symptoms)
+            if (person.symptoms)
                 resources -= cureCost;
 
-            if(person.daysSinceInfection == person.deathDay){
+            if (person.daysSinceInfection == person.deathDay) {
                 //è rosso può morire
                 alivePopulation.remove(person);//Rimuovo l'individuo dalla lista delle persone vive
                 person.alive = false;
                 continue;
             }
 
-            if(person.daysSinceInfection == diseaseDuration){
+            if (person.daysSinceInfection == diseaseDuration) {
                 boolean hadSymtomps = person.symptoms;
 
                 person.immune = true;
@@ -161,38 +167,41 @@ public class Simulator {
                 person.symptoms = false;
                 //person.canMove=true; DISABLED, THE STRATEGY SHOULD MANAGE THIS!!!
 
-                if(hadSymtomps && strategy != null) strategy.personClean(person);
+                if (hadSymtomps && strategy != null) strategy.personClean(person);
             }
             //#endregion
         }
 
-        if(strategy!=null) strategy.afterExecuteDay(); //Eseguiamo il giorno sulla strategia
+        if (strategy != null) strategy.afterExecuteDay(); //Eseguiamo il giorno sulla strategia
         //#region simulation status return
-        if(alivePopulation.size() == 0) return Outcomes.ALL_DEAD; //AlivePopulation==0-->Outcomes=All Dead(Not big surprise)
-        if(alivePopulation.stream().filter(person -> person.infected).count() == 0) return Outcomes.ALL_HEALED; //Se di tutte le persone in vita gli infetti sono 0-->Outcames=All Healed
-        if(resources <= 0) return  Outcomes.ECONOMIC_COLLAPSE;//Se le risorse raggiungono lo 0-->Outcomes=Economic Collapse
+        if (alivePopulation.size() == 0)
+            return Outcomes.ALL_DEAD; //AlivePopulation==0-->Outcomes=All Dead(Not big surprise)
+        if (alivePopulation.stream().filter(person -> person.infected).count() == 0)
+            return Outcomes.ALL_HEALED; //Se di tutte le persone in vita gli infetti sono 0-->Outcames=All Healed
+        if (resources <= 0)
+            return Outcomes.ECONOMIC_COLLAPSE;//Se le risorse raggiungono lo 0-->Outcomes=Economic Collapse
         return Outcomes.NOTHING; //Altrimenti ritorniamo NOTHING per continuare l'esecuzione...(il ciclo di continuazione è nel Main)
         //#endregion
     }
 
     //Funzione per la simulazione dell'incontro tra due persone
     private void encounter(Person person1, Person person2) {
-        if(person1.canInfect && !person2.infected){//Se persona1 è un giallo/infetto e persona2 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona2
+        if (person1.canInfect && !person2.infected) {//Se persona1 è un giallo/infetto e persona2 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona2
             person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
-        if(person2.canInfect && !person1.infected){//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
+        if (person2.canInfect && !person1.infected) {//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
             person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
-        if(strategy != null) strategy.registerEncounter(person1, person2);
+        if (strategy != null && firstRed == true) strategy.registerEncounter(person1, person2);
     }
 
-    public boolean testVirus(Person person){
+    public boolean testVirus(Person person) {
         //if it has symptoms then it has the virus, no need to waste resources.
-        if(person.symptoms) return true;
+        if (person.symptoms) return true;
 
         //otherwise i do the test
         resources -= testPrice;
-        if(person.canInfect) return true;
+        if (person.canInfect) return true;
         return false;
     }
 
