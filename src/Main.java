@@ -14,10 +14,10 @@ public class Main {
         Simulator sim = null;
 
         try {
-            sim = new Simulator(1000, 44999, 100, 3, 50, 50, 50, 45);
+            sim = new Simulator(1000, 49999, 5, 3, 20, 20, 20, 50);
             //Strategy strategy = new PreemptiveLockdownAndStopSpread(sim,25, 2);
             //Strategy strategy=new BusinessAsUsual(sim);
-            //Strategy strategy = new ContactTracingMod(sim, 20);
+            Strategy strategy = new ContactTracingLightTest(sim, 20);
         } catch (InvalidSimulationException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
