@@ -1,8 +1,10 @@
 package com.epidemic_simulator;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.lang.Math;
 
 public abstract class Strategy {
     protected Simulator simulator;
@@ -39,6 +41,13 @@ public abstract class Strategy {
 
     public void personHasSymptoms(Person person){
         person.setCanMove(false);
+    }
+
+    public void quarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
+        if ((!person.symptoms) && ((currentDay - person.quarantineStartDay) > Math.ceil((5*simulator.diseaseDuration) / 6 ))){
+            person.setCanMove(true);
+            person.precautionaryQuarantine = false;
+        }
     }
 
 
