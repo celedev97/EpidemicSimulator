@@ -1,5 +1,5 @@
 package com.epidemic_simulator;
-import java.awt.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +11,7 @@ public abstract class Strategy {
     private ArrayList<Person> population;
     protected int originalResources;
 
-    protected HashMap<Integer,HashMap<Person, List<Person>>> encounters;
+    protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 
     public Strategy(Simulator simulator) {
         this.simulator = simulator;
@@ -23,6 +23,7 @@ public abstract class Strategy {
 
     /**
      * DEPRECATED METHOD, DO NOT USE!!!
+     *
      * @param lockDownPercentage
      */
     @Deprecated
@@ -39,12 +40,12 @@ public abstract class Strategy {
         person.setCanMove(true);
     }
 
-    public void personHasSymptoms(Person person){
+    public void personHasSymptoms(Person person) {
         person.setCanMove(false);
     }
 
     public void quarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
-        if ((!person.symptoms) && ((currentDay - person.quarantineStartDay) > Math.ceil((5*simulator.diseaseDuration) / 6 ))){
+        if ((!person.symptoms) && ((currentDay - person.quarantineStartDay) > Math.ceil((5 * simulator.diseaseDuration) / 6))) {
             person.setCanMove(true);
             person.precautionaryQuarantine = false;
         }
@@ -54,10 +55,11 @@ public abstract class Strategy {
     /**
      * Register that the person1 and the person2 met today
      * NOTE: This should ONLY be used by the Simulator!!!
+     *
      * @param person1 The first person
      * @param person2 The second person
      */
-    protected void registerEncounter(Person person1, Person person2){
+    protected void registerEncounter(Person person1, Person person2) {
         int day = simulator.day;
 
         //get this day encounter dictionary
@@ -73,19 +75,20 @@ public abstract class Strategy {
 
     /**
      * Find the list of people that a person has met in the last days
-     * @param person The person that should be used for the research
+     *
+     * @param person       The person that should be used for the research
      * @param previousDays The number of days that should be looked up (NOTE: if days = 1 you will only search today)
      * @return The list of the people that that person has met over the last days
      */
-    protected List<Person> findEncounters(Person person, int previousDays){
+    protected List<Person> findEncounters(Person person, int previousDays) {
         ArrayList<Person> outputList = new ArrayList<>();
 
         int currentDay = simulator.day;
         int limitDay = currentDay - previousDays;
-        HashMap<Person,List<Person>> encountersThisDay;
-        for (int day = currentDay; day>limitDay; day--){
+        HashMap<Person, List<Person>> encountersThisDay;
+        for (int day = currentDay; day > limitDay; day--) {
             //find the encounter dictionary for the day, then find the list of the Persons for this person, then add them all to the list
-            findEncounters(findEncounters(day),person).stream().collect(Collectors.toCollection(() -> outputList));
+            findEncounters(findEncounters(day), person).stream().collect(Collectors.toCollection(() -> outputList));
         }
 
         return outputList;
@@ -97,12 +100,13 @@ public abstract class Strategy {
     /**
      * Find the encounters of a person from the encounter dictionary of a day
      * NOTE: It's equal to encounterDictionary.get(person), but it performs some additional error checking
+     *
      * @param encounterDictionary The encounter dictionary in which the person should be searched
-     * @param person The person to search
+     * @param person              The person to search
      * @return The list of the people that this person has met
      */
     private List<Person> findEncounters(HashMap<Person, List<Person>> encounterDictionary, Person person) {
-        if(!encounterDictionary.containsKey(person)){
+        if (!encounterDictionary.containsKey(person)) {
             ArrayList<Person> temp = new ArrayList<>();
             encounterDictionary.put(person, temp);
             return temp;
@@ -113,13 +117,14 @@ public abstract class Strategy {
     /**
      * Find the dictionary of the encounters for a single day
      * NOTE: this is the same as doing encounters.get(dayNum), but it performs some additional error checking
+     *
      * @param dayNum the number of the day that should be looked up
      * @return
      */
-    protected HashMap<Person,List<Person>> findEncounters(int dayNum){
+    protected HashMap<Person, List<Person>> findEncounters(int dayNum) {
         //if this day doesn't exists in the encounters dictionary i add it
-        if(!encounters.containsKey(dayNum)){
-            HashMap<Person,List<Person>> temp = new HashMap<>();
+        if (!encounters.containsKey(dayNum)) {
+            HashMap<Person, List<Person>> temp = new HashMap<>();
             encounters.put(dayNum, temp);
             return temp;
         }
