@@ -147,6 +147,7 @@ public class Simulator {
                 person.symptoms = true;
                 firstRed = true; //flag per il primo sintomatico per iniziare a tracciare gli incontri
                 if (strategy != null) strategy.personHasSymptoms(person);
+                person.precautionaryQuarantine = false;
             }
 
             if (person.symptoms)
@@ -170,6 +171,9 @@ public class Simulator {
 
                 if (hadSymtomps && strategy != null) strategy.personClean(person);
             }
+
+            if ((strategy != null) && (person.precautionaryQuarantine))
+                strategy.quarantine(person, getDay());
             //#endregion
         }
 
@@ -193,7 +197,7 @@ public class Simulator {
         if (person2.canInfect && !person1.infected) {//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
             person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
-        if (strategy != null && firstRed == true) strategy.registerEncounter(person1, person2);
+        if (strategy != null && firstRed) strategy.registerEncounter(person1, person2);
     }
 
     public boolean testVirus(Person person) {
