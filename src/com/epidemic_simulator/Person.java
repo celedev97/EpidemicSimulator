@@ -20,6 +20,9 @@ public class Person {
 
     protected boolean canMove = true; //All'inizio tutti gli individui possono muoversi
 
+    public boolean precautionaryQuarantine = false; //Indica se una persona è in quarantena post-tampone o meno
+    public int quarantineStartDay;
+
     public Color getColor(){
         //Se l'individuo ha status-alive=false è sicuramente nero/morto.
         if(!alive) return Color.BLACK;
