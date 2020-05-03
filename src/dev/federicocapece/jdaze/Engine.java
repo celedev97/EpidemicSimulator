@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public final class Engine {
     private static Thread runningThread = null;
 
-    public static Renderer renderer;
+    public static Renderer renderer = new Renderer();
 
     protected static ArrayList<GameObject> gameObjects;
 
@@ -31,7 +31,6 @@ public final class Engine {
         }
 
         //initialize runtime stuff
-        renderer = new Renderer();
         renderer.init();
         gameObjects = new ArrayList<>();
 

@@ -22,14 +22,14 @@ public class Test extends JFrame {
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
 
-        contentPane.add(MiniGameEngine.getEngine(), BorderLayout.CENTER);
+        contentPane.add(Engine.renderer, BorderLayout.CENTER);
 
         //forcing component draw so i can get the canvas size
         setVisible(true);
         revalidate();
         repaint();
 
-        MiniGameEngine.getEngine().start();
+        Engine.start();
     }
 
     public static void main(String[] args) {
