@@ -1,5 +1,6 @@
 import com.epidemic_simulator.InvalidSimulationException;
 import com.epidemic_simulator.Simulator;
+import strategies.MediumControlledLockdown;
 
 import java.awt.*;
 
@@ -16,7 +17,7 @@ public class Main {
             //Strategy strategy = new PreemptiveLockdownAndStopSpread(sim,25, 2);
             //Strategy strategy=new BusinessAsUsual(sim);
             //ContactTracingLightTest strategy = new ContactTracingLightTest(sim, 20);
-            //MediumControlledLockdown strategy=new MediumControlledLockdown(sim,10);
+            MediumControlledLockdown strategy=new MediumControlledLockdown(sim,10);
             //FullControlledLockdownAndStopSpread strategy=new FullControlledLockdownAndStopSpread(sim,20);
         } catch (InvalidSimulationException e) {
             e.printStackTrace();

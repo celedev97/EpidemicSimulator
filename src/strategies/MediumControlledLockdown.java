@@ -40,13 +40,15 @@ public class MediumControlledLockdown extends Strategy {
                 Person randomPerson = chiavi.get(Utils.random(chiavi.size()));
                 int controllo=0;
                 for (Person r:check1) {
-                    if(randomPerson.equals(r)){
-                        i--;
-                        controllo++;
+                    if(!randomPerson.equals(r)){
+                        controllo=0;
                         break;
                     }
+                    else {
+                        controllo++;
+                    }
                 }
-                if(controllo!=0){
+                if(controllo==0){
                     check1.add(randomPerson);
                     if(randomPerson.getColor()==Color.YELLOW||randomPerson.getColor()==Color.RED){
                         randomPerson.setCanMove(false);
@@ -56,34 +58,41 @@ public class MediumControlledLockdown extends Strategy {
                         }
                     }
                 }
+                else {
+                    i--;
+                }
             }
-            if(check.size()==0){
+        }
+        System.out.println(sintomatici+" "+limite);
+        if(check.size()==0){
+            check.put(simulator.getDay(),persone);
+        }
+        else {
+            int controllo=0;
+            for (Integer data:check.keySet()) {
+                if(data==simulator.getDay()){
+                    ArrayList appoggio=check.get(data);
+                    appoggio.addAll(persone);
+                    check.put(data,appoggio);
+                    controllo++;
+                }
+            }
+            if(controllo==0){
                 check.put(simulator.getDay(),persone);
-            }
-            else {
-                int controllo=0;
-                for (Integer data:check.keySet()) {
-                    if(data==simulator.getDay()){
-                        ArrayList appoggio=check.get(data);
-                        appoggio.addAll(persone);
-                        check.put(data,appoggio);
-                        controllo++;
-                    }
-                }
-                if(controllo==0){
-                    check.put(simulator.getDay(),persone);
-                }
             }
         }
         if(check.size()!=0){
             for (int data:check.keySet()) {
                 ArrayList<Person>p=check.get(data);
+                ArrayList<Person>rossi=new ArrayList<>();
                 for (Person t:p) {
                     if (t.getColor() == Color.RED) {
                         personClean(t);
-                        p.remove(t);
+                        System.out.println("!!!!!!");
+                        rossi.add(t);
                     }
                 }
+                p.removeAll(rossi);
                 if(simulator.getDay()==data+simulator.canInfectDay+simulator.developSymptomsMaxDay){
                     for (Person t:p) {
                         if(!simulator.testVirus(t)){
@@ -93,6 +102,7 @@ public class MediumControlledLockdown extends Strategy {
                 }
             }
         }
+        System.out.println(sintomatici+" "+limite);
     }
 
     @Override
@@ -103,6 +113,7 @@ public class MediumControlledLockdown extends Strategy {
 
     @Override
     public void personClean(Person person) {
+        simulator.Heal(person);
         this.sintomatici--;
         person.setCanMove(true);
     }
