@@ -162,11 +162,14 @@ public class Simulator {
 
             if (person.daysSinceInfection == diseaseDuration) {
                 boolean hadSymtomps = person.symptoms;
+
+                person.immune = true;
+                person.infected = false;
+                person.canInfect = false;
+                person.symptoms = false;
                 //person.canMove=true; DISABLED, THE STRATEGY SHOULD MANAGE THIS!!!
-                if (hadSymtomps && strategy != null){
-                    System.out.println("ELIMINO DAL SIM.");
-                    strategy.personClean(person);
-                }
+
+                if (hadSymtomps && strategy != null) strategy.personClean(person);
             }
 
             if ((strategy != null) && (person.precautionaryQuarantine))
@@ -201,13 +204,6 @@ public class Simulator {
         resources -= testPrice;
         if (person.canInfect) return true;
         return false;
-    }
-
-    public void Heal(Person person){
-        person.immune = true;
-        person.infected = false;
-        person.canInfect = false;
-        person.symptoms = false;
     }
 
 }
