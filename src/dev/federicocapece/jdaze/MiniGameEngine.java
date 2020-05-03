@@ -4,25 +4,19 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class MiniGameEngine extends Canvas {
-    private Thread runningThread = null;
+public final class Engine {
+    private static Thread runningThread = null;
 
-    private Renderer renderer;
+    public static Renderer renderer;
 
-    public ArrayList<GameObject> gameObjects;
+    protected static ArrayList<GameObject> gameObjects;
 
-    private static MiniGameEngine engine;
+    private static StopWatch stopWatch;
 
-    public static MiniGameEngine getEngine() {
-        if(engine == null) engine = new MiniGameEngine();
-        return engine;
-    }
+    protected static float deltaTime;
 
-    private MiniGameEngine(){
 
-    }
-
-    public void start(){
+    public static void start(){
         //if a Game thread is already running i try to close it, i cannot start a new one otherwise
         if(runningThread != null) {
             runningThread.interrupt();
@@ -37,27 +31,32 @@ public class MiniGameEngine extends Canvas {
         }
 
         //initialize runtime stuff
-        renderer = new Renderer(this);
+        renderer = new Renderer();
+        renderer.init();
         gameObjects = new ArrayList<>();
+
+        stopWatch.start();
 
         //start the GameLoop
         runningThread = new Thread(){
             @Override
             public void run() {
-                while (!this.isInterrupted()){
+                while (!isInterrupted()){
                     update();
                 }
             }
         };
+
         runningThread.start();
     }
 
-    public void update(){
+    public static void update(){
+        stopWatch.start();
         for (GameObject gameObject : gameObjects){
             gameObject.update();
             renderer.update(gameObject);
         }
-
+        deltaTime = stopWatch.getElapsedTime() / 1000.0f;
         renderer.update();
     }
 

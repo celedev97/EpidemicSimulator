@@ -5,10 +5,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
 
-class Renderer {
+class Renderer extends Canvas {
 
     //canvas
-    private Canvas canvas;
     private Graphics canvasGraphics;
 
     //buffered image
@@ -18,13 +17,12 @@ class Renderer {
     //manual pixel writings to buffered image
     private int[] pixels;
 
-    public Renderer(Canvas canvas) {
-
+    public void init(){
         //canvas init
-        canvasGraphics = canvas.getGraphics();
+        canvasGraphics = getGraphics();
 
         //buffer init
-        image = new BufferedImage(canvas.getWidth(),canvas.getHeight(),BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_RGB);
         bufferGraphics = image.createGraphics();;
         this.image = image;
 
