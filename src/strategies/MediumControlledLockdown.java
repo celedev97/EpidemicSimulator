@@ -113,7 +113,6 @@ public class MediumControlledLockdown extends Strategy {
 
     @Override
     public void personClean(Person person) {
-        simulator.Heal(person);
         this.sintomatici--;
         person.setCanMove(true);
     }
