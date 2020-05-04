@@ -17,12 +17,14 @@ public class Person extends GameObject {
 
     @Override
     protected void update() {
-        position.sumUpdate(new Vector(10,10).multiply(Engine.deltaTime));
+        //position.sumUpdate(new Vector(10,10).multiply(Engine.deltaTime));
     }
 
     @Override
-    protected void draw(Graphics graphics, int x, int y) {
+    protected void draw(Graphics graphics, int x, int y, float scale) {
         graphics.setColor(innerPerson.getColor());
-        graphics.fillOval(x-5,y-5,10,10);
+        int scaledSize = (int)(10*scale);
+        int halfScaledSize = scaledSize/2;
+        graphics.fillOval(x-scaledSize,y-scaledSize,scaledSize,scaledSize);
     }
 }
