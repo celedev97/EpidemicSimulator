@@ -21,18 +21,6 @@ public abstract class Strategy {
         encounters = new HashMap<>();
     }
 
-    /**
-     * DEPRECATED METHOD, DO NOT USE!!!
-     *
-     * @param lockDownPercentage
-     */
-    @Deprecated
-    protected void initialLockDown(int lockDownPercentage) {
-        /*for (int i = (int)(simulator.population.size() * (1-(lockDownPercentage/100.0))); i < simulator.population.size(); i++) {
-            simulator.population.get(i).setCanMove(false);
-        }*/
-    }
-
     public abstract void afterExecuteDay();
 
     public void personClean(Person person) {
