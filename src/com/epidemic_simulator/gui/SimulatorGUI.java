@@ -5,6 +5,8 @@ import dev.federicocapece.jdaze.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class SimulatorGUI extends JFrame {
     
@@ -28,13 +30,17 @@ public class SimulatorGUI extends JFrame {
             setVisible(true);
             revalidate();
             repaint();
-    
-            Engine.start();
+
+            Engine.start(100);
 
             //adding Persons to the GameEngine
-            for(com.epidemic_simulator.Person person : simulator.population){
-                new Person(new com.epidemic_simulator.Person());
-            }
+            /*for(com.epidemic_simulator.Person person : simulator.population){
+                new Person(person);
+            }*/
+            new Person(new com.epidemic_simulator.Person()).position.sumUpdate(10,10);
+            new Person(new com.epidemic_simulator.Person()).position.sumUpdate(-10,-10);
+
+            new CameraMove(200);
         }
 
 
