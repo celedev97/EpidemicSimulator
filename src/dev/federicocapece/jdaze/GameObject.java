@@ -5,10 +5,19 @@ import java.awt.*;
 public abstract class GameObject {
     public Collider collider = null;
 
-    public Vector position = Vector.ZERO();
+    public Vector position;
 
     public GameObject() {
-        MiniGameEngine.getEngine();
+        this(Vector.ZERO());
+    }
+
+    public GameObject(float x, float y){
+        this(new Vector(x, y));
+    }
+
+    public GameObject(Vector position){
+        this.position = position;
+        Engine.gameObjects.add(this);
     }
 
     protected void update(){}
