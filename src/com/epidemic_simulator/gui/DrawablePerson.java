@@ -1,5 +1,6 @@
 package com.epidemic_simulator.gui;
 
+import com.epidemic_simulator.Person;
 import dev.federicocapece.jdaze.Engine;
 import dev.federicocapece.jdaze.GameObject;
 import dev.federicocapece.jdaze.Vector;
@@ -9,8 +10,12 @@ import java.awt.*;
 public class DrawablePerson extends GameObject {
     private com.epidemic_simulator.Person innerPerson;
 
-    public DrawablePerson(com.epidemic_simulator.Person innerPerson) {
-        super();
+    public DrawablePerson(Person innerPerson){
+        this(innerPerson,0,0);
+    }
+
+    public DrawablePerson(Person innerPerson, float x, float y) {
+        super(x,y);
         this.innerPerson = innerPerson;
     }
 

@@ -1,5 +1,6 @@
 package com.epidemic_simulator.gui;
 
+import com.epidemic_simulator.Person;
 import com.epidemic_simulator.Simulator;
 import dev.federicocapece.jdaze.*;
 
@@ -32,11 +33,11 @@ public class SimulatorGUI extends JFrame {
             Engine.start(100);
 
             //adding Persons to the GameEngine
-            /*for(com.epidemic_simulator.Person person : simulator.population){
+            /*for(Person person : simulator.population){
                 new Person(person);
             }*/
-            new DrawablePerson(new com.epidemic_simulator.Person()).getPosition().sumUpdate(10,10);
-            new DrawablePerson(new com.epidemic_simulator.Person()).getPosition().sumUpdate(-10,-10);
+            new DrawablePerson(new Person(),10,10);
+            new DrawablePerson(new Person(),-10,-10);
 
             new CameraMove(200);
         }
