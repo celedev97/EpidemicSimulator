@@ -23,7 +23,7 @@ public class CameraMove extends GameObject {//TODO: change with GameScript
         if(Engine.input.isKeyDown(KeyEvent.VK_DOWN))    movement.sumUpdate(Vector.DOWN());
         System.out.println("MOVE: " + movement);
         Engine.camera.move(movement.multiply(speed * Engine.deltaTime));
-        System.out.println("POS: " + Engine.camera.position + "\n");
+        System.out.println("POS: " + Engine.camera.getPosition() + "\n");
     }
 
     @Override

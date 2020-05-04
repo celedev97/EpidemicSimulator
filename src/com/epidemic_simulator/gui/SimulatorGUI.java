@@ -35,8 +35,8 @@ public class SimulatorGUI extends JFrame {
             /*for(com.epidemic_simulator.Person person : simulator.population){
                 new Person(person);
             }*/
-            new DrawablePerson(new com.epidemic_simulator.Person()).position.sumUpdate(10,10);
-            new DrawablePerson(new com.epidemic_simulator.Person()).position.sumUpdate(-10,-10);
+            new DrawablePerson(new com.epidemic_simulator.Person()).getPosition().sumUpdate(10,10);
+            new DrawablePerson(new com.epidemic_simulator.Person()).getPosition().sumUpdate(-10,-10);
 
             new CameraMove(200);
         }
