@@ -11,9 +11,9 @@ public final class Engine {
 
     protected static ArrayList<GameObject> gameObjects;
 
-    private static StopWatch stopWatch;
+    private static StopWatch stopWatch = new StopWatch();
 
-    protected static float deltaTime;
+    public static float deltaTime;
 
 
     public static void start(){
@@ -51,12 +51,16 @@ public final class Engine {
 
     public static void update(){
         stopWatch.start();
+        renderer.clean();
         for (GameObject gameObject : gameObjects){
             gameObject.update();
             renderer.update(gameObject);
         }
-        deltaTime = stopWatch.getElapsedTime() / 1000.0f;
         renderer.update();
+
+        deltaTime = stopWatch.getElapsedTime() / 1000.0f;
+        System.out.println("deltaTime = "+deltaTime);
+        System.out.println("fps = "+ (1/deltaTime));
     }
 
 }
