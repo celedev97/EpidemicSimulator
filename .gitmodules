@@ -1,0 +1,3 @@
+[submodule "JDaze"]
+	path = JDaze
+	url = https://github.com/fc-dev/JDaze
