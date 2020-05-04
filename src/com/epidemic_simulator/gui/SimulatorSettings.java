@@ -313,7 +313,7 @@ public class SimulatorSettings extends JFrame {
                 choosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
 
             //creating simulator GUI and closing configurator
-            new SimulatorGUI(simulator,1000);
+            new SimulatorGUI(simulator);
             this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
