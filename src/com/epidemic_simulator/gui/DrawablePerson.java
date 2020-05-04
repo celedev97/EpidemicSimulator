@@ -6,10 +6,10 @@ import dev.federicocapece.jdaze.Vector;
 
 import java.awt.*;
 
-public class Person extends GameObject {
+public class DrawablePerson extends GameObject {
     private com.epidemic_simulator.Person innerPerson;
 
-    public Person(com.epidemic_simulator.Person innerPerson) {
+    public DrawablePerson(com.epidemic_simulator.Person innerPerson) {
         super();
         this.innerPerson = innerPerson;
     }
