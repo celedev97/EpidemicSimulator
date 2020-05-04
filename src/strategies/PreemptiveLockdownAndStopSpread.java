@@ -16,13 +16,7 @@ public class PreemptiveLockdownAndStopSpread extends Strategy {
     int stopSpreadFrequency;
     public PreemptiveLockdownAndStopSpread(Simulator simulator, int lockDownPercentage, int stopSpreadFrequency) {
         super(simulator);
-        initialLockDown(lockDownPercentage);
         this.stopSpreadFrequency = stopSpreadFrequency;
-    }
-
-    @Override
-    protected void initialLockDown(int lockDownPercentage) {
-        super.initialLockDown(lockDownPercentage);
     }
 
     @Override
