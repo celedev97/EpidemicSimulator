@@ -43,9 +43,9 @@ public class Simulator {
     //constructor
     public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
         //Condizioni necessarie per verificare la validità dei dati inseriti in funzione del requisito.
-        if (resources >= (10 * startingPopulation * testPrice))
+        if (resources >= (10 * (long)startingPopulation * testPrice))
             throw new InvalidSimulationException("Condition not met: R < 10 * P ∗ C");
-        if (resources >= (startingPopulation * diseaseDuration))
+        if (resources >= ((long)startingPopulation * diseaseDuration))
             throw new InvalidSimulationException("Condition not met: R < P ∗ D");
 
         //Dati popolazione/stato
