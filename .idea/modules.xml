@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EpidemicSimulator.iml" filepath="$PROJECT_DIR$/EpidemicSimulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JDaze/JDaze.iml" filepath="$PROJECT_DIR$/JDaze/JDaze.iml" />
     </modules>
   </component>
 </project>
