@@ -29,19 +29,22 @@ class Renderer extends Canvas {
         //direct pixel edit init:
         pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
+        clean();
+    }
+
+    public void update(GameObject gameObject) {
+        //TODO: calcoli basati sulla telecamera
+        gameObject.draw(bufferGraphics,(int)gameObject.position.x,(int)gameObject.position.y);
+    }
+
+    public void update() {
+        canvasGraphics.drawImage(image,0,0,null);
+    }
+
+    public void clean() {
         //turn the image full white
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = 0xffffff;
         }
     }
-
-    public void update(GameObject gameObject) {
-        gameObject.draw(bufferGraphics,0,0);
-    }
-
-    public void update() {
-
-        canvasGraphics.drawImage(image,0,0,null);
-    }
-
 }
