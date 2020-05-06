@@ -30,6 +30,6 @@ public class DrawablePerson extends GameObject {
         graphics.setColor(innerPerson.getColor());
         int scaledSize = (int)(10*scale);
         int halfScaledSize = scaledSize/2;
-        graphics.fillOval(x-scaledSize,y-scaledSize,scaledSize,scaledSize);
+        graphics.fillOval(x-halfScaledSize,y-halfScaledSize,scaledSize,scaledSize);
     }
 }
