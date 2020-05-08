@@ -13,7 +13,8 @@ public class SimulatorGUI extends JFrame {
     
         public SimulatorGUI(Simulator simulator) {
             this.simulator = simulator;
-            //size
+
+            //creating the Frame
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
     
@@ -30,16 +31,34 @@ public class SimulatorGUI extends JFrame {
             revalidate();
             repaint();
 
+            //Starting the graphic engine
             Engine.start(100);
 
-            //adding Persons to the GameEngine
-            /*for(Person person : simulator.population){
-                new Person(person);
-            }*/
-            new DrawablePerson(new Person(),10,10);
-            new DrawablePerson(new Person(),-10,-10);
+            //calculating the best rows and column configuration for the number of Persons that i have
+            int nPersons = 10000;
 
+            int width = Engine.renderer.getWidth();
+            int height = Engine.renderer.getHeight();
+
+            int nx = (int)Math.sqrt(((float)nPersons)*width/height);
+            int ny = (int)Math.sqrt(((float)nPersons)*height/width)+1;
+
+            //creating the persons
+            int created = 0;
+            creationLoop:
+            for (int y = 0; y < ny; y++){
+                for (int x = 0; x < nx; x++){
+                    created++;
+                    new DrawablePerson(new Person(), x*20, y*20);
+                    if (created == nPersons) break creationLoop;
+                }
+            }
+
+            //creating the camera movement script
             new CameraMove(200);
+            //centering the camera
+            CameraMove.setPosition(nx*10, ny*10);
+
         }
 
 

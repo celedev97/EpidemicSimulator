@@ -4,11 +4,14 @@ import com.epidemic_simulator.Person;
 import dev.federicocapece.jdaze.Engine;
 import dev.federicocapece.jdaze.GameObject;
 import dev.federicocapece.jdaze.Vector;
+import dev.federicocapece.jdaze.collider.Collider;
 
 import java.awt.*;
 
 public class DrawablePerson extends GameObject {
-    private com.epidemic_simulator.Person innerPerson;
+    private Person innerPerson;
+
+    private DrawablePerson target = null;
 
     public DrawablePerson(Person innerPerson){
         this(innerPerson,0,0);
@@ -22,7 +25,19 @@ public class DrawablePerson extends GameObject {
 
     @Override
     protected void update() {
+        if(target != null){
+            //(target.position-position).normalized * speed * deltaTime
+            move(target.position.sub(this.position).normalize().multiply(10*Engine.deltaTime));
+        }
         //position.sumUpdate(new Vector(10,10).multiply(Engine.deltaTime));
+    }
+
+    @Override
+    protected void onCollisionEnter(Collider collider) {
+        if(collider.gameObject == target){
+            target = null;
+            extrapolate(collider);
+        }
     }
 
     @Override
