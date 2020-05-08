@@ -22,7 +22,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
     }
 
     @Override
-    public void afterExecuteDay() {
+    public void afterExecuteDay(Simulator.Outcome outcome) {
         int data_check = 0;
         if(sintomatici>=this.limite){
             HashMap<Person,List<Person>>person;
@@ -72,6 +72,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
         }
         return;
     }
+
 
     @Override
     public void personHasSymptoms(Person person){

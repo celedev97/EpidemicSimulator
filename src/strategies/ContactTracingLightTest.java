@@ -54,7 +54,7 @@ public class ContactTracingLightTest extends Strategy {
 
 
     @Override
-    public void afterExecuteDay() {
+    public void afterExecuteDay(Simulator.Outcome outcome) {
         for(Person person : simulator.alivePopulation){
             if(precautionaryQuarantine.get(person))
                 quarantine(person, simulator.getDay());

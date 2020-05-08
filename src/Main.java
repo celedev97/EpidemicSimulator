@@ -1,6 +1,5 @@
 import com.epidemic_simulator.InvalidSimulationException;
 import com.epidemic_simulator.Simulator;
-import strategies.*;
 
 import java.awt.*;
 
@@ -23,9 +22,9 @@ public class Main {
             System.out.println(e.getMessage());
             System.exit(0);
         }
-        Simulator.Outcomes outcome;
+        Simulator.Outcome outcome;
         System.out.println("DAY " + sim.getDay());
-        while ((outcome = sim.executeDay()) == Simulator.Outcomes.NOTHING) {
+        while ((outcome = sim.executeDay()) == Simulator.Outcome.NOTHING) {
             System.out.println();
             System.out.println("DAY " + sim.getDay());
             int black = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLACK).count();

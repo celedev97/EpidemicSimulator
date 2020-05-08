@@ -8,6 +8,6 @@ public interface SimulatorCallBack {
 
     public void registerEncounter(Person person1, Person person2);
 
-    public void afterExecuteDay();
+    public void afterExecuteDay(Simulator.Outcome outcome);
 
 }

@@ -25,7 +25,7 @@ public class MediumControlledLockdown extends Strategy {
     }
 
     @Override
-    public void afterExecuteDay() {
+    public void afterExecuteDay(Simulator.Outcome outcome) {
         ArrayList<Person>persone = new ArrayList<>();
         ArrayList<Person>check1=new ArrayList<>();
         if(sintomatici>=this.limite){

@@ -20,7 +20,7 @@ public class PreemptiveLockdownAndStopSpread extends Strategy {
     }
 
     @Override
-    public void afterExecuteDay() {
+    public void afterExecuteDay(Simulator.Outcome outcome) {
         if(simulator.getDay()%(simulator.diseaseDuration /stopSpreadFrequency) == 0){
             System.out.println("TESTING AND RESTRAINING!");
             //TODO: only test the people you can test with x% of the original budget

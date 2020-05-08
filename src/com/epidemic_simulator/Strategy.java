@@ -21,13 +21,18 @@ public abstract class Strategy implements SimulatorCallBack {
         encounters = new HashMap<>();
     }
 
-    public abstract void afterExecuteDay();
+    @Override
+    public void afterExecuteDay(Simulator.Outcome outcome) {
 
+    }
+
+    @Override
     public void personClean(Person person) {
         //if the person is now clean from the virus i allow him to move again
         person.setCanMove(true);//TODO: MAYBE THIS NEED TO GO INTO THE SIMULATOR
     }
 
+    @Override
     public void personHasSymptoms(Person person) {
         person.setCanMove(false);
     }
@@ -39,6 +44,7 @@ public abstract class Strategy implements SimulatorCallBack {
      * @param person1 The first person
      * @param person2 The second person
      */
+    @Override
     public final void registerEncounter(Person person1, Person person2) {
         //i can't register encounters before the first red is found.
         if(!simulator.firstRed) return;

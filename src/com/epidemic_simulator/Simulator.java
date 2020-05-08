@@ -87,14 +87,14 @@ public class Simulator {
     }
 
     //Possibili finali della simulazione
-    public enum Outcomes {
+    public enum Outcome {
         NOTHING,
         ALL_HEALED,
         ALL_DEAD,
         ECONOMIC_COLLAPSE
     }
 
-    public Outcomes executeDay() {//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
+    public Outcome executeDay() {//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
         day++;//Variabile contatrice dei giorni
 
         //Vd calculation
@@ -173,16 +173,21 @@ public class Simulator {
             //#endregion
         }
 
-        callBacks.forEach(simulatorCallBack -> simulatorCallBack.afterExecuteDay()); //Eseguiamo il giorno sulla strategia
+
         //#region simulation status return
-        if (alivePopulation.size() == 0)
-            return Outcomes.ALL_DEAD; //AlivePopulation==0-->Outcomes=All Dead(Not big surprise)
-        if (alivePopulation.stream().filter(person -> person.infected).count() == 0)
-            return Outcomes.ALL_HEALED; //Se di tutte le persone in vita gli infetti sono 0-->Outcames=All Healed
-        if (resources <= 0)
-            return Outcomes.ECONOMIC_COLLAPSE;//Se le risorse raggiungono lo 0-->Outcomes=Economic Collapse
-        return Outcomes.NOTHING; //Altrimenti ritorniamo NOTHING per continuare l'esecuzione...(il ciclo di continuazione è nel Main)
+        Outcome outcome = Outcome.NOTHING;
+        if (alivePopulation.size() == 0){
+            outcome = Outcome.ALL_DEAD;
+        }else if (alivePopulation.stream().filter(person -> person.infected).count() == 0) {
+            outcome =  Outcome.ALL_HEALED;
+        }else if (resources <= 0) {
+            outcome =  Outcome.ECONOMIC_COLLAPSE;
+        }
         //#endregion
+
+        Outcome finalOutcome = outcome;
+        callBacks.forEach(simulatorCallBack -> simulatorCallBack.afterExecuteDay(finalOutcome));
+        return outcome;
     }
 
     //Funzione per la simulazione dell'incontro tra due persone
