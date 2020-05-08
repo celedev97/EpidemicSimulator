@@ -22,15 +22,15 @@ public class ContactTracingLightTest extends Strategy {
 
     private int testPercentage;
 
-    public HashMap<Person, boolean> precautionaryQuarantine;
-    public HashMap<Person, int> quarantineStartDay;
+    public HashMap<Person, Boolean> precautionaryQuarantine;
+    public HashMap<Person, Integer> quarantineStartDay;
 
     public ContactTracingLightTest(Simulator simulator, int testPercentage) {
         super(simulator);
         this.testPercentage = testPercentage;
 
-        precautionaryQuarantine = new HashMap<Person, boolean>();
-        quarantineStartDay = new HashMap<Person, int>();
+        precautionaryQuarantine = new HashMap<>();
+        quarantineStartDay = new HashMap<>();
 
         for(Person person: simulator.population){
             precautionaryQuarantine.put(person,false);
