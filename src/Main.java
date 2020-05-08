@@ -1,5 +1,6 @@
 import com.epidemic_simulator.InvalidSimulationException;
 import com.epidemic_simulator.Simulator;
+import strategies.*;
 
 import java.awt.*;
 
@@ -12,9 +13,8 @@ public class Main {
         Simulator sim = null;
 
         try {
-            sim = new Simulator(1000, 49999, 5, 3, 20, 20, 20, 50);
+            sim = new Simulator(1000, 49999, 5, 2, 10, 10, 10, 50);
             //Strategy strategy = new PreemptiveLockdownAndStopSpread(sim,25, 2);
-            //Strategy strategy=new BusinessAsUsual(sim);
             //ContactTracingLightTest strategy = new ContactTracingLightTest(sim, 20);
             //MediumControlledLockdown strategy=new MediumControlledLockdown(sim,10);
             //FullControlledLockdownAndStopSpread strategy=new FullControlledLockdownAndStopSpread(sim,20);
