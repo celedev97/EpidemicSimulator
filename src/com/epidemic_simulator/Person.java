@@ -15,13 +15,58 @@ public class Person {
     protected int symptomsDevelopmentDay =-1; //Numero giorni entro cui eventualmente presenterà sintomi,-1 dato che la persona potrebbe non svilupparli.
     protected int deathDay =-1; //Numero giorni entro cui eventualmente la persona in questione morirà,-1 dato che la persona potrebbe anche non morire.
     //#endregion
-    
+
+    //#region GETTERS
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public boolean isInfected() {
+        return infected;
+    }
+
+    public boolean isCanInfect() {
+        return canInfect;
+    }
+
+    public boolean isSymptoms() {
+        return symptoms;
+    }
+
+    public boolean isImmune() {
+        return immune;
+    }
+
+    public int getDaysSinceInfection() {
+        return daysSinceInfection;
+    }
+
+    public int getSymptomsDevelopmentDay() {
+        return symptomsDevelopmentDay;
+    }
+
+    public int getDeathDay() {
+        return deathDay;
+    }
+
+    public boolean isCanMove() {
+        return canMove;
+    }
+
+    //#endregion
+
+    public void setCanMove(boolean canMove) {
+        this.canMove = canMove;
+    }
+
+    public boolean getCanMove() {
+        return canMove;
+    }
+
     //#endregion
 
     protected boolean canMove = true; //All'inizio tutti gli individui possono muoversi
-
-    public boolean precautionaryQuarantine = false; //Indica se una persona è in quarantena post-tampone o meno
-    public int quarantineStartDay;
 
     public Color getColor(){
         //Se l'individuo ha status-alive=false è sicuramente nero/morto.
@@ -61,17 +106,4 @@ public class Person {
         if(!Utils.randomBool(deathRate)) return;
         deathDay = Utils.random(symptomsDevelopmentDay, healDay-1);//Calcolo di un giorno entro cui la persona morirà.
     }
-
-    public void setCanMove(boolean canMove) {
-        this.canMove = canMove;
-    }
-
-    public boolean getCanMove() {
-        return canMove;
-    }
-
-    public boolean getImmune(){
-        return immune;
-    }
-
 }

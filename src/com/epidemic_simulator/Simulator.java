@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Simulator {
 
-    protected Strategy strategy;//Oggetto Strategy per i vari richiami sulle strategie
+    public ArrayList<SimulatorCallBack> callBacks;
 
     //#region Simulation parameters
     private final int startingPopulation;
@@ -86,7 +86,6 @@ public class Simulator {
         return day;
     }
 
-
     //Possibili finali della simulazione
     public enum Outcomes {
         NOTHING,
@@ -146,8 +145,7 @@ public class Simulator {
                 //è giallo ed oggi è il giorno in cui sviluppa sintomi
                 person.symptoms = true;
                 firstRed = true; //flag per il primo sintomatico per iniziare a tracciare gli incontri
-                if (strategy != null) strategy.personHasSymptoms(person);
-                person.precautionaryQuarantine = false;
+                callBacks.forEach(simulatorCallBack -> simulatorCallBack.personHasSymptoms(person));
             }
 
             if (person.symptoms)
@@ -169,15 +167,13 @@ public class Simulator {
                 person.symptoms = false;
                 //person.canMove=true; DISABLED, THE STRATEGY SHOULD MANAGE THIS!!!
 
-                if (hadSymtomps && strategy != null) strategy.personClean(person);
+                if (hadSymtomps)
+                    callBacks.forEach(simulatorCallBack -> simulatorCallBack.personClean(person));
             }
-
-            if ((strategy != null) && (person.precautionaryQuarantine))
-                strategy.quarantine(person, getDay());
             //#endregion
         }
 
-        if (strategy != null) strategy.afterExecuteDay(); //Eseguiamo il giorno sulla strategia
+        callBacks.forEach(simulatorCallBack -> simulatorCallBack.afterExecuteDay()); //Eseguiamo il giorno sulla strategia
         //#region simulation status return
         if (alivePopulation.size() == 0)
             return Outcomes.ALL_DEAD; //AlivePopulation==0-->Outcomes=All Dead(Not big surprise)
@@ -197,7 +193,7 @@ public class Simulator {
         if (person2.canInfect && !person1.infected) {//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
             person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
-        if (strategy != null && firstRed) strategy.registerEncounter(person1, person2);
+        callBacks.forEach(simulatorCallBack -> simulatorCallBack.registerEncounter(person1, person2));
     }
 
     public boolean testVirus(Person person) {

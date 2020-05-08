@@ -9,6 +9,7 @@ import dev.federicocapece.jdaze.collider.Collider;
 import java.awt.*;
 
 public class DrawablePerson extends GameObject {
+    private final Vector startingPosition;
     private Person innerPerson;
 
     private DrawablePerson target = null;
@@ -20,6 +21,7 @@ public class DrawablePerson extends GameObject {
     public DrawablePerson(Person innerPerson, float x, float y) {
         super(x,y);
         this.innerPerson = innerPerson;
+        startingPosition = position;
     }
 
 
@@ -47,4 +49,5 @@ public class DrawablePerson extends GameObject {
         int halfScaledSize = scaledSize/2;
         graphics.fillOval(x-halfScaledSize,y-halfScaledSize,scaledSize,scaledSize);
     }
+
 }
