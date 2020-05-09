@@ -80,6 +80,8 @@ public class Simulator {
 
         //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
         alivePopulation = (ArrayList<Person>) population.clone();
+
+        callBacks = new ArrayList<>();//TODO: decide a decent place for this
     }
 
     public int getDay() {
