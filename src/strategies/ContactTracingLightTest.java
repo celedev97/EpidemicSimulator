@@ -45,7 +45,7 @@ public class ContactTracingLightTest extends Strategy {
     }
 
 
-    public void quarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
+    public void checkQuarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
         if ((!person.isSymptoms()) && ((currentDay - quarantineStartDay.get(person)) > Math.ceil((5 * simulator.diseaseDuration) / 6))) {
             person.setCanMove(true);
             precautionaryQuarantine.put(person, false);
@@ -57,7 +57,7 @@ public class ContactTracingLightTest extends Strategy {
     public void afterExecuteDay(Simulator.Outcome outcome) {
         for (Person person : simulator.alivePopulation) {
             if (precautionaryQuarantine.get(person))
-                quarantine(person, simulator.getDay());
+                checkQuarantine(person, simulator.getDay());
         }
 
         if (simulator.firstRed) {
@@ -70,22 +70,24 @@ public class ContactTracingLightTest extends Strategy {
                     for (int i = 0; i < ((encounters.size() * testPercentage) / 100); i++) {     //una percentuale fa il tampone
                         if ((encounters.get(i).getColor() != Color.RED) && (encounters.get(i).getColor() != Color.BLUE) && (!precautionaryQuarantine.get(encounters.get(i)))) {
                             if (simulator.testVirus(encounters.get(i))) {
-                                precautionaryQuarantine.put(encounters.get(i), true);
-                                quarantineStartDay.put(encounters.get(i), simulator.getDay());
-                                encounters.get(i).setCanMove(false);
+                                quarantine(encounters, i);
                             }
                         }
                     }
                     for (int i = (testPercentage * 100 / encounters.size()); i < encounters.size(); i++) {  //il resto viene messo in quarantena per tot giorni
                         if ((encounters.get(i).getColor() != Color.RED) && (encounters.get(i).getColor() != Color.BLUE) && (!precautionaryQuarantine.get(encounters.get(i)))) {
-                            precautionaryQuarantine.put(encounters.get(i), true);
-                            quarantineStartDay.put(encounters.get(i), simulator.getDay());
-                            encounters.get(i).setCanMove(false);
+                            quarantine(encounters, i);
                         }
                     }
                 }
             }
         }
+    }
+
+    public void quarantine(List<Person> encounters, int i) {
+        precautionaryQuarantine.put(encounters.get(i), true);
+        quarantineStartDay.put(encounters.get(i), simulator.getDay());
+        encounters.get(i).setCanMove(false);
     }
 
 }
