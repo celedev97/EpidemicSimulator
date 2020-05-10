@@ -7,10 +7,12 @@ import dev.federicocapece.jdaze.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class SimulatorGUI extends JFrame {
+public class SimulatorGUI extends JDialog {
     JLabel dayLabel;
 
-    public SimulatorGUI(Simulator simulator){
+    public SimulatorGUI(Frame parent, Simulator simulator){
+        super(parent);
+
         //creating the Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
