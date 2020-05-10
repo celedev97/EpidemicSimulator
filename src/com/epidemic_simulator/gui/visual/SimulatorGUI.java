@@ -1,18 +1,16 @@
-package com.epidemic_simulator.gui;
+package com.epidemic_simulator.gui.visual;
 
-import com.epidemic_simulator.Person;
 import com.epidemic_simulator.Simulator;
-import com.epidemic_simulator.SimulatorCallBack;
+import com.epidemic_simulator.gui.SimulatorSettings;
 import dev.federicocapece.jdaze.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 
 public class SimulatorGUI extends JFrame {
     JLabel dayLabel;
 
-    public SimulatorGUI(Simulator simulator) throws NoSuchMethodException {
+    public SimulatorGUI(Simulator simulator){
         //creating the Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
@@ -48,7 +46,7 @@ public class SimulatorGUI extends JFrame {
     public static void main(String[] args) {
         //fake main that just start a Setting window and call the start button
         SimulatorSettings settings = new SimulatorSettings();
-        settings.startButtonListener.actionPerformed(null);
+        settings.startGUIButtonListener.actionPerformed(null);
     }
 
     public void updateUI(Simulator simulator) {

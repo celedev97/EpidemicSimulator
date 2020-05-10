@@ -1,4 +1,4 @@
-package com.epidemic_simulator.gui;
+package com.epidemic_simulator.gui.visual;
 
 import com.epidemic_simulator.*;
 import dev.federicocapece.jdaze.*;

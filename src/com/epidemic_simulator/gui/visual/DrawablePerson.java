@@ -1,4 +1,4 @@
-package com.epidemic_simulator.gui;
+package com.epidemic_simulator.gui.visual;
 
 import com.epidemic_simulator.Person;
 import dev.federicocapece.jdaze.Engine;

@@ -2,6 +2,7 @@ package com.epidemic_simulator.gui;
 
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Utils;
+import com.epidemic_simulator.gui.visual.SimulatorGUI;
 import jdk.jshell.spi.ExecutionControl;
 
 
@@ -255,8 +256,13 @@ public class SimulatorSettings extends JFrame {
 
         //#endregion
 
-        JButton startButton = new JButton("Start Simulation");
-        contentPane.add(startButton, BorderLayout.SOUTH);
+        JPanel southPanel = new JPanel(new GridLayout(1,2));
+        JButton startTextButton = new JButton("Start Textual Simulation (Quicker)");
+        JButton startGUIButton = new JButton("Start Visual Simulation (Slower)");
+        southPanel.add(startTextButton);
+        southPanel.add(startGUIButton);
+
+        contentPane.add(southPanel, BorderLayout.SOUTH);
 
         //#endregion
 
@@ -275,7 +281,8 @@ public class SimulatorSettings extends JFrame {
         strategyCombobox.addActionListener(strategyComboboxListener);
 
         //Start Button binding
-        startButton.addActionListener(startButtonListener);
+        startGUIButton.addActionListener(startGUIButtonListener);
+        startTextButton.addActionListener(startTextButtonListener);
 
         //#endregion
 
@@ -297,7 +304,25 @@ public class SimulatorSettings extends JFrame {
 
     //#region event listeners
 
-    public final ActionListener startButtonListener = e -> {
+    public final ActionListener startTextButtonListener = e -> {
+        Simulator simulator;
+        if((simulator = createSimulator()) == null) return;
+
+        //creating simulator GUI and closing configurator
+        new SimulatorText(this, simulator);
+        //this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+    };
+
+    public final ActionListener startGUIButtonListener = e -> {
+        Simulator simulator;
+        if((simulator = createSimulator()) == null) return;
+
+        //creating simulator GUI and closing configurator
+        new SimulatorGUI(simulator);
+        this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+    };
+
+    private Simulator createSimulator() {
         try {
             //creating simulator
             Simulator simulator = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
@@ -312,14 +337,13 @@ public class SimulatorSettings extends JFrame {
             if(choosenStrategy != null)
                 choosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
 
-            //creating simulator GUI and closing configurator
-            new SimulatorGUI(simulator);
-            this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+            return simulator;
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
-    };
+        return null;
+    }
 
     private ActionListener strategyComboboxListener = e -> {
         try {
