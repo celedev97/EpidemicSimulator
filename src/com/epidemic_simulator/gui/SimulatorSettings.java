@@ -1,59 +1,43 @@
 package com.epidemic_simulator.gui;
 
+//INTERNAL IMPORTS
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Utils;
 import com.epidemic_simulator.gui.textual.SimulatorText;
 import com.epidemic_simulator.gui.visual.SimulatorGUI;
-import jdk.jshell.spi.ExecutionControl;
 
-
-//GUI IMPORTS
+//AWT/SWING
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 
-//TODO: I DON'T EVEN REMEMBER WHAT I USE THOSE FOR
+//JSON/FILE
+import org.json.*;
 import java.io.*;
+
+//REFLECTION (FOR STRATEGIES)
 import java.lang.reflect.*;
-import java.net.*;
+
+//LIST UTILS
 import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//XML IMPORTS
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
 
 public class SimulatorSettings extends JFrame {
     private final int PARAMETERS_PER_ROW = 4;
 
-    private static final String CONF_EXTENSION = "simconf";
-    private static final String DEFAULT_CONF_FILE = "./configuration."+CONF_EXTENSION;
-
-    //constants for XML
-    private static final String XML_ROOT                = "simulator";
-
-    private static final String XML_STATE               = "state";
-    private static final String XML_POPULATION          = "population";
-    private static final String XML_RESOURCES           = "resources";
-    private static final String XML_TEST_PRICE          = "test_price";
-    private static final String XML_ENCOUNTERS_PER_DAY  = "encounters_per_day";
-
-    private static final String XML_DISEASE             = "disease";
-    private static final String XML_INFECTIVITY         = "infectivity";
-    private static final String XML_SYMPTOMATICITY      = "symptomaticity";
-    private static final String XML_LETHALITY           = "lethality";
-    private static final String XML_DURATION            = "duration";
-
+    private static final String CONF_EXTENSION = ".simconf.json";
+    private static final String DEFAULT_CONF_FILE = "./configuration"+CONF_EXTENSION;
 
     //#region class fields
 
     //#region state
+    private JPanel stateDataPanel;
+
     private JSpinner population;
     private JSpinner resources;
     private JSpinner testPrice;
@@ -61,6 +45,8 @@ public class SimulatorSettings extends JFrame {
     //#endregion
 
     //#region disease
+    private JPanel diseaseDataPanel;
+
     private JSpinner infectivity;
     private JSpinner symptomaticity;
     private JSpinner lethality;
@@ -68,10 +54,10 @@ public class SimulatorSettings extends JFrame {
     //#endregion
 
     //#region strategy
-    private JComboBox strategyCombobox;
+    private JComboBox<SelectableStrategy> strategyComboBox;
 
     private JPanel[] strategyParametersColumns;
-    private ArrayList<JComponent> strategyParameters;
+    private ArrayList<JSpinner> strategyParameters;
 
     private JPanel strategyPanel;
     //#endregion
@@ -150,7 +136,8 @@ public class SimulatorSettings extends JFrame {
         //#region State Data Panel
         GridLayout stateDataGridLayout = new GridLayout(2,4);
         stateDataGridLayout.setHgap(10);
-        JPanel stateDataPanel = new JPanel(stateDataGridLayout);
+        stateDataPanel = new JPanel(stateDataGridLayout);
+        stateDataPanel.setName("state");
         stateDataPanel.setBorder(BorderFactory.createTitledBorder("State data"));
         northPanel.add(stateDataPanel);
 
@@ -161,21 +148,29 @@ public class SimulatorSettings extends JFrame {
         stateDataPanel.add(new JLabel("Encounters per day (V):"));
 
         //adding spinners
-        population          = new JSpinner();
-        resources           = new JSpinner();
-        testPrice           = new JSpinner();
-        encountersPerDay    = new JSpinner();
-
+        population = new JSpinner();
+        population.setName("population");
         stateDataPanel.add(population);
+
+        resources = new JSpinner();
+        resources.setName("resources");
         stateDataPanel.add(resources);
+
+        testPrice = new JSpinner();
+        testPrice.setName("testPrice");
         stateDataPanel.add(testPrice);
+
+        encountersPerDay = new JSpinner();
+        encountersPerDay.setName("encountersPerDay");
         stateDataPanel.add(encountersPerDay);
+
         //#endregion
 
         //#region Disease Data Panel
         GridLayout diseaseDataGridLayout = new GridLayout(2,4);
         diseaseDataGridLayout.setHgap(10);
-        JPanel diseaseDataPanel = new JPanel(diseaseDataGridLayout);
+        diseaseDataPanel = new JPanel(diseaseDataGridLayout);
+        diseaseDataPanel.setName("disease");
         diseaseDataPanel.setBorder(BorderFactory.createTitledBorder("Disease data"));
         northPanel.add(diseaseDataPanel);
 
@@ -197,14 +192,20 @@ public class SimulatorSettings extends JFrame {
         diseaseDataPanel.add(durationLabel);
 
         //adding spinners
-        infectivity     = new JSpinner();
-        symptomaticity  = new JSpinner();
-        lethality       = new JSpinner();
-        duration        = new JSpinner();
-
+        infectivity = new JSpinner();
+        infectivity.setName("infectivity");
         diseaseDataPanel.add(infectivity);
+
+        symptomaticity = new JSpinner();
+        symptomaticity.setName("symptomaticity");
         diseaseDataPanel.add(symptomaticity);
+
+        lethality = new JSpinner();
+        lethality.setName("lethality");
         diseaseDataPanel.add(lethality);
+
+        duration = new JSpinner();
+        duration.setName("duration");
         diseaseDataPanel.add(duration);
         //#endregion
 
@@ -213,17 +214,17 @@ public class SimulatorSettings extends JFrame {
         northPanel.add(strategySelectorPanel);
 
         strategySelectorPanel.add(new JLabel("Strategy:  "));
-        strategyCombobox = new JComboBox();
-        strategySelectorPanel.add(strategyCombobox);
+        strategyComboBox = new JComboBox<>();
+        strategySelectorPanel.add(strategyComboBox);
 
         //#region strategies combobox population
         strategyParameters = new ArrayList<>();
 
         String packageName = "strategies";
-        strategyCombobox.addItem(new SelectableStrategy(null));
+        strategyComboBox.addItem(new SelectableStrategy(null));
         try{
             for(Class clas : Utils.getClassesForPackage(packageName)){
-                strategyCombobox.addItem(new SelectableStrategy(clas));
+                strategyComboBox.addItem(new SelectableStrategy(clas));
             }
         }catch (Exception ex){
             ex.printStackTrace();
@@ -235,14 +236,16 @@ public class SimulatorSettings extends JFrame {
 
         //#endregion
 
+
+
         //#region Strategy Parameters Panel
-        GridLayout strategyDataGridLayout = new GridLayout(2,4);
-        strategyDataGridLayout.setHgap(10);//TODO: FIND OUT WHY THIS IS NOT WORKING!!!
+        GridLayout strategyDataGridLayout = new GridLayout(1,PARAMETERS_PER_ROW);
+        strategyDataGridLayout.setHgap(10);
         strategyPanel = new JPanel(strategyDataGridLayout);
+        strategyPanel.setName("strategy");
         northPanel.add(strategyPanel);
 
         //#region strategy dynamic GUI preparation
-        strategyPanel.setLayout(new GridLayout(1,PARAMETERS_PER_ROW));
         strategyParametersColumns = new JPanel[PARAMETERS_PER_ROW];
         for (int x = 0; x < PARAMETERS_PER_ROW; x++) {
             strategyParametersColumns[x] = new JPanel();
@@ -279,7 +282,7 @@ public class SimulatorSettings extends JFrame {
         quitButton.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 
         //Strategy selector binding
-        strategyCombobox.addActionListener(strategyComboboxListener);
+        strategyComboBox.addActionListener(strategyComboboxListener);
 
         //Start Button binding
         startGUIButton.addActionListener(startGUIButtonListener);
@@ -292,7 +295,17 @@ public class SimulatorSettings extends JFrame {
 
         //file load and save
         fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileNameExtensionFilter("Simulator config", CONF_EXTENSION));
+        fileChooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.isDirectory() || f.getPath().endsWith(CONF_EXTENSION);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Simulator config file (*"+CONF_EXTENSION+")";
+            }
+        });
 
         //setting default parameters
         setDefaultParameters();
@@ -302,9 +315,7 @@ public class SimulatorSettings extends JFrame {
 
     }
 
-
-    //#region event listeners
-
+    //#region Start
     public final ActionListener startTextButtonListener = e -> {
         Simulator simulator;
         if((simulator = createSimulator()) == null) return;
@@ -319,8 +330,7 @@ public class SimulatorSettings extends JFrame {
         if((simulator = createSimulator()) == null) return;
 
         //creating simulator GUI and closing configurator
-        new SimulatorGUI(simulator);
-        this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
+        new SimulatorGUI(this, simulator);
     };
 
     private Simulator createSimulator() {
@@ -329,12 +339,13 @@ public class SimulatorSettings extends JFrame {
             Simulator simulator = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
 
             //fetching parameters from JSpinners
-            List<Object> parametersList  = strategyParameters.stream().map(par -> {return ((JSpinner)par).getValue();}).collect(Collectors.toList());
+            List<Object> parametersList  = strategyParameters.stream().map(parameter -> parameter.getValue()).collect(Collectors.toList());
+
             //adding the simulator as the first parameter
             parametersList.add(0,simulator);
 
             //creating strategy
-            Class choosenStrategy = ((SelectableStrategy)strategyCombobox.getSelectedItem()).getValue();
+            Class choosenStrategy = ((SelectableStrategy) strategyComboBox.getSelectedItem()).getValue();
             if(choosenStrategy != null)
                 choosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
 
@@ -346,99 +357,9 @@ public class SimulatorSettings extends JFrame {
         return null;
     }
 
-    private ActionListener strategyComboboxListener = e -> {
-        try {
-            //clearing old parameters
-            strategyParameters.clear();
-            for(JPanel panel : strategyParametersColumns){
-                panel.removeAll();
-            }
-
-            strategyPanel.setBorder(null);
-
-            Class strategyClass = ((SelectableStrategy)((JComboBox)e.getSource()).getSelectedItem()).getValue();
-            if(strategyClass != null){
-                strategyPanel.setBorder(BorderFactory.createTitledBorder("Strategy parameters"));
-                Parameter[] parameters = strategyClass.getDeclaredConstructors()[0].getParameters();
-                //populating the parameters columns with the data from parameters
-                //(SKIPPING THE FIRST PARAMETER, THAT'S THE SIMULATOR)
-                for (int i = 1; i < parameters.length; i++) {
-                    //getting parameter data
-                    Class type = parameters[i].getType();
-                    String parameterName = Utils.javaNameToUserString(parameters[i].getName());
-
-                    //calculating y and x for this parameter
-                    int x = (i-1) % PARAMETERS_PER_ROW;
-
-                    //creating the label
-                    JLabel label = new JLabel(parameterName);
-                    label.setAlignmentX(Component.LEFT_ALIGNMENT);
-                    strategyParametersColumns[x].add(label);
-
-                    //generating the component
-                    JComponent generatedComponent = null;
-                    if(type == int.class){
-                        generatedComponent = new JSpinner();
-                        generatedComponent.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        strategyParametersColumns[x].add(generatedComponent);
-                    }else{
-                        throw new ExecutionControl.NotImplementedException("PARAMETER TYPE: "+type.toString()+" NOT SUPPORTED!!!");
-                    }
-                    strategyParameters.add(generatedComponent);
-                }
-            }
-
-        } catch (ExecutionControl.NotImplementedException ex) {
-            ex.printStackTrace();
-            System.out.println(ex.getMessage());
-        }
-
-        //force redraw of the strategy panel
-        strategyPanel.revalidate();
-        strategyPanel.repaint();
-    };
-
-    private ActionListener openButtonListener = e -> {
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            readConfig(fileChooser.getSelectedFile());
-        }
-    };
-
-    private ActionListener saveButtonListener = e -> {
-        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            writeConfig(fileChooser.getSelectedFile());
-        }
-    };
-
-    private WindowAdapter windowAdapter = new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent e) {
-            writeConfig(new File(DEFAULT_CONF_FILE));
-            ((JFrame)e.getSource()).dispose();
-        }
-    };
     //#endregion
 
-    public void forceJSpinnerCommit() {
-        forceJSpinnerCommit(this);
-    }
-
-    public void forceJSpinnerCommit(Container container) {
-        for (Component component : container.getComponents()) {
-            if(component instanceof JSpinner) {
-                try {
-                    ((JSpinner) component).commitEdit();
-                } catch (ParseException e) {
-                    //TODO: investigate on this!!!
-                    e.printStackTrace();
-                }
-            }else if (component instanceof Container){
-                forceJSpinnerCommit((Container) component);
-            }
-        }
-    }
-
-
+    //#region Configuration LOAD/SAVE/RELOAD
     private void setDefaultParameters() {
         population.setValue(1000);
         resources.setValue(35000);
@@ -449,134 +370,216 @@ public class SimulatorSettings extends JFrame {
         symptomaticity.setValue(50);
         lethality.setValue(50);
         duration.setValue(40);
+
+        strategyComboBox.setSelectedIndex(0);
     }
+
+    private ActionListener openButtonListener = e -> {
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            readConfig(fileChooser.getSelectedFile());
+        }
+    };
+
+    private ActionListener saveButtonListener = e -> {
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            writeFullConfig(fileChooser.getSelectedFile());
+        }
+    };
 
     private void readConfig(File file)  {
         if(!file.exists()) return;
+        System.out.println("READING: "+ file.getPath());
 
         //forcing all the JSpinner to validate any possible input not yet validated (otherwise they can't be written into)
-        forceJSpinnerCommit();
+        forceJSpinnerCommit(this);
 
-        //saving current parameter to some vars so i can restore them later if something goes wrong
-        int populationVal       = (int) population.getValue();
-        int resourcesVal        = (int) resources.getValue();
-        int testPriceVal        = (int) testPrice.getValue();
-        int encountersPerDayVal = (int) encountersPerDay.getValue();
+        try (FileInputStream fileReader = new FileInputStream(file)) {
+            //reading the file
+            byte[] data = new byte[(int) file.length()];
+            fileReader.read(data);
+            fileReader.close();
 
-        int infectivityVal      = (int) infectivity.getValue();
-        int symptomaticityVal   = (int) symptomaticity.getValue();
-        int lethalityVal        = (int) lethality.getValue();
-        int durationVal         = (int) duration.getValue();
+            String jsonString = new String(data,"UTF-8");
 
-        try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = builder.parse(file);
+            //getting the root object
+            JSONObject root = new JSONObject(jsonString);
 
-            //state data
-            population.setValue(Integer.parseInt(doc.getElementsByTagName(XML_POPULATION).item(0).getTextContent()));
-            resources.setValue(Integer.parseInt(doc.getElementsByTagName(XML_RESOURCES).item(0).getTextContent()));
-            testPrice.setValue(Integer.parseInt(doc.getElementsByTagName(XML_TEST_PRICE).item(0).getTextContent()));
-            encountersPerDay.setValue(Integer.parseInt(doc.getElementsByTagName(XML_ENCOUNTERS_PER_DAY).item(0).getTextContent()));
+            //deserialize state data
+            if(root.has(stateDataPanel.getName())){
+                deserializeSpinners(stateDataPanel, root.getJSONObject(stateDataPanel.getName()));
+            }
 
-            //disease data
-            infectivity.setValue(Integer.parseInt(doc.getElementsByTagName(XML_INFECTIVITY).item(0).getTextContent()));
-            symptomaticity.setValue(Integer.parseInt(doc.getElementsByTagName(XML_SYMPTOMATICITY).item(0).getTextContent()));
-            lethality.setValue(Integer.parseInt(doc.getElementsByTagName(XML_LETHALITY).item(0).getTextContent()));
-            duration.setValue(Integer.parseInt(doc.getElementsByTagName(XML_DURATION).item(0).getTextContent()));
+            //deserialize disease data
+            if(root.has(diseaseDataPanel.getName())){
+                deserializeSpinners(diseaseDataPanel, root.getJSONObject(diseaseDataPanel.getName()));
+            }
 
-            /*((JSpinner.DefaultEditor) duration.getEditor()).getTextField().setForeground(Color.red);
-            duration.revalidate();
-            duration.repaint();*/
+            //deserialize stategy data
+            if(root.has(strategyPanel.getName())){
+                JSONObject strategyData = root.getJSONObject(strategyPanel.getName());
+                String selectedClass = strategyData.getString("selected");
+
+                //looking for the strategy with that name
+                int i;
+                for(i = 0; i<strategyComboBox.getItemCount(); i++){
+                    Class classValue = strategyComboBox.getItemAt(i).getValue();
+                    if((classValue == null && selectedClass.equals("null")) || (classValue != null && selectedClass.equals(classValue.toString())) ){
+                        strategyComboBox.setSelectedIndex(i);
+                        strategyComboboxListener.actionPerformed(null);
+                        break;
+                    }
+                }
+
+                //if i found a strategy then i can load the spinners
+                if(i != strategyComboBox.getItemCount())
+                    deserializeSpinners(strategyPanel, strategyData);
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-
-            population.setValue(populationVal);
-            resources.setValue(resourcesVal);
-            testPrice.setValue(testPriceVal);
-            encountersPerDay.setValue(encountersPerDayVal);
-
-            infectivity.setValue(infectivityVal);
-            symptomaticity.setValue(symptomaticityVal);
-            lethality.setValue(lethalityVal);
-            duration.setValue(durationVal);
-
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error!", JOptionPane.ERROR);
+            setDefaultParameters();
         }
+
     }
 
-    private void writeConfig(File file) {
-        try {
-            //i swear this isn't confused at all, good fucking job java, that's how to make thing simple. TODO: remove this comment, not now, i love it, but... you'll have to sooner or later
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    private void writeFullConfig(File file){
+        //reading strategy combobox
+        Class strategyClass = ((SelectableStrategy)strategyComboBox.getSelectedItem()).getValue();
+        JSONObject strategyJSON = serializeSpinners(strategyPanel);
+        strategyJSON.getJSONObject(strategyPanel.getName()).put("selected", strategyClass != null ? strategyClass.toString() : "null");
 
-            // root element
-            Element simulator = document.createElement(XML_ROOT);
-            document.appendChild(simulator);
+        writeConfig(file, serializeSpinners(stateDataPanel), serializeSpinners(diseaseDataPanel), strategyJSON);
+    }
 
-            //#region State data
-            Element state = document.createElement(XML_STATE);
-            simulator.appendChild(state);
+    private void writeConfig(File file, JSONObject... serializableInfo) {
+        System.out.println("WRITING: "+ file.getPath());
+        if (!file.getName().endsWith(CONF_EXTENSION))
+            file = new File(file.getAbsolutePath()+CONF_EXTENSION);
 
-            //population
-            Element population = document.createElement(XML_POPULATION);
-            population.appendChild(document.createTextNode(this.population.getValue().toString()));
-            state.appendChild(population);
+        //forcing all the JSpinner to validate any possible input not yet validated (otherwise they can't be written into)
+        forceJSpinnerCommit(this);
 
-            //resources
-            Element resources = document.createElement(XML_RESOURCES);
-            resources.appendChild(document.createTextNode(this.resources.getValue().toString()));
-            state.appendChild(resources);
+        //creating root object
+        JSONObject root = new JSONObject();
 
-            //testPrice
-            Element testPrice = document.createElement(XML_TEST_PRICE);
-            testPrice.appendChild(document.createTextNode(this.testPrice.getValue().toString()));
-            state.appendChild(testPrice);
+        for (JSONObject setting : serializableInfo){
+            setting.keySet().forEach(s -> root.put(s,setting.get(s)));
+        }
 
-            //encountersPerDay
-            Element encountersPerDay = document.createElement(XML_ENCOUNTERS_PER_DAY);
-            encountersPerDay.appendChild(document.createTextNode(this.encountersPerDay.getValue().toString()));
-            state.appendChild(encountersPerDay);
-
-            //#endregion
-
-            //#region Disease data
-            Element disease = document.createElement(XML_DISEASE);
-            simulator.appendChild(disease);
-
-            //infectivity
-            Element infectivity = document.createElement(XML_INFECTIVITY);
-            infectivity.appendChild(document.createTextNode(this.infectivity.getValue().toString()));
-            disease.appendChild(infectivity);
-
-            //infectivity
-            Element symptomaticity = document.createElement(XML_SYMPTOMATICITY);
-            symptomaticity.appendChild(document.createTextNode(this.symptomaticity.getValue().toString()));
-            disease.appendChild(symptomaticity);
-
-            //infectivity
-            Element lethality = document.createElement(XML_LETHALITY);
-            lethality.appendChild(document.createTextNode(this.lethality.getValue().toString()));
-            disease.appendChild(lethality);
-
-            //duration
-            Element duration = document.createElement(XML_DURATION);
-            duration.appendChild(document.createTextNode(this.duration.getValue().toString()));
-            disease.appendChild(duration);
-            //#endregion
-
-            // create the xml file
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.transform(new DOMSource(document), new StreamResult(file));
-
-            System.out.println("Done creating XML File ("+file.getName()+")");
-        } catch (Exception e) {
-            //TODO: message the user about the error
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(root.toString(4));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    private JSONObject serializeSpinners(JPanel spinnerPanel){
+        //get all the spinners in this
+        JSONObject panel = new JSONObject();
+        JSONObject values = new JSONObject();
+        panel.put(spinnerPanel.getName(), values);
+
+        getJSpinners(spinnerPanel).forEach(jSpinner -> values.put(jSpinner.getName(), jSpinner.getValue()));
+
+        return panel;
+    }
+
+    private void deserializeSpinners(JPanel dataPanel, JSONObject jsonObject) {
+        getJSpinners(dataPanel).forEach(jSpinner -> {
+            System.out.println("SETTING: "+jSpinner.getName()+" TO "+jsonObject.getInt(jSpinner.getName()));
+            jSpinner.setValue(jsonObject.getInt(jSpinner.getName()));
+        });
+    }
+
+    //#endregion
+
+    private ActionListener strategyComboboxListener = e -> {
+        //#region clearing old strategy
+        strategyParameters.clear();
+        for(JPanel panel : strategyParametersColumns){
+            panel.removeAll();
+        }
+
+        strategyPanel.setBorder(null);
+        //#endregion
+
+        //#region generating new strategy
+        Class strategyClass = ((SelectableStrategy)strategyComboBox.getSelectedItem()).getValue();
+        if(strategyClass != null){
+            strategyPanel.setBorder(BorderFactory.createTitledBorder("Strategy parameters"));
+            Parameter[] parameters = strategyClass.getDeclaredConstructors()[0].getParameters();
+            //populating the parameters columns with the data from parameters
+            //(SKIPPING THE FIRST PARAMETER, THAT'S THE SIMULATOR)
+            for (int i = 1; i < parameters.length; i++) {
+                //getting parameter data
+                Class type = parameters[i].getType();
+                String parameterName = Utils.javaNameToUserString(parameters[i].getName());
+
+                //calculating y and x for this parameter
+                int x = (i-1) % PARAMETERS_PER_ROW;
+
+                //creating the label
+                JLabel label = new JLabel(parameterName);
+                label.setAlignmentX(Component.LEFT_ALIGNMENT);
+                strategyParametersColumns[x].add(label);
+
+                //generating the component
+                JSpinner generatedComponent = null;
+                generatedComponent = new JSpinner();
+                generatedComponent.setName(parameters[i].getName());
+                generatedComponent.setAlignmentX(Component.LEFT_ALIGNMENT);
+                strategyParametersColumns[x].add(generatedComponent);
+
+                //adding the component to the list of parameters and to the list of json to serialize
+                strategyParameters.add(generatedComponent);
+            }
+        }
+        //#endregion
+
+        //force redraw of the strategy panel
+        strategyPanel.revalidate();
+        strategyPanel.repaint();
+    };
+
+    private WindowAdapter windowAdapter = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            writeFullConfig(new File(DEFAULT_CONF_FILE));
+            ((JFrame)e.getSource()).dispose();
+        }
+    };
+
+    //#region Utils
+
+    private static List<JSpinner> getJSpinners(final Container c) {
+        Component[] comps = c.getComponents();
+        List<JSpinner> compList = new ArrayList<>();
+        for (Component comp : comps) {
+            if(comp instanceof JSpinner){
+                compList.add((JSpinner)comp);
+            }else if (comp instanceof Container){
+                compList.addAll(getJSpinners((Container) comp));
+            }
+        }
+        return compList;
+    }
+
+    public void forceJSpinnerCommit(Container container) {
+        getJSpinners(container).forEach(jSpinner -> {
+            try {
+                jSpinner.commitEdit();
+            } catch (ParseException e) {
+                //TODO: investigate on this!!!
+                e.printStackTrace();
+            }
+        });
+    }
+
+    //#endregion
+
+    public static void main(String[] args) {
         new SimulatorSettings();
     }
 
