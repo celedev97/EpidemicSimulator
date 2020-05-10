@@ -43,10 +43,11 @@ public class Simulator {
     //constructor
     public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
         //Condizioni necessarie per verificare la validità dei dati inseriti in funzione del requisito.
-        if (resources >= (10 * (long)startingPopulation * testPrice))
+        if (resources >= (10 * (long) startingPopulation * testPrice))
             throw new InvalidSimulationException("Condition not met: R < 10 * P ∗ C");
-        if (resources >= ((long)startingPopulation * diseaseDuration))
+        if (resources >= ((long) startingPopulation * diseaseDuration))
             throw new InvalidSimulationException("Condition not met: R < P ∗ D");
+        //TODO: inserire check per i Rate (max 100)
 
         //Dati popolazione/stato
         this.startingPopulation = startingPopulation; //Numero popolazione iniziale/al lancio del simulatore
@@ -178,12 +179,12 @@ public class Simulator {
 
         //#region simulation status return
         Outcome outcome = Outcome.NOTHING;
-        if (alivePopulation.size() == 0){
+        if (alivePopulation.size() == 0) {
             outcome = Outcome.ALL_DEAD;
-        }else if (alivePopulation.stream().filter(person -> person.infected).count() == 0) {
-            outcome =  Outcome.ALL_HEALED;
-        }else if (resources <= 0) {
-            outcome =  Outcome.ECONOMIC_COLLAPSE;
+        } else if (alivePopulation.stream().filter(person -> person.infected).count() == 0) {
+            outcome = Outcome.ALL_HEALED;
+        } else if (resources <= 0) {
+            outcome = Outcome.ECONOMIC_COLLAPSE;
         }
         //#endregion
 

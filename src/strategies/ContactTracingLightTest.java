@@ -32,16 +32,16 @@ public class ContactTracingLightTest extends Strategy {
         precautionaryQuarantine = new HashMap<>();
         quarantineStartDay = new HashMap<>();
 
-        for(Person person: simulator.population){
-            precautionaryQuarantine.put(person,false);
-            quarantineStartDay.put(person,0);
+        for (Person person : simulator.population) {
+            precautionaryQuarantine.put(person, false);
+            quarantineStartDay.put(person, 0);
         }
     }
 
 
     @Override
     public void personHasSymptoms(Person person) {
-        precautionaryQuarantine.put(person,false);//OLD: person.precautionaryQuarantine = false;
+        precautionaryQuarantine.put(person, false);//OLD: person.precautionaryQuarantine = false;
     }
 
 
@@ -55,8 +55,8 @@ public class ContactTracingLightTest extends Strategy {
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
-        for(Person person : simulator.alivePopulation){
-            if(precautionaryQuarantine.get(person))
+        for (Person person : simulator.alivePopulation) {
+            if (precautionaryQuarantine.get(person))
                 quarantine(person, simulator.getDay());
         }
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.lang.Math;
 
 public abstract class Strategy implements SimulatorCallBack {
     protected Simulator simulator;
@@ -47,7 +46,7 @@ public abstract class Strategy implements SimulatorCallBack {
     @Override
     public final void registerEncounter(Person person1, Person person2) {
         //i can't register encounters before the first red is found.
-        if(!simulator.firstRed) return;
+        if (!simulator.firstRed) return;
 
         int day = simulator.day;
 

@@ -1,5 +1,6 @@
 import com.epidemic_simulator.InvalidSimulationException;
 import com.epidemic_simulator.Simulator;
+import strategies.*;
 
 import java.awt.*;
 
