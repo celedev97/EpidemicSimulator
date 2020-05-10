@@ -2,6 +2,7 @@ package com.epidemic_simulator.gui;
 
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Utils;
+import com.epidemic_simulator.gui.textual.SimulatorText;
 import com.epidemic_simulator.gui.visual.SimulatorGUI;
 import jdk.jshell.spi.ExecutionControl;
 

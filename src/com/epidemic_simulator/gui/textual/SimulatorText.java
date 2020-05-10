@@ -1,18 +1,21 @@
-package com.epidemic_simulator.gui;
+package com.epidemic_simulator.gui.textual;
 
 import com.epidemic_simulator.*;
+import com.epidemic_simulator.gui.SimulatorSettings;
 
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import java.awt.*;
 
 public class SimulatorText extends JDialog {
     Simulator simulator;
 
-    JEditorPane output;
+    JTextPane output;
     JScrollPane outputScroll;
 
     public SimulatorText(Frame owner, Simulator simulator) {
-        super(owner);
+        super(owner,"Epidemic simulator - Textual Simulator");
         this.simulator = simulator;
 
         //creating the Frame
@@ -25,7 +28,10 @@ public class SimulatorText extends JDialog {
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
 
-        output = new JEditorPane();
+        output = new JTextPane();
+        output.setBackground(Color.GRAY);
+        output.setFont(new Font("monospaced", Font.PLAIN, 14));
+
         outputScroll = new JScrollPane(output, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         contentPane.add(outputScroll, BorderLayout.CENTER);
 
@@ -42,21 +48,21 @@ public class SimulatorText extends JDialog {
             //starting the simulation
             long start = System.currentTimeMillis();
             Simulator.Outcome outcome;
-            output.setText(output.getText()+ "DAY " + simulator.getDay() + '\n');
             while ((outcome = simulator.executeDay()) == Simulator.Outcome.NOTHING)
                 dayReport();
 
-            output.setText(output.getText()+ "\nFinal report:\n");
-            output.setText(output.getText()+ simulator.getDay() + "d " + outcome.toString());
-
             dayReport();
 
-            output.setText(output.getText()+ "\n" + (System.currentTimeMillis() - start) + " milliseconds passed");
+            writeOutput( "\nFINAL REPORT:\n", 20, "b", Color.BLACK);
+            writeOutput( "DAY "+simulator.getDay()+ ": " + outcome.toString(), "b", 18);
+            writeOutput("\n");
+            writeOutput( "\nSTARTING PARAMETERS:\n", 20, "b", Color.BLACK);
+            writeOutput("Hey, give me the time to implement this...", 10);
+
+            writeOutput( "\n\n" + (System.currentTimeMillis() - start) + " milliseconds passed");
         }
 
         private void dayReport() {
-            output.setText(output.getText()+ "\nDAY " + simulator.getDay() + '\n');
-
             int black = (int) simulator.population.stream().filter(person -> person.getColor() == Color.BLACK).count();
             int green = (int) simulator.population.stream().filter(person -> person.getColor() == Color.GREEN).count();
             int yellow = (int) simulator.population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
@@ -64,11 +70,14 @@ public class SimulatorText extends JDialog {
             int blue = (int) simulator.population.stream().filter(person -> person.getColor() == Color.BLUE).count();
 
 
-            writeOutput( "green : " + green + '\n', Color.GREEN);
-            writeOutput( "yellow: " + yellow + '\n', Color.YELLOW);
-            writeOutput( "red   : " + red + '\n', Color.RED);
-            writeOutput( "blue  : " + blue + '\n', Color.BLUE);
-            writeOutput( "black : " + black + '\n', Color.BLACK);
+            writeOutput( "\nDAY " + simulator.getDay() + '\n',"b",18);
+            writeOutput("----------\n");
+            writeOutput( "GREEN : " + green + '\n', Color.GREEN, "b");
+            writeOutput( "YELLOW: " + yellow + '\n', Color.YELLOW, "b");
+            writeOutput( "RED   : " + red + '\n', Color.RED, "b");
+            writeOutput( "BLUE  : " + blue + '\n', Color.BLUE, "b");
+            writeOutput( "BLACK : " + black + '\n', Color.BLACK , "b");
+            writeOutput("----------\n");
             writeOutput( "resources : " + simulator.getResources() + '\n');
             writeOutput( "R0 factor: " + simulator.r0 + '\n');
 
@@ -81,25 +90,40 @@ public class SimulatorText extends JDialog {
         }
     };
 
-    private void writeOutput(String line){
-        writeOutput(line, Color.BLACK);
-    }
 
-    private void writeOutput(String line, Color color){
-        //getting text data
-        String previous = output.getText();
-        int caret = previous.length()-1;
+    private void writeOutput(String line, Object... styleParams){
+        SimpleAttributeSet set = new SimpleAttributeSet();
+
+        //unpacking params to set style
+        for (Object parameter : styleParams){
+            if(parameter.getClass() == Color.class) {
+                StyleConstants.setForeground(set, (Color) parameter);
+            }else if(parameter.getClass() == String.class){
+                String style = ((String) parameter).toLowerCase();
+
+                if(style.contains("b"))
+                    StyleConstants.setBold(set,true);
+
+                if(style.contains("i"))
+                    StyleConstants.setItalic(set,true);
+            }else if(parameter.getClass() == Integer.class){
+                StyleConstants.setFontSize(set, (Integer)parameter);
+            }
+        }
+
+
+        //positioning caret to the end
+        output.setCaretPosition(output.getDocument().getLength());
+
+
+        // Set the attributes before adding text
+        output.setCharacterAttributes(set, true);
 
         //setting new text
-        output.setText(previous + line);
+        output.replaceSelection(line);
 
-        //coloring it
-        output.setSelectionStart(caret);
-        output.setSelectionEnd(caret + line.length());
-        output.setSelectedTextColor(color);
-
-        //setting caret
-        output.setCaretPosition(output.getText().length()-1);
+        //positioning caret to the end
+        output.setCaretPosition(output.getDocument().getLength());
 
     }
 
