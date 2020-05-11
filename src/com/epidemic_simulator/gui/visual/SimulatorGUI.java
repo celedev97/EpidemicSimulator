@@ -18,7 +18,7 @@ public class SimulatorGUI extends JDialog {
         setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
 
         setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
