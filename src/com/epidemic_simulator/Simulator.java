@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Simulator {
 
+    //#region Fields/Getters
     public ArrayList<SimulatorCallBack> callBacks;
 
     //#region Simulation parameters
@@ -30,27 +31,65 @@ public class Simulator {
     public final int developSymptomsMaxDay;
     //#endregion
 
-    //simulation status
+    //#region Simulation running status
+    protected int day = 0;//TODO: make this private
+    public int getDay() {
+        return day;
+    }
+
+    //TODO: is there some way to make those lists read only from outside class?
     public ArrayList<Person> population;
     public ArrayList<Person> alivePopulation;
 
     public double r0;
 
-    protected int day = 0;
+    public boolean firstRed = false;//TODO: make this private
 
-    public boolean firstRed = false;
+    //#endregion
+    //#endregion
 
-    //constructor
+    /**
+     * Enum for the possible outcomes of a day execution.
+     */
+    public enum Outcome {
+        NOTHING,
+        ALL_HEALED,
+        ALL_DEAD,
+        ECONOMIC_COLLAPSE
+    }
+
+    /**
+     * Create a simulator according to the parameters given.
+     * @param startingPopulation (P) The population of the simulation at the start.
+     * @param resources (R) The economic resources available for this simulation.
+     * @param testPrice (C) The cost of a test for this disease.
+     * @param averageEncountersPerDay (V) The number of encounters that a person does in a day if everyone is allowed to move.
+     * @param infectionRate (I) The percentage of possibility that an infected person can infect another one if they meet.
+     * @param symptomsRate (S) The percentage of possibility that an infected person can develop symptoms.
+     * @param deathRate (L) The percentage of possibility that a symptomatic person can die.
+     * @param diseaseDuration (D) The number of days that the disease takes to heal;
+     * @throws InvalidSimulationException If the parameters are not in line with the rules of the simulation this exception will be thrown, please refer to the exception message for more details.
+     */
     public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
+        //#region Parameters validity check
         //Condizioni necessarie per verificare la validità dei dati inseriti in funzione del requisito.
         if (resources >= (10 * (long) startingPopulation * testPrice))
             throw new InvalidSimulationException("Condition not met: R < 10 * P ∗ C");
         if (resources >= ((long) startingPopulation * diseaseDuration))
             throw new InvalidSimulationException("Condition not met: R < P ∗ D");
-        //TODO: inserire check per i Rate (max 100)
 
+        //checking that rateos are all between 0 and 100
+        if(infectionRate>100 || infectionRate<0)
+            throw new InvalidSimulationException("Infectivity should be between 0 and 100");
+        if(symptomsRate>100 || symptomsRate<0)
+            throw new InvalidSimulationException("Symptomaticity should be between 0 and 100");
+        if(deathRate>100 || deathRate<0)
+            throw new InvalidSimulationException("Lethality should be between 0 and 100");
+        //#endregion
+
+        //#region Initializing simulation parameter
         //Dati popolazione/stato
-        this.startingPopulation = startingPopulation; //Numero popolazione iniziale/al lancio del simulatore
+        this.startingPopulation = startingPopulation;
         this.resources = resources;
         this.testPrice = testPrice;
         this.cureCost = testPrice * 3;
@@ -69,6 +108,9 @@ public class Simulator {
         this.canInfectDay = diseaseDuration / 6;
         this.developSymptomsMaxDay = diseaseDuration / 3;
 
+        //#endregion
+
+        //#region Preparing population lists
         population = new ArrayList<>();//Lista persona
 
         //Aggiunta di persona alla lista
@@ -79,33 +121,32 @@ public class Simulator {
         population.get(0).infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
         population.get(0).canInfect = true;
 
-        //All'inizio abbiamo tanti soggetti vivi quante sono le persone inserite.
+        //cloning the
         alivePopulation = (ArrayList<Person>) population.clone();
+        //#endregion
 
-        callBacks = new ArrayList<>();//TODO: decide a decent place for this
+        //Initializing callback lists
+        callBacks = new ArrayList<>();
+
     }
 
-    public int getDay() {
-        return day;
-    }
-
-    //Possibili finali della simulazione
-    public enum Outcome {
-        NOTHING,
-        ALL_HEALED,
-        ALL_DEAD,
-        ECONOMIC_COLLAPSE
-    }
-
-    public Outcome executeDay() {//Fino al raggiungimento di un 'finale' eseguiamo 'n' giorni,e per ognuno di essi sperimentiamo degli esiti tra incontri e consumi
-        day++;//Variabile contatrice dei giorni
+    /**
+     * Execute a day in the simulator.
+     * This method will:
+     * -make the people that have to move move and meet other people
+     * -adjust resources
+     * -make the disease status proceed for every one that has the disease
+     * @return the outcome of this day execution.
+     */
+    public Outcome executeDay() {
+        day++;
 
         //Vd calculation
         int canMoveCount = (int) alivePopulation.stream().filter(person -> person.canMove).count();
         double encountersThisDay = averageEncountersPerDay * canMoveCount / population.size();
         int intEncountersThisDay = encountersThisDay == (int) encountersThisDay ? (int) encountersThisDay : (int) encountersThisDay + 1;
 
-        //R0 calculation
+        //R0 calculation TODO: is this really necessary?
         r0 = encountersThisDay * diseaseDuration * doubleInfectionRate;
         if (r0 < 1)
             System.out.println("Desease has been eradicated");
@@ -193,7 +234,11 @@ public class Simulator {
         return outcome;
     }
 
-    //Funzione per la simulazione dell'incontro tra due persone
+    /**
+     * This method makes two people meet, and try to infect one in case the other one is at a disease state for which he can infect other people.
+     * @param person1 the first person for this encounter
+     * @param person2 the second person for this encounter
+     */
     private void encounter(Person person1, Person person2) {
         if (person1.canInfect && !person2.infected) {//Se persona1 è un giallo/infetto e persona2 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona2
             person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
@@ -204,6 +249,11 @@ public class Simulator {
         callBacks.forEach(simulatorCallBack -> simulatorCallBack.registerEncounter(person1, person2));
     }
 
+    /**
+     * This method test the virus inside a Person, the virus will only be detected if the person it's already at a stage at which he can infect other people.
+     * @param person the person to test
+     * @return true if the virus is found, false if it's not found
+     */
     public boolean testVirus(Person person) {
         resources -= testPrice;
         if (person.canInfect) return true;
