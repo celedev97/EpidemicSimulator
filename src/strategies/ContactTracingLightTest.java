@@ -7,6 +7,7 @@ import com.epidemic_simulator.Strategy;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -22,8 +23,8 @@ public class ContactTracingLightTest extends Strategy {
 
     private int testPercentage;
 
-    public HashMap<Person, Boolean> precautionaryQuarantine;
-    public HashMap<Person, Integer> quarantineStartDay;
+    public final Map<Person, Boolean> precautionaryQuarantine;
+    public Map<Person, Integer> quarantineStartDay;
 
     public ContactTracingLightTest(Simulator simulator, int testPercentage) {
         super(simulator);
@@ -41,12 +42,12 @@ public class ContactTracingLightTest extends Strategy {
 
     @Override
     public void personHasSymptoms(Person person) {
-        precautionaryQuarantine.put(person, false);//OLD: person.precautionaryQuarantine = false;
+        precautionaryQuarantine.put(person, false);
     }
 
 
     public void checkQuarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
-        if ((!person.isSymptoms()) && ((currentDay - quarantineStartDay.get(person)) > Math.ceil((5 * simulator.diseaseDuration) / 6))) {
+        if ((!person.isSymptoms()) && ((currentDay - quarantineStartDay.get(person)) > Math.ceil((5 * simulator.diseaseDuration) / 6.0))) {
             person.setCanMove(true);
             precautionaryQuarantine.put(person, false);
         }
@@ -56,7 +57,7 @@ public class ContactTracingLightTest extends Strategy {
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
         for (Person person : simulator.getAlivePopulation()) {
-            if (precautionaryQuarantine.get(person))
+            if (Boolean.TRUE.equals(precautionaryQuarantine.get(person)))
                 checkQuarantine(person, simulator.getDay());
         }
 
@@ -66,18 +67,14 @@ public class ContactTracingLightTest extends Strategy {
             for (Person tizio : reds) {
                 List<Person> encounters;
                 encounters = findEncounters(tizio, simulator.developSymptomsMaxDay);  //per ogni sintomatico controllo la lista dei suoi ultimi incontri
-                if (encounters.size() > 0) {
+                if (!encounters.isEmpty()) {
                     for (int i = 0; i < ((encounters.size() * testPercentage) / 100); i++) {     //una percentuale fa il tampone
-                        if ((encounters.get(i).getColor() != Color.RED) && (encounters.get(i).getColor() != Color.BLUE) && (!precautionaryQuarantine.get(encounters.get(i)))) {
-                            if (simulator.testVirus(encounters.get(i))) {
-                                quarantine(encounters, i);
-                            }
-                        }
+                        if (isTestable(encounters, i) && (simulator.testVirus(encounters.get(i))))
+                            quarantine(encounters, i);
                     }
                     for (int i = (testPercentage * 100 / encounters.size()); i < encounters.size(); i++) {  //il resto viene messo in quarantena per tot giorni
-                        if ((encounters.get(i).getColor() != Color.RED) && (encounters.get(i).getColor() != Color.BLUE) && (!precautionaryQuarantine.get(encounters.get(i)))) {
+                        if (isTestable(encounters, i))
                             quarantine(encounters, i);
-                        }
                     }
                 }
             }
@@ -88,6 +85,10 @@ public class ContactTracingLightTest extends Strategy {
         precautionaryQuarantine.put(encounters.get(i), true);
         quarantineStartDay.put(encounters.get(i), simulator.getDay());
         encounters.get(i).setCanMove(false);
+    }
+
+    boolean isTestable(List<Person> encounters, int i) {
+        return (encounters.get(i).getColor() != Color.RED) && (encounters.get(i).getColor() != Color.BLUE) && (!precautionaryQuarantine.get(encounters.get(i)));
     }
 
 }
