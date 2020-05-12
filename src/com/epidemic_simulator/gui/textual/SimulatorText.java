@@ -63,11 +63,11 @@ public class SimulatorText extends JDialog {
         }
 
         private void dayReport() {
-            int black = (int) simulator.population.stream().filter(person -> person.getColor() == Color.BLACK).count();
-            int green = (int) simulator.population.stream().filter(person -> person.getColor() == Color.GREEN).count();
-            int yellow = (int) simulator.population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
-            int red = (int) simulator.population.stream().filter(person -> person.getColor() == Color.RED).count();
-            int blue = (int) simulator.population.stream().filter(person -> person.getColor() == Color.BLUE).count();
+            int black = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.BLACK).count();
+            int green = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.GREEN).count();
+            int yellow = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.YELLOW).count();
+            int red = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.RED).count();
+            int blue = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.BLUE).count();
 
 
             writeOutput( "\nDAY " + simulator.getDay() + '\n',"b",18);

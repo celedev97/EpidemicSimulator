@@ -1,6 +1,7 @@
 package com.epidemic_simulator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Simulator {
 
@@ -8,7 +9,7 @@ public class Simulator {
     public ArrayList<SimulatorCallBack> callBacks;
 
     //#region Simulation parameters
-    private final int startingPopulation;
+    private final int startingPopulation; //TODO: serve effettivamente a qualcosa?
     private int resources;//Numero risorse disponibili
 
     public int getResources() {
@@ -32,18 +33,26 @@ public class Simulator {
     //#endregion
 
     //#region Simulation running status
-    protected int day = 0;//TODO: make this private
+    private int day = 0;
+
     public int getDay() {
         return day;
     }
 
-    //TODO: is there some way to make those lists read only from outside class?
-    public ArrayList<Person> population;
-    public ArrayList<Person> alivePopulation;
+    final private ArrayList<Person> population;
+    final private List<Person> alivePopulation;
+
+    public List<Person> getPopulation() {
+        return population;
+    }
+
+    public List<Person> getAlivePopulation() {
+        return alivePopulation;
+    }
 
     public double r0;
 
-    public boolean firstRed = false;//TODO: make this private
+    private boolean firstRed = false;
 
     //#endregion
     //#endregion
@@ -60,14 +69,15 @@ public class Simulator {
 
     /**
      * Create a simulator according to the parameters given.
-     * @param startingPopulation (P) The population of the simulation at the start.
-     * @param resources (R) The economic resources available for this simulation.
-     * @param testPrice (C) The cost of a test for this disease.
+     *
+     * @param startingPopulation      (P) The population of the simulation at the start.
+     * @param resources               (R) The economic resources available for this simulation.
+     * @param testPrice               (C) The cost of a test for this disease.
      * @param averageEncountersPerDay (V) The number of encounters that a person does in a day if everyone is allowed to move.
-     * @param infectionRate (I) The percentage of possibility that an infected person can infect another one if they meet.
-     * @param symptomsRate (S) The percentage of possibility that an infected person can develop symptoms.
-     * @param deathRate (L) The percentage of possibility that a symptomatic person can die.
-     * @param diseaseDuration (D) The number of days that the disease takes to heal;
+     * @param infectionRate           (I) The percentage of possibility that an infected person can infect another one if they meet.
+     * @param symptomsRate            (S) The percentage of possibility that an infected person can develop symptoms.
+     * @param deathRate               (L) The percentage of possibility that a symptomatic person can die.
+     * @param diseaseDuration         (D) The number of days that the disease takes to heal;
      * @throws InvalidSimulationException If the parameters are not in line with the rules of the simulation this exception will be thrown, please refer to the exception message for more details.
      */
     public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
@@ -79,11 +89,11 @@ public class Simulator {
             throw new InvalidSimulationException("Condition not met: R < P ∗ D");
 
         //checking that rateos are all between 0 and 100
-        if(infectionRate>100 || infectionRate<0)
+        if (infectionRate > 100 || infectionRate < 0)
             throw new InvalidSimulationException("Infectivity should be between 0 and 100");
-        if(symptomsRate>100 || symptomsRate<0)
+        if (symptomsRate > 100 || symptomsRate < 0)
             throw new InvalidSimulationException("Symptomaticity should be between 0 and 100");
-        if(deathRate>100 || deathRate<0)
+        if (deathRate > 100 || deathRate < 0)
             throw new InvalidSimulationException("Lethality should be between 0 and 100");
         //#endregion
 
@@ -136,6 +146,7 @@ public class Simulator {
      * -make the people that have to move move and meet other people
      * -adjust resources
      * -make the disease status proceed for every one that has the disease
+     *
      * @return the outcome of this day execution.
      */
     public Outcome executeDay() {
@@ -220,7 +231,7 @@ public class Simulator {
 
         //#region simulation status return
         Outcome outcome = Outcome.NOTHING;
-        if (alivePopulation.size() == 0) {
+        if (alivePopulation.isEmpty()) {
             outcome = Outcome.ALL_DEAD;
         } else if (alivePopulation.stream().filter(person -> person.infected).count() == 0) {
             outcome = Outcome.ALL_HEALED;
@@ -236,6 +247,7 @@ public class Simulator {
 
     /**
      * This method makes two people meet, and try to infect one in case the other one is at a disease state for which he can infect other people.
+     *
      * @param person1 the first person for this encounter
      * @param person2 the second person for this encounter
      */
@@ -251,13 +263,17 @@ public class Simulator {
 
     /**
      * This method test the virus inside a Person, the virus will only be detected if the person it's already at a stage at which he can infect other people.
+     *
      * @param person the person to test
      * @return true if the virus is found, false if it's not found
      */
     public boolean testVirus(Person person) {
         resources -= testPrice;
-        if (person.canInfect) return true;
-        return false;
+        return person.canInfect;
+    }
+
+    public boolean getFirstRed() {
+        return firstRed;
     }
 
 }

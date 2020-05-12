@@ -20,7 +20,7 @@ public class MediumControlledLockdown extends Strategy {
     public MediumControlledLockdown(Simulator simulator,int percentualOfStop) {
         super(simulator);
         this.percentualOfStop=percentualOfStop;
-        this.limite=(simulator.alivePopulation.size()*percentualOfStop)/100;
+        this.limite=(simulator.getAlivePopulation().size()*percentualOfStop)/100;
         check= new HashMap<>();
     }
 
@@ -29,7 +29,7 @@ public class MediumControlledLockdown extends Strategy {
         ArrayList<Person>persone = new ArrayList<>();
         ArrayList<Person>check1=new ArrayList<>();
         if(sintomatici>=this.limite){
-            int estrazione=(simulator.alivePopulation.size()*this.sintomatici)/100;
+            int estrazione=(simulator.getAlivePopulation().size()*this.sintomatici)/100;
             HashMap<Person, List<Person>> p=findEncounters(simulator.getDay());
             Set<Person>key=p.keySet();
             ArrayList<Person>chiavi=new ArrayList<>();

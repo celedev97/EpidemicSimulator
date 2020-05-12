@@ -17,7 +17,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
     public FullControlledLockdownAndStopSpread(Simulator simulator,int percentualOfStop) {
         super(simulator);
         this.percentualOfStop=percentualOfStop;
-        this.limite=(simulator.alivePopulation.size()*percentualOfStop)/100;
+        this.limite=(simulator.getAlivePopulation().size()*percentualOfStop)/100;
         check=new ArrayList<>();
     }
 

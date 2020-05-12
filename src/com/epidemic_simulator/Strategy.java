@@ -46,9 +46,9 @@ public abstract class Strategy implements SimulatorCallBack {
     @Override
     public final void registerEncounter(Person person1, Person person2) {
         //i can't register encounters before the first red is found.
-        if (!simulator.firstRed) return;
+        if (!simulator.getFirstRed()) return;
 
-        int day = simulator.day;
+        int day = simulator.getDay();
 
         //get this day encounter dictionary
         HashMap<Person, List<Person>> encounterDictionary = findEncounters(day);
@@ -71,7 +71,7 @@ public abstract class Strategy implements SimulatorCallBack {
     protected final List<Person> findEncounters(Person person, int previousDays) {
         ArrayList<Person> outputList = new ArrayList<>();
 
-        int currentDay = simulator.day;
+        int currentDay = simulator.getDay();
         int limitDay = currentDay - previousDays;
         HashMap<Person, List<Person>> encountersThisDay;
         for (int day = currentDay; day > limitDay; day--) {

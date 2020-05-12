@@ -21,7 +21,7 @@ public class PersonManager {
 
         //#region Creating and placing drawablePersons
         //calculating the best rows and column configuration for the canvas rateo and the number of Persons that i have
-        int nPersons = simulator.population.size();
+        int nPersons = simulator.getPopulation().size();
 
         int width = Engine.renderer.getWidth();
         int height = Engine.renderer.getHeight();
@@ -40,7 +40,7 @@ public class PersonManager {
         creationLoop:
         for (int y = 0; y < worldY; y+=20){
             for (int x = 0; x < worldX; x+=20){
-                Person person = simulator.population.get(created);
+                Person person = simulator.getPopulation().get(created);
                 DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y);
                 drawablePersonsDictionary.put(person, drawablePerson);
                 drawablePersons.add(drawablePerson);

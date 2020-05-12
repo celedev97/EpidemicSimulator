@@ -28,11 +28,11 @@ public class Main {
         while ((outcome = sim.executeDay()) == Simulator.Outcome.NOTHING) {
             System.out.println();
             System.out.println("DAY " + sim.getDay());
-            int black = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLACK).count();
-            int green = (int) sim.population.stream().filter(person -> person.getColor() == Color.GREEN).count();
-            int yellow = (int) sim.population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
-            int red = (int) sim.population.stream().filter(person -> person.getColor() == Color.RED).count();
-            int blue = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLUE).count();
+            int black = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.BLACK).count();
+            int green = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.GREEN).count();
+            int yellow = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.YELLOW).count();
+            int red = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.RED).count();
+            int blue = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.BLUE).count();
 
             System.out.println("green : " + green);
             System.out.println("yellow: " + yellow);
@@ -45,11 +45,11 @@ public class Main {
         System.out.println("\nFinal report:");
         System.out.println(sim.getDay() + "d " + outcome.toString());
 
-        int black = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLACK).count();
-        int green = (int) sim.population.stream().filter(person -> person.getColor() == Color.GREEN).count();
-        int yellow = (int) sim.population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
-        int red = (int) sim.population.stream().filter(person -> person.getColor() == Color.RED).count();
-        int blue = (int) sim.population.stream().filter(person -> person.getColor() == Color.BLUE).count();
+        int black = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.BLACK).count();
+        int green = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.GREEN).count();
+        int yellow = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.YELLOW).count();
+        int red = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.RED).count();
+        int blue = (int) sim.getPopulation().stream().filter(person -> person.getColor() == Color.BLUE).count();
 
         System.out.println("green : " + green);
         System.out.println("yellow: " + yellow);

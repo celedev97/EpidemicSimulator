@@ -24,7 +24,7 @@ public class PreemptiveLockdownAndStopSpread extends Strategy {
         if(simulator.getDay()%(simulator.diseaseDuration /stopSpreadFrequency) == 0){
             System.out.println("TESTING AND RESTRAINING!");
             //TODO: only test the people you can test with x% of the original budget
-            Iterator<Person> sickIterator = simulator.population.stream().filter(person -> person.getCanMove()).filter(person -> simulator.testVirus(person)).iterator();
+            Iterator<Person> sickIterator = simulator.getPopulation().stream().filter(person -> person.getCanMove()).filter(person -> simulator.testVirus(person)).iterator();
             while(sickIterator.hasNext()){
                 sickIterator.next().setCanMove(false);
             }

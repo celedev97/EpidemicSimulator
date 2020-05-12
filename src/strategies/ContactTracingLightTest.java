@@ -32,7 +32,7 @@ public class ContactTracingLightTest extends Strategy {
         precautionaryQuarantine = new HashMap<>();
         quarantineStartDay = new HashMap<>();
 
-        for (Person person : simulator.population) {
+        for (Person person : simulator.getPopulation()) {
             precautionaryQuarantine.put(person, false);
             quarantineStartDay.put(person, 0);
         }
@@ -55,14 +55,14 @@ public class ContactTracingLightTest extends Strategy {
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
-        for (Person person : simulator.alivePopulation) {
+        for (Person person : simulator.getAlivePopulation()) {
             if (precautionaryQuarantine.get(person))
                 checkQuarantine(person, simulator.getDay());
         }
 
-        if (simulator.firstRed) {
+        if (simulator.getFirstRed()) {
             ArrayList<Person> reds = new ArrayList<>();
-            simulator.alivePopulation.stream().filter(s -> (Color.RED).equals(s.getColor())).forEach(reds::add); //aggiungo all'array reds tutti i sintomatici
+            simulator.getAlivePopulation().stream().filter(s -> (Color.RED).equals(s.getColor())).forEach(reds::add); //aggiungo all'array reds tutti i sintomatici
             for (Person tizio : reds) {
                 List<Person> encounters;
                 encounters = findEncounters(tizio, simulator.developSymptomsMaxDay);  //per ogni sintomatico controllo la lista dei suoi ultimi incontri
