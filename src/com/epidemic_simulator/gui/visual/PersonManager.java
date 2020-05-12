@@ -93,11 +93,9 @@ public class PersonManager {
     };
 
     public void doneMoving(DrawablePerson drawablePerson) {
-        System.out.println("DONE MOVING: " + drawablePersons.indexOf(drawablePerson));
         currentlyMoving--;//TODO: this is clearly not working, this is reaching 0 even if they did not all finish to move
         lastMovingPersonIndex++;
         if(lastMovingPersonIndex < drawablePersons.size()){
-            System.out.println("START MOVING: " + lastMovingPersonIndex);
             drawablePersons.get(lastMovingPersonIndex).doMove = true;
             currentlyMoving++;
         }else if(currentlyMoving < 1){

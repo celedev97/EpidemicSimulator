@@ -106,15 +106,14 @@ public class SimulatorText extends JDialog {
 
                 if(style.contains("i"))
                     StyleConstants.setItalic(set,true);
+
             }else if(parameter.getClass() == Integer.class){
                 StyleConstants.setFontSize(set, (Integer)parameter);
             }
         }
 
-
         //positioning caret to the end
         output.setCaretPosition(output.getDocument().getLength());
-
 
         // Set the attributes before adding text
         output.setCharacterAttributes(set, true);

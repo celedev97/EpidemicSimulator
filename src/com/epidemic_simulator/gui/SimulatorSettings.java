@@ -61,11 +61,11 @@ public class SimulatorSettings extends JFrame {
 
     private JPanel strategyPanel;
     //#endregion
+
     //dialogue
     private JFileChooser fileChooser;
 
     //#endregion
-
 
     public SimulatorSettings(){
         //#region JFrame setup
@@ -220,10 +220,9 @@ public class SimulatorSettings extends JFrame {
         //#region strategies combobox population
         strategyParameters = new ArrayList<>();
 
-        String packageName = "strategies";
         strategyComboBox.addItem(new SelectableStrategy(null));
         try{
-            for(Class clas : Utils.getClassesForPackage(packageName)){
+            for(Class clas : Utils.getClassesForPackage("strategies")){
                 strategyComboBox.addItem(new SelectableStrategy(clas));
             }
         }catch (Exception ex){
@@ -235,8 +234,6 @@ public class SimulatorSettings extends JFrame {
 
 
         //#endregion
-
-
 
         //#region Strategy Parameters Panel
         GridLayout strategyDataGridLayout = new GridLayout(1,PARAMETERS_PER_ROW);
@@ -502,6 +499,7 @@ public class SimulatorSettings extends JFrame {
             panel.removeAll();
         }
 
+        //TODO: use visibility, not border
         strategyPanel.setBorder(null);
         //#endregion
 
@@ -514,7 +512,7 @@ public class SimulatorSettings extends JFrame {
             //(SKIPPING THE FIRST PARAMETER, THAT'S THE SIMULATOR)
             for (int i = 1; i < parameters.length; i++) {
                 //getting parameter data
-                Class type = parameters[i].getType();
+                //Class type = parameters[i].getType();
                 String parameterName = Utils.javaNameToUserString(parameters[i].getName());
 
                 //calculating y and x for this parameter
@@ -588,6 +586,7 @@ public class SimulatorSettings extends JFrame {
 class SelectableStrategy{
     private Class value;
     private String humanReadableClassName;
+
     public Class getValue() {
         return value;
     }
