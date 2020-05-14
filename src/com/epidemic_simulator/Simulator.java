@@ -270,6 +270,8 @@ public class Simulator {
      * @return true if the virus is found, false if it's not found
      */
     public boolean testVirus(Person person) {
+        if(person.symptoms) return true;
+
         resources -= testPrice;
         return person.canInfect;
     }
