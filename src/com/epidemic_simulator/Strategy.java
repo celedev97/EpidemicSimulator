@@ -73,7 +73,6 @@ public abstract class Strategy implements SimulatorCallBack {
 
         int currentDay = simulator.getDay();
         int limitDay = currentDay - previousDays;
-        HashMap<Person, List<Person>> encountersThisDay;
         for (int day = currentDay; day > limitDay; day--) {
             //find the encounter dictionary for the day, then find the list of the Persons for this person, then add them all to the list
             findEncounters(findEncounters(day), person).stream().collect(Collectors.toCollection(() -> outputList));

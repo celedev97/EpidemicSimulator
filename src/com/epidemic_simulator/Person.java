@@ -3,14 +3,14 @@ package com.epidemic_simulator;
 import java.awt.*;
 
 public class Person {
-    //#region DISEASE STATUS
+    //#region DISEASE FLAGS
     protected boolean alive        = true;
     protected boolean infected     = false;
     protected boolean canInfect    = false;
     protected boolean symptoms     = false;
     protected boolean immune       = false;
 
-    //#region DISEASE EVOLUTION
+    //#region DISEASE STATUS
     protected int daysSinceInfection = 0; //Numero giorni passati dal contagio.
     protected int symptomsDevelopmentDay =-1; //Numero giorni entro cui eventualmente presenterà sintomi,-1 dato che la persona potrebbe non svilupparli.
     protected int deathDay =-1; //Numero giorni entro cui eventualmente la persona in questione morirà,-1 dato che la persona potrebbe anche non morire.

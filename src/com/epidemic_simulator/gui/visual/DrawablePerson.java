@@ -79,7 +79,6 @@ public class DrawablePerson extends GameObject {
             doMove = false;
             personManager.doneMoving(this);
         }
-        //position.sumUpdate(new Vector(10,10).multiply(Engine.deltaTime));
     }
 
     @Override
