@@ -15,12 +15,12 @@ import java.util.HashSet;
  */
 public class BlockEveryoneByContactTracing extends Strategy {
 
-    private HashSet<Person> immunes = new HashSet<>();
-    private HashMap<Person, Integer> quarantine = new HashMap<>();
+    HashSet<Person> immunes = new HashSet<>();
+    HashMap<Person, Integer> quarantine = new HashMap<>();
 
-    private int quarantined = 0;
+    int quarantined = 0;
 
-    private int postIncubation = 0;
+    int postIncubation = 0;
 
     public BlockEveryoneByContactTracing(Simulator simulator) {
         super(simulator);
