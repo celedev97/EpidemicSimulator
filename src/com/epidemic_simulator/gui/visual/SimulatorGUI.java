@@ -6,14 +6,14 @@ import dev.federicocapece.jdaze.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class SimulatorGUI extends JDialog {
+public class SimulatorGUI extends JFrame {
     JLabel dayLabel;
 
-    public SimulatorGUI(Frame parent, Simulator simulator){
-        super(parent);
-
-        //creating the Frame
+    public SimulatorGUI(Simulator simulator){
+        //#region creating the Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
 
@@ -31,11 +31,7 @@ public class SimulatorGUI extends JDialog {
         northPanel.add(dayLabel);
 
         contentPane.add(northPanel, BorderLayout.NORTH);
-
-        //forcing component draw so i can get the canvas size
-        setVisible(true);
-        revalidate();
-        repaint();
+        //#endregion
 
         //Starting the graphic engine
         Engine.start();
@@ -43,7 +39,17 @@ public class SimulatorGUI extends JDialog {
         //creating the manager that will decide which person can move and which have to wait
         new PersonManager(this, simulator);
 
+        addWindowListener(windowListener);
+
     }
+
+    private WindowAdapter windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+           Engine.stop();
+        }
+    };
+
 
     public static void main(String[] args) {
         //fake main that just start a Setting window and call the start button

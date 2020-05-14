@@ -28,15 +28,6 @@ public class TestEveryOneOnFirstRed extends BlockEveryoneByContactTracing {
         }
 
         super.personHasSymptoms(person);
-
-        for (Person contact : findEncounters(person, postIncubation)){
-            if(!immunes.contains(contact)){
-                if(!quarantine.containsKey(person)){
-                    quarantine.put(person, simulator.canInfectDay);
-                    quarantined++;
-                }
-            }
-        }
     }
 
 

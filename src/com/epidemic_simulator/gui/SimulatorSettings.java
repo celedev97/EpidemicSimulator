@@ -327,7 +327,7 @@ public class SimulatorSettings extends JFrame {
         if((simulator = createSimulator()) == null) return;
 
         //creating simulator GUI and closing configurator
-        new SimulatorGUI(this, simulator);
+        new SimulatorGUI(simulator);
     };
 
     private Simulator createSimulator() {
