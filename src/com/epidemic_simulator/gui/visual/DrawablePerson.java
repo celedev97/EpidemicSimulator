@@ -15,7 +15,7 @@ public class DrawablePerson extends GameObject {
     private final int SIZE = 10;
     //MOVEMENT SPEED/PRECISION
 
-    private final int BASE_SPEED = 10000;
+    private final int BASE_SPEED = 100;
     private final float SPEED_VARIANT = .5f;
     private final int SPEED = BASE_SPEED - (int)(BASE_SPEED*SPEED_VARIANT)+rand.nextInt((int)(BASE_SPEED*SPEED_VARIANT));
 

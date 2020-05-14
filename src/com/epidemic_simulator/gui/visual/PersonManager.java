@@ -9,7 +9,8 @@ import java.util.*;
 public class PersonManager {
     private HashMap<Person, DrawablePerson> drawablePersonsDictionary;
     private ArrayList<DrawablePerson> drawablePersons;
-    private int lastMovingPersonIndex, currentlyMoving;
+    private ArrayList<DrawablePerson> toMovePersons;
+    private int movedPersons;
 
     private Simulator simulator;
     private Simulator.Outcome lastDayOutCome = Simulator.Outcome.NOTHING;
@@ -61,6 +62,7 @@ public class PersonManager {
         cameraScript.setScales(.2f,30f);
 
         //setting the ideal zoom for the world size
+        //TODO: this sucks, discover why
         Engine.camera.setScale((float)width/(worldX+40));
         //#endregion
 
@@ -81,7 +83,6 @@ public class PersonManager {
 
         @Override
         public void registerEncounter(Person person1, Person person2) {
-            //if(count++<2)
             drawablePersonsDictionary.get(person1).target.add(drawablePersonsDictionary.get(person2));
         }
 
@@ -93,12 +94,9 @@ public class PersonManager {
     };
 
     public void doneMoving(DrawablePerson drawablePerson) {
-        currentlyMoving--;//TODO: this is clearly not working, this is reaching 0 even if they did not all finish to move
-        lastMovingPersonIndex++;
-        if(lastMovingPersonIndex < drawablePersons.size()){
-            drawablePersons.get(lastMovingPersonIndex).doMove = true;
-            currentlyMoving++;
-        }else if(currentlyMoving < 1){
+        if(toMovePersons.size()>0){
+            moveRandomPerson();
+        }else{
             startANewDay();
         }
     }
@@ -115,18 +113,25 @@ public class PersonManager {
         simulator.executeDay();
 
         //#region STARTING THE BALL SIMULATION
+        toMovePersons = new ArrayList<>(drawablePersons);
 
-        lastMovingPersonIndex = drawablePersons.size()/5;
-        //if it's 0 then move them all because they are less than 3
-        lastMovingPersonIndex = lastMovingPersonIndex == 0 ? drawablePersons.size()-1 : lastMovingPersonIndex;
+        movedPersons = drawablePersons.size()/5;
 
+        //if it's 0 then move them all because they are less than 5
+        movedPersons = movedPersons == 0 ? drawablePersons.size()-1 : movedPersons;
 
-        for (int i = 0; i < lastMovingPersonIndex; i++)
-            drawablePersons.get(i).doMove = true;
+        for (int i = 0; i < movedPersons; i++){
+            moveRandomPerson();
+        }
 
-        currentlyMoving = lastMovingPersonIndex;
         //#endregion
 
+    }
+
+    private void moveRandomPerson() {
+        int index = Utils.random(toMovePersons.size());
+        toMovePersons.get(index).doMove = true;
+        toMovePersons.remove(index);
     }
 
 }
