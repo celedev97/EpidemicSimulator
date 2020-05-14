@@ -10,7 +10,7 @@ public class PersonManager {
     private HashMap<Person, DrawablePerson> drawablePersonsDictionary;
     private ArrayList<DrawablePerson> drawablePersons;
     private ArrayList<DrawablePerson> toMovePersons;
-    private int movedPersons;
+    private int movingPersons;
 
     private Simulator simulator;
     private Simulator.Outcome lastDayOutCome = Simulator.Outcome.NOTHING;
@@ -94,9 +94,15 @@ public class PersonManager {
     };
 
     public void doneMoving(DrawablePerson drawablePerson) {
-        if(toMovePersons.size()>0){
+        System.out.println("DONE");
+        movingPersons--;
+        //if there are still people that need to move
+        if(toMovePersons.size() != 0){
             moveRandomPerson();
-        }else{
+            movingPersons++;
+        }
+        //else if all the people did already move
+        if(movingPersons == 0){
             startANewDay();
         }
     }
@@ -115,12 +121,12 @@ public class PersonManager {
         //#region STARTING THE BALL SIMULATION
         toMovePersons = new ArrayList<>(drawablePersons);
 
-        movedPersons = drawablePersons.size()/5;
+        movingPersons = drawablePersons.size()/5;
 
         //if it's 0 then move them all because they are less than 5
-        movedPersons = movedPersons == 0 ? drawablePersons.size()-1 : movedPersons;
+        movingPersons = movingPersons == 0 ? drawablePersons.size()-1 : movingPersons;
 
-        for (int i = 0; i < movedPersons; i++){
+        for (int i = 0; i < movingPersons; i++){
             moveRandomPerson();
         }
 
