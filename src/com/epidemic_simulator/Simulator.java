@@ -127,9 +127,11 @@ public class Simulator {
         for (int i = 0; i < startingPopulation; i++) {
             population.add(new Person());
         }
+
         //Creazione della prima persona infetta che va in giro,il suo canMove=true resta invariato->Un infetto per il momento giallo
-        population.get(0).infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
-        population.get(0).canInfect = true;
+        Person infected = population.get(Utils.random(startingPopulation));
+        infected.infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
+        infected.canInfect = true;
 
         //cloning the
         alivePopulation = (ArrayList<Person>) population.clone();
