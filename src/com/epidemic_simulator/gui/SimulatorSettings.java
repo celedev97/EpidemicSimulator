@@ -455,9 +455,6 @@ public class SimulatorSettings extends JFrame {
         if (!file.getName().endsWith(CONF_EXTENSION))
             file = new File(file.getAbsolutePath()+CONF_EXTENSION);
 
-        //forcing all the JSpinner to validate any possible input not yet validated (otherwise they can't be written into)
-        forceJSpinnerCommit(this);
-
         //creating root object
         JSONObject root = new JSONObject();
 
@@ -473,6 +470,8 @@ public class SimulatorSettings extends JFrame {
     }
 
     private JSONObject serializeSpinners(JPanel spinnerPanel){
+        forceJSpinnerCommit(spinnerPanel);
+
         //get all the spinners in this
         JSONObject panel = new JSONObject();
         JSONObject values = new JSONObject();

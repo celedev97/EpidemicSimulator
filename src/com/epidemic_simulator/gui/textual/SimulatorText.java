@@ -2,23 +2,29 @@ package com.epidemic_simulator.gui.textual;
 
 import com.epidemic_simulator.*;
 import com.epidemic_simulator.gui.SimulatorSettings;
+import dev.federicocapece.jdaze.Engine;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class SimulatorText extends JDialog {
+public class SimulatorText extends JFrame {
     Simulator simulator;
 
     JTextPane output;
     JScrollPane outputScroll;
 
-    public SimulatorText(Frame owner, Simulator simulator) {
-        super(owner,"Epidemic simulator - Textual Simulator");
+    JFrame settingsFrame;
+
+    public SimulatorText(JFrame settingsFrame, Simulator simulator) {
+        super("Epidemic simulator - Textual Simulator");
+        this.settingsFrame = settingsFrame;
         this.simulator = simulator;
 
-        //creating the Frame
+        //#region creating the Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension windowSize = new Dimension((int)(screenSize.width*.3),(int)(screenSize.height*.9));
 
@@ -35,7 +41,20 @@ public class SimulatorText extends JDialog {
         outputScroll = new JScrollPane(output, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         contentPane.add(outputScroll, BorderLayout.CENTER);
 
+        JButton exitButton = new JButton("Exit");
+        contentPane.add(exitButton, BorderLayout.SOUTH);
+
         setVisible(true);
+        //#endregion
+
+        //hooking exit button
+        exitButton.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
+        getRootPane().setDefaultButton(exitButton);
+        exitButton.grabFocus();
+
+        //hooking the windows adapter
+        addWindowListener(windowListener);
+
 
         //start the simulation thread
         simulationThread.start();
@@ -90,7 +109,6 @@ public class SimulatorText extends JDialog {
         }
     };
 
-
     private void writeOutput(String line, Object... styleParams){
         SimpleAttributeSet set = new SimpleAttributeSet();
 
@@ -126,12 +144,17 @@ public class SimulatorText extends JDialog {
 
     }
 
-
-
     public static void main(String[] args) {
         //fake main that just start a Setting window and call the start button
         SimulatorSettings settings = new SimulatorSettings();
         settings.startTextButtonListener.actionPerformed(null);
     }
+
+    private final WindowAdapter windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            settingsFrame.setVisible(true);
+        }
+    };
 
 }
