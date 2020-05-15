@@ -22,7 +22,7 @@ public class DrawablePerson extends GameObject {
     private final int POSITION_PRECISION = 2;
 
     //GUI CONTROL
-    protected PersonManager personManager;
+    protected SimulatorGUI simulatorGUI;
     protected Boolean doMove = false;
 
     private final Vector startingPosition;
@@ -31,14 +31,14 @@ public class DrawablePerson extends GameObject {
     protected ArrayList<DrawablePerson> target;
     private Color color = Color.CYAN;
 
-    public DrawablePerson(PersonManager personManager, Person thisPerson){
-        this(personManager, thisPerson,0,0);
+    public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson){
+        this(simulatorGUI, thisPerson,0,0);
     }
 
-    public DrawablePerson(PersonManager personManager, Person thisPerson, float x, float y) {
+    public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson, float x, float y) {
         super(x,y);
         target = new ArrayList<>();
-        this.personManager = personManager;
+        this.simulatorGUI = simulatorGUI;
         this.thisPerson = thisPerson;
         startingPosition = new Vector(position);
     }
@@ -73,11 +73,11 @@ public class DrawablePerson extends GameObject {
             }else{
                 position.set(startingPosition);
                 doMove = false;
-                personManager.doneMoving(this);
+                simulatorGUI.doneMoving(this);
             }
         }else{
             doMove = false;
-            personManager.doneMoving(this);
+            simulatorGUI.doneMoving(this);
         }
     }
 
