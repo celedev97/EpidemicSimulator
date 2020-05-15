@@ -3,6 +3,7 @@ package com.epidemic_simulator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Simulator {
 
@@ -41,7 +42,8 @@ public class Simulator {
     }
 
     final private ArrayList<Person> population;
-    final private List<Person> alivePopulation;
+    final private ArrayList<Person> alivePopulation;
+    final private ArrayList<Person> notQuarantinedPersons;
 
     public List<Person> getPopulation() {
         return population;
@@ -56,15 +58,24 @@ public class Simulator {
     private boolean firstRed = false;
 
     public void dispose() {
+        //#region strategies
         //unlinking each strategy from this simulator
-        callBacks.stream()
-                .filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()))
-                .forEach(callBack -> ((Strategy) callBack).simulator = null);
+        Stream<SimulatorCallBack> strategies = callBacks.stream()
+                .filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()));
+
+        strategies.forEach(strategy -> {
+            ((Strategy) strategy).simulator = null;
+            ((Strategy) strategy).dispose();
+        });
+
         //clearing my references to the callbacks
         callBacks.clear();
         //setting the array to null (just to be safe)
         callBacks = null;
         //now the gc should be able to kick in and clear this Simulator and its callbacks
+        //#endregion
+
+        notQuarantinedPersons.clear();
     }
 
     //#endregion
@@ -148,6 +159,7 @@ public class Simulator {
 
         //cloning the
         alivePopulation = (ArrayList<Person>) population.clone();
+        notQuarantinedPersons = new ArrayList<>(alivePopulation.size());
         //#endregion
 
         //Initializing callback lists
@@ -164,9 +176,10 @@ public class Simulator {
      *
      * @return the outcome of this day execution.
      */
-    public Outcome executeDay() {
-        //TODO: find a decent place for this
-        List<Person> notQuarantinedPersons = alivePopulation.stream().filter(p -> p.canMove).collect(Collectors.toList());
+    public synchronized Outcome executeDay() {
+        //creating a list with the canMove=true population TODO: find a decent place for this
+        notQuarantinedPersons.clear();
+        alivePopulation.stream().filter(p -> p.canMove).collect(Collectors.toCollection(() -> notQuarantinedPersons));
 
         day++;
 

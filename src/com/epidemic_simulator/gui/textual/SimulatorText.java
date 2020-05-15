@@ -154,6 +154,7 @@ public class SimulatorText extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
             settingsFrame.setVisible(true);
+            simulator.dispose();
         }
     };
 

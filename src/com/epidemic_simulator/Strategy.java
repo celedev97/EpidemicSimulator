@@ -20,6 +20,11 @@ public abstract class Strategy implements SimulatorCallBack {
         encounters = new HashMap<>();
     }
 
+    public void dispose(){
+        encounters.clear();
+        encounters = null;
+    }
+
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
 

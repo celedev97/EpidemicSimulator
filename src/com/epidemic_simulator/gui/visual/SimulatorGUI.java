@@ -187,6 +187,7 @@ public class SimulatorGUI extends JFrame {
         public void windowClosing(WindowEvent e) {
            Engine.stop();
            settingsFrame.setVisible(true);
+           simulator.dispose();
         }
     };
 
