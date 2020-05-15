@@ -332,6 +332,7 @@ public class SimulatorSettings extends JFrame {
     };
 
     private Simulator createSimulator() {
+        System.gc();
         try {
             //creating simulator
             Simulator simulator = new Simulator((int)population.getValue(), ((Number)resources.getValue()).longValue(), (int)testPrice.getValue(), ((Number)encountersPerDay.getValue()).doubleValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());

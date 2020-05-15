@@ -55,6 +55,18 @@ public class Simulator {
 
     private boolean firstRed = false;
 
+    public void dispose() {
+        //unlinking each strategy from this simulator
+        callBacks.stream()
+                .filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()))
+                .forEach(callBack -> ((Strategy) callBack).simulator = null);
+        //clearing my references to the callbacks
+        callBacks.clear();
+        //setting the array to null (just to be safe)
+        callBacks = null;
+        //now the gc should be able to kick in and clear this Simulator and its callbacks
+    }
+
     //#endregion
     //#endregion
 
