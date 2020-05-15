@@ -318,8 +318,8 @@ public class SimulatorSettings extends JFrame {
         if((simulator = createSimulator()) == null) return;
 
         //creating simulator GUI and closing configurator
+        this.setVisible(false);
         new SimulatorText(this, simulator);
-        //this.windowAdapter.windowClosing(new WindowEvent(this,WindowEvent.WINDOW_CLOSING));
     };
 
     public final ActionListener startGUIButtonListener = e -> {
@@ -327,7 +327,8 @@ public class SimulatorSettings extends JFrame {
         if((simulator = createSimulator()) == null) return;
 
         //creating simulator GUI and closing configurator
-        new SimulatorGUI(simulator);
+        this.setVisible(false);
+        new SimulatorGUI(this, simulator);
     };
 
     private Simulator createSimulator() {
