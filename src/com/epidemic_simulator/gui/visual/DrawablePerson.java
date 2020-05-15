@@ -15,7 +15,7 @@ public class DrawablePerson extends GameObject {
     private final int SIZE = 10;
     //MOVEMENT SPEED/PRECISION
 
-    private final int BASE_SPEED = 100;
+    private final int BASE_SPEED = 1000;
     private final float SPEED_VARIANT = .5f;
     private final int SPEED = BASE_SPEED - (int)(BASE_SPEED*SPEED_VARIANT)+rand.nextInt((int)(BASE_SPEED*SPEED_VARIANT));
 
@@ -29,7 +29,9 @@ public class DrawablePerson extends GameObject {
     private Person thisPerson;
 
     protected ArrayList<DrawablePerson> target;
+
     private Color color = Color.CYAN;
+    private boolean innerYellow = false;
 
     public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson){
         this(simulatorGUI, thisPerson,0,0);
@@ -87,9 +89,14 @@ public class DrawablePerson extends GameObject {
         int scaledSize = (int)(SIZE*scale);
         int halfScaledSize = scaledSize/2;
         graphics.fillOval(x-halfScaledSize,y-halfScaledSize,scaledSize,scaledSize);
+        if(innerYellow){
+            graphics.setColor(Color.YELLOW);
+            graphics.fillOval(x-halfScaledSize/2,y-halfScaledSize/2,scaledSize/2,scaledSize/2);
+        }
     }
 
     public void updateColor() {
         color = thisPerson.getColor();
+        innerYellow = color == Color.GREEN && thisPerson.isInfected();
     }
 }

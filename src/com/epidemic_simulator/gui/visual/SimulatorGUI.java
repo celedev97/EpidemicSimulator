@@ -57,16 +57,7 @@ public class SimulatorGUI extends JFrame {
 
         //Starting the graphic engine
         Engine.start();
-
-        //creating the manager that will decide which person can move and which have to wait
-        initializePersons();
-
-        addWindowListener(windowListener);
-
-    }
-
-    private void initializePersons() {
-
+        
         //#region Creating and placing drawablePersons
         //calculating the best rows and column configuration for the canvas rateo and the number of Persons that i have
         int nPersons = simulator.getPopulation().size();
@@ -113,10 +104,14 @@ public class SimulatorGUI extends JFrame {
         Engine.camera.setScale((float)width/(worldX+40));
         //#endregion
 
-        //linking simulator to GUI
+        //linking simulator callbacks to GUI
         simulator.callBacks.add(simulatorEventListener);
 
+        addWindowListener(windowListener);
+
         startANewDay();
+
+
     }
 
     private final SimulatorCallBack simulatorEventListener = new SimulatorCallBack() {
