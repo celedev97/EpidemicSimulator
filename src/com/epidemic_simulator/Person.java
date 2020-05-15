@@ -16,42 +16,14 @@ public class Person {
     protected int deathDay =-1; //Numero giorni entro cui eventualmente la persona in questione morirà,-1 dato che la persona potrebbe anche non morire.
     //#endregion
 
-    //#region GETTERS
+    //#region GETTERS FOR STRATEGIES
 
     public boolean isAlive() {
         return alive;
     }
 
-    public boolean isInfected() {
-        return infected;
-    }
-
-    public boolean isCanInfect() {
-        return canInfect;
-    }
-
-    public boolean isSymptoms() {
+    public boolean hasSymptoms() {
         return symptoms;
-    }
-
-    public boolean isImmune() {
-        return immune;
-    }
-
-    public int getDaysSinceInfection() {
-        return daysSinceInfection;
-    }
-
-    public int getSymptomsDevelopmentDay() {
-        return symptomsDevelopmentDay;
-    }
-
-    public int getDeathDay() {
-        return deathDay;
-    }
-
-    public boolean isCanMove() {
-        return canMove;
     }
 
     //#endregion
