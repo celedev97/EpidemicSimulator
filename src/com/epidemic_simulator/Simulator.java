@@ -2,6 +2,7 @@ package com.epidemic_simulator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Simulator {
 
@@ -10,9 +11,9 @@ public class Simulator {
 
     //#region Simulation parameters
     private final int startingPopulation; //TODO: serve effettivamente a qualcosa?
-    private int resources;//Numero risorse disponibili
+    private long resources;//Numero risorse disponibili
 
-    public int getResources() {
+    public long getResources() {
         return resources;
     }
 
@@ -80,7 +81,7 @@ public class Simulator {
      * @param diseaseDuration         (D) The number of days that the disease takes to heal;
      * @throws InvalidSimulationException If the parameters are not in line with the rules of the simulation this exception will be thrown, please refer to the exception message for more details.
      */
-    public Simulator(int startingPopulation, int resources, int testPrice, int averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
+    public Simulator(int startingPopulation, long resources, int testPrice, double averageEncountersPerDay, int infectionRate, int symptomsRate, int deathRate, int diseaseDuration) throws InvalidSimulationException {
         //#region Parameters validity check
         //Condizioni necessarie per verificare la validità dei dati inseriti in funzione del requisito.
         if (resources >= (10 * (long) startingPopulation * testPrice))
@@ -152,41 +153,41 @@ public class Simulator {
      * @return the outcome of this day execution.
      */
     public Outcome executeDay() {
+        //TODO: find a decent place for this
+        List<Person> notQuarantinedPersons = alivePopulation.stream().filter(p -> p.canMove).collect(Collectors.toList());
+
         day++;
 
         //Vd calculation
-        int canMoveCount = (int) alivePopulation.stream().filter(person -> person.canMove).count();
+        int canMoveCount = notQuarantinedPersons.size();
         double encountersThisDay = averageEncountersPerDay * canMoveCount / population.size();
         int intEncountersThisDay = encountersThisDay == (int) encountersThisDay ? (int) encountersThisDay : (int) encountersThisDay + 1;
 
         //R0 calculation TODO: is this really necessary?
         r0 = encountersThisDay * diseaseDuration * doubleInfectionRate;
         if (r0 < 1)
-            System.out.println("Desease has been eradicated");
+            System.out.println("Disease has been eradicated");
+
+        int encounterToDo = (int) (encountersThisDay * canMoveCount);
+
+        if(canMoveCount > 1){
+            for (int i = 0; i < encounterToDo; i++) {
+                Person p1 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));
+                Person p2 = null;
+
+                while (p2 == null || p2 == p1) {
+                    p2 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));//Estraiamo un'altra persona...che non sia se stessa
+                }
+
+                encounter(p1,p2);
+            }
+        }
+
+        resources -= (alivePopulation.size() - canMoveCount);
 
         //Per ogni giorno prendiamo tutte le 'n' persone VIVE
         for (Person person : population) {
             if (!person.alive) continue;//Se è un morto passiamo avanti alla prossima...
-
-            //#region movimento
-            if (!person.canMove || person.symptoms) {
-                //Se non è abilitata a muoversi o presenta sintomi il soggetto consuma una delle risorse disponibili
-                resources--;
-            } else {
-                //Se la persona è abilitata al movimento,vuol dire che giornalmente incontra 'n' altre persone Random
-                for (int i = 0; i < intEncountersThisDay; i++) {
-                    Person randomPerson = null;
-                    if (alivePopulation.size() == 1)
-                        break;//Se rimane un solo soggetto in vita non può incontrare nessuno...
-
-                    while (randomPerson == null || randomPerson == person) {
-                        randomPerson = alivePopulation.get(Utils.random(alivePopulation.size()));//Estraiamo un'altra persona...che non sia se stessa
-                    }
-                    //Sperimentiamo l'incontro
-                    encounter(person, randomPerson);
-                }
-            }
-            //#endregion
 
             //#region prosecuzione malattia
             if (!person.infected) continue;//Controlliamo se la persona è stata effettivamente infettata

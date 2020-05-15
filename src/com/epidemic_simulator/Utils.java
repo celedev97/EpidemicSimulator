@@ -5,14 +5,10 @@ import java.net.*;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.*;
 
 public class Utils {
-    private static Random rand;
-    static{
-        rand = new Random(LocalDateTime.now().getNano());
-    }
-
     /** Generate a random int between 0 and maxValue(excluded)
      * @param maxValue the maximum value to generate (excluded)
      * @return the random number
@@ -27,7 +23,7 @@ public class Utils {
      * @return the random number
      */
     public static int random(int minValue, int maxValue) {
-        return minValue + rand.nextInt(maxValue-minValue);
+        return minValue + ThreadLocalRandom.current().nextInt(maxValue-minValue);
     }
 
 

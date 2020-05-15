@@ -26,6 +26,20 @@ public class Person {
         return symptoms;
     }
 
+    public boolean isInfected() {
+        String callerName = Thread.currentThread().getStackTrace()[2].getClassName();
+
+        try {
+            Class<?> caller = Class.forName(callerName);
+            if(Strategy.class.isAssignableFrom(caller))
+                throw new RuntimeException("Strategies cannot know if a person is infected");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return infected;
+    }
+
     //#endregion
 
     public void setCanMove(boolean canMove) {

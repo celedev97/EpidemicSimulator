@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public abstract class Strategy implements SimulatorCallBack {
     protected Simulator simulator;
     private ArrayList<Person> population;
-    protected int originalResources;
+    protected long originalResources;
 
     protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 

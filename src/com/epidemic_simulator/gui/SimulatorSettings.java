@@ -152,7 +152,7 @@ public class SimulatorSettings extends JFrame {
         population.setName("population");
         stateDataPanel.add(population);
 
-        resources = new JSpinner();
+        resources = new JSpinner(new SpinnerNumberModel((Long)0L, (Long)0L, (Long)Long.MAX_VALUE, (Long)1L));
         resources.setName("resources");
         stateDataPanel.add(resources);
 
@@ -160,7 +160,7 @@ public class SimulatorSettings extends JFrame {
         testPrice.setName("testPrice");
         stateDataPanel.add(testPrice);
 
-        encountersPerDay = new JSpinner();
+        encountersPerDay = new JSpinner(new SpinnerNumberModel(0.3, 0.0, 50.0, 0.1));
         encountersPerDay.setName("encountersPerDay");
         stateDataPanel.add(encountersPerDay);
 
@@ -192,19 +192,19 @@ public class SimulatorSettings extends JFrame {
         diseaseDataPanel.add(durationLabel);
 
         //adding spinners
-        infectivity = new JSpinner();
+        infectivity = new JSpinner(new SpinnerNumberModel(0 , 0, 100, 1));
         infectivity.setName("infectivity");
         diseaseDataPanel.add(infectivity);
 
-        symptomaticity = new JSpinner();
+        symptomaticity = new JSpinner(new SpinnerNumberModel(0 , 0, 100, 1));
         symptomaticity.setName("symptomaticity");
         diseaseDataPanel.add(symptomaticity);
 
-        lethality = new JSpinner();
+        lethality = new JSpinner(new SpinnerNumberModel(0 , 0, 100, 1));
         lethality.setName("lethality");
         diseaseDataPanel.add(lethality);
 
-        duration = new JSpinner();
+        duration = new JSpinner(new SpinnerNumberModel(6 , 6, 300, 1));
         duration.setName("duration");
         diseaseDataPanel.add(duration);
         //#endregion
@@ -334,7 +334,7 @@ public class SimulatorSettings extends JFrame {
     private Simulator createSimulator() {
         try {
             //creating simulator
-            Simulator simulator = new Simulator((int)population.getValue(), (int)resources.getValue(), (int)testPrice.getValue(), (int)encountersPerDay.getValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
+            Simulator simulator = new Simulator((int)population.getValue(), ((Number)resources.getValue()).longValue(), (int)testPrice.getValue(), ((Number)encountersPerDay.getValue()).doubleValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
 
             //fetching parameters from JSpinners
             List<Object> parametersList  = strategyParameters.stream().map(parameter -> parameter.getValue()).collect(Collectors.toList());
@@ -412,7 +412,7 @@ public class SimulatorSettings extends JFrame {
                 deserializeSpinners(diseaseDataPanel, root.getJSONObject(diseaseDataPanel.getName()));
             }
 
-            //deserialize stategy data
+            //deserialize strategy data
             if(root.has(strategyPanel.getName())){
                 JSONObject strategyData = root.getJSONObject(strategyPanel.getName());
                 String selectedClass = strategyData.getString("selected");
@@ -485,8 +485,8 @@ public class SimulatorSettings extends JFrame {
 
     private void deserializeSpinners(JPanel dataPanel, JSONObject jsonObject) {
         getJSpinners(dataPanel).forEach(jSpinner -> {
-            System.out.println("SETTING: "+jSpinner.getName()+" TO "+jsonObject.getInt(jSpinner.getName()));
-            jSpinner.setValue(jsonObject.getInt(jSpinner.getName()));
+            System.out.println("SETTING: "+jSpinner.getName()+" TO "+jsonObject.getNumber(jSpinner.getName()));
+            jSpinner.setValue(jsonObject.getNumber(jSpinner.getName()));
         });
     }
 
