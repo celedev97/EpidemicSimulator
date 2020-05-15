@@ -13,8 +13,8 @@ public class Main {
         Simulator sim = null;
 
         try {
-            sim = new Simulator(10000, 449999, 100,5, 33, 50, 50, 45);
-            //new BlockEveryoneByContactTracing(sim);
+            sim = new Simulator(10000, 449999, 5,0.3f, 50, 50, 50, 45);
+            //new TestEveryOneOnFirstRed(sim);
             //ContactTracingLightTest strategy = new ContactTracingLightTest(sim, 20);
             //MediumControlledLockdown strategy=new MediumControlledLockdown(sim,10);
             //FullControlledLockdownAndStopSpread strategy=new FullControlledLockdownAndStopSpread(sim,20);
