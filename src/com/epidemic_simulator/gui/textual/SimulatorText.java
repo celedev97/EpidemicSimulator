@@ -73,7 +73,14 @@ public class SimulatorText extends JFrame {
             dayReport();
 
             writeOutput( "\nFINAL REPORT:\n", 20, "b", Color.BLACK);
-            writeOutput( "DAY "+simulator.getDay()+ ": " + outcome.toString(), "b", 18);
+            //TODO: c'è un modo migliore per pulire sto accrocco?
+            writeOutput("DAY " + simulator.getDay() + ": ", "b", 18);
+            if (outcome == Simulator.Outcome.ALL_HEALED)
+                writeOutput(outcome.toString(), "b", 18, Color.GREEN);
+            else if (outcome == Simulator.Outcome.ECONOMIC_COLLAPSE)
+                writeOutput(outcome.toString(), "b", 18, Color.ORANGE);
+            else
+                writeOutput(outcome.toString(), "b", 18, Color.RED);
             writeOutput("\n");
             writeOutput( "\nSTARTING PARAMETERS:\n", 20, "b", Color.BLACK);
             writeOutput("Hey, give me the time to implement this...", 10);
