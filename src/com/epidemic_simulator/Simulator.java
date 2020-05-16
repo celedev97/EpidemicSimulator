@@ -197,18 +197,17 @@ public class Simulator {
 
         //Vd calculation
         int canMoveCount = notQuarantinedPersons.size();
-        double encountersThisDay = averageEncountersPerDay * canMoveCount / population.size();
-        int intEncountersThisDay = encountersThisDay == (int) encountersThisDay ? (int) encountersThisDay : (int) encountersThisDay + 1;
+        double encountersPerPersonThisDay = averageEncountersPerDay * canMoveCount / population.size();
 
         //R0 calculation TODO: is this really necessary?
-        r0 = encountersThisDay * diseaseDuration * doubleInfectionRate;
+        r0 = encountersPerPersonThisDay * diseaseDuration * doubleInfectionRate;
         if (r0 < 1)
             System.out.println("Disease has been eradicated");
 
-        int encounterToDo = (int) (encountersThisDay * canMoveCount);
+        int encounterToDoThisDay = (int) (encountersPerPersonThisDay * canMoveCount);
 
         if(canMoveCount > 1){
-            for (int i = 0; i < encounterToDo; i++) {
+            for (int i = 0; i < encounterToDoThisDay; i++) {
                 Person p1 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));
                 Person p2 = null;
 
