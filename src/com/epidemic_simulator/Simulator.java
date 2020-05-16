@@ -12,7 +12,6 @@ public class Simulator {
     public ArrayList<SimulatorCallBack> callBacks;
 
     //#region Simulation parameters
-    private final int startingPopulation; //TODO: serve effettivamente a qualcosa?
     private long resources;//Numero risorse disponibili
 
     public long getResources() {
@@ -75,8 +74,6 @@ public class Simulator {
 
         //clearing my references to the callbacks
         callBacks.clear();
-        //setting the array to null (just to be safe) TODO: REMOVE
-        //callBacks = null;
         //now the gc should be able to kick in and clear this Simulator and its callbacks
         //#endregion
 
@@ -128,7 +125,6 @@ public class Simulator {
 
         //#region Initializing simulation parameter
         //Dati popolazione/stato
-        this.startingPopulation = startingPopulation;
         this.resources = resources;
         this.testPrice = testPrice;
         this.cureCost = testPrice * 3;
@@ -199,7 +195,7 @@ public class Simulator {
         int canMoveCount = notQuarantinedPersons.size();
         double encountersPerPersonThisDay = averageEncountersPerDay * canMoveCount / population.size();
 
-        //R0 calculation TODO: is this really necessary?
+        //R0 calculation
         r0 = encountersPerPersonThisDay * diseaseDuration * doubleInfectionRate;
         if (r0 < 1)
             System.out.println("Disease has been eradicated");
@@ -318,5 +314,6 @@ public class Simulator {
     }
 
     //TODO: THE SIMULATOR SHOULD BE SYNCHRONIZED, THE ENGINE AND THE GUI ARE ON SEPARATE THREADS!!!
+    //ARE YOU REALLY SURE ABOUT THIS? IF THE GETTERS AREN'T SYNCHRONIZED IT SHOULD BE FINE.
 
 }
