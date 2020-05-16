@@ -42,13 +42,13 @@ public class Simulator {
         return day;
     }
 
-    final private ArrayList<Person> population;
-    final private ArrayList<Person> alivePopulation;
+    private final ArrayList<Person> population;
+    private final ArrayList<Person> alivePopulation;
 
-    final private List<Person> readOnlyPopulation;
-    final private List<Person> readOnlyAlivePopulation;
+    private final List<Person> readOnlyPopulation;
+    private final List<Person> readOnlyAlivePopulation;
 
-    final private ArrayList<Person> notQuarantinedPersons;
+    private final ArrayList<Person> notQuarantinedPersons;
 
     public List<Person> getPopulation() {
         return readOnlyPopulation;
