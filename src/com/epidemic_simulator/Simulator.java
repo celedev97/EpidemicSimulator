@@ -75,8 +75,8 @@ public class Simulator {
 
         //clearing my references to the callbacks
         callBacks.clear();
-        //setting the array to null (just to be safe)
-        callBacks = null;
+        //setting the array to null (just to be safe) TODO: REMOVE
+        //callBacks = null;
         //now the gc should be able to kick in and clear this Simulator and its callbacks
         //#endregion
 
