@@ -39,20 +39,12 @@ public class ContactTracingLightTest extends Strategy {
         }
     }
 
-
-    @Override
-    public void personHasSymptoms(Person person) {
-        precautionaryQuarantine.put(person, false);
-    }
-
-
     public void checkQuarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
         if ((!person.hasSymptoms()) && ((currentDay - quarantineStartDay.get(person)) > Math.ceil((5 * simulator.diseaseDuration) / 6.0))) {
             person.setCanMove(true);
             precautionaryQuarantine.put(person, false);
         }
     }
-
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
