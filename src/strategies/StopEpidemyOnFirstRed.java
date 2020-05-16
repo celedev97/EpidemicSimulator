@@ -19,14 +19,14 @@ public class StopEpidemyOnFirstRed extends Strategy {
             if(this.controllo==0){
                 data_check=simulator.getDay();
                 System.out.println("DATA: "+data_check+" CANINFECTDAY: "+simulator.canInfectDay+" SYMPTOMSMAXDAY: "+simulator.developSymptomsMaxDay);
-                System.out.println("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+simulator.developSymptomsMaxDay))+" DAY!");
+                System.out.println("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
                 for (Person p:simulator.getAlivePopulation()) {
                     p.setCanMove(false);
                 }
                 this.controllo++;
             }
             //System.out.println(this.controllo>0&&simulator.getDay()==(data_check+simulator.canInfectDay+simulator.developSymptomsMaxDay));
-            if(this.controllo>0&&simulator.getDay()==((data_check+simulator.canInfectDay+simulator.developSymptomsMaxDay))){
+            if(this.controllo>0&&simulator.getDay()==((data_check+simulator.canInfectDay+1))){
                 System.out.println("START OF THE CONTROLL!");
                 int count=0;
                 for (Person p:simulator.getAlivePopulation()){
