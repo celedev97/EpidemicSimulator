@@ -1,6 +1,7 @@
 package com.epidemic_simulator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -43,21 +44,25 @@ public class Simulator {
 
     final private ArrayList<Person> population;
     final private ArrayList<Person> alivePopulation;
+
+    final private List<Person> readOnlyPopulation;
+    final private List<Person> readOnlyAlivePopulation;
+
     final private ArrayList<Person> notQuarantinedPersons;
 
     public List<Person> getPopulation() {
-        return population;
+        return readOnlyPopulation;
     }
 
     public List<Person> getAlivePopulation() {
-        return alivePopulation;
+        return readOnlyAlivePopulation;
     }
 
     public double r0;
 
     private boolean firstRed = false;
 
-    public void dispose() {
+    public synchronized void dispose() {
         //#region strategies
         //unlinking each strategy from this simulator
         Stream<SimulatorCallBack> strategies = callBacks.stream()
@@ -157,9 +162,16 @@ public class Simulator {
         infected.infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
         infected.canInfect = true;
 
-        //cloning the
+        //cloning the population to get alive population
         alivePopulation = (ArrayList<Person>) population.clone();
+
+        //creating a preallocated empty list for not quarantined persons
         notQuarantinedPersons = new ArrayList<>(alivePopulation.size());
+
+        //creating read only view for population and alive population (for strategies)
+        readOnlyPopulation = Collections.unmodifiableList(population);
+        readOnlyAlivePopulation = Collections.unmodifiableList(alivePopulation);
+
         //#endregion
 
         //Initializing callback lists
@@ -305,5 +317,7 @@ public class Simulator {
     public boolean getFirstRed() {
         return firstRed;
     }
+
+    //TODO: THE SIMULATOR SHOULD BE SYNCHRONIZED, THE ENGINE AND THE GUI ARE ON SEPARATE THREADS!!!
 
 }
