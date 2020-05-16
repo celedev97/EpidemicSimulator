@@ -185,11 +185,12 @@ public class Simulator {
      * @return the outcome of this day execution.
      */
     public synchronized Outcome executeDay() {
-        //creating a list with the canMove=true population TODO: find a decent place for this
+        day++;
+
+        //#region Encounters
+        //updating the list of not quarantined persons for encounters
         notQuarantinedPersons.clear();
         alivePopulation.stream().filter(p -> p.canMove).collect(Collectors.toCollection(() -> notQuarantinedPersons));
-
-        day++;
 
         //Vd calculation
         int canMoveCount = notQuarantinedPersons.size();
@@ -214,69 +215,82 @@ public class Simulator {
                 encounter(p1,p2);
             }
         }
+        //#endregion
 
+        //depleting resources
         resources -= (alivePopulation.size() - canMoveCount);
 
-        //Per ogni giorno prendiamo tutte le 'n' persone VIVE
-        for (Person person : population) {
-            if (!person.alive) continue;//Se è un morto passiamo avanti alla prossima...
 
-            //#region prosecuzione malattia
-            if (!person.infected) continue;//Controlliamo se la persona è stata effettivamente infettata
-
+        //#region prosecuzione malattia
+        //parallel loop over all the alive and infected persons
+        //TODO: parallelize this
+        population.parallelStream().filter(person -> person.alive && person.infected).parallel().forEach(person -> {
             person.daysSinceInfection++;//Altrimenti comincio a contare i giorni entro cui,anche se infetta,l'individuo non può infettare
 
-            if (!person.canInfect && person.daysSinceInfection == canInfectDay) {
-                //è verde ma è infetto, e sono i passati i giorni dell'incubazione, quindi diventa giallo
+            //if this person is green and today is the day they become yellow
+            if (!person.canInfect && person.daysSinceInfection == canInfectDay)
                 person.canInfect = true;
-            }
 
+            //if this person is yellow and today is the day they become red
             if (person.daysSinceInfection == person.symptomsDevelopmentDay) {
-                //è giallo ed oggi è il giorno in cui sviluppa sintomi
                 person.symptoms = true;
-                firstRed = true; //flag per il primo sintomatico per iniziare a tracciare gli incontri
+                //this flag enables the contact-tracing of the strategies
+                firstRed = true;
                 callBacks.forEach(simulatorCallBack -> simulatorCallBack.personHasSymptoms(person));
             }
 
+            //if the person has symptoms i need to cure them
             if (person.symptoms)
                 resources -= cureCost;
 
+            //if this is the day this person die
             if (person.daysSinceInfection == person.deathDay) {
-                //è rosso può morire
-                alivePopulation.remove(person);//Rimuovo l'individuo dalla lista delle persone vive
+                synchronized (alivePopulation){
+                    alivePopulation.remove(person);
+                }
                 person.alive = false;
-                continue;
+                return;//this return is to avoid a people dying and then healing itself
             }
 
+            //if this is the day this person heals
             if (person.daysSinceInfection == diseaseDuration) {
-                boolean hadSymtomps = person.symptoms;
+                boolean hadSymptoms = person.symptoms;
 
                 person.immune = true;
                 person.infected = false;
                 person.canInfect = false;
                 person.symptoms = false;
-                //person.canMove=true; DISABLED, THE STRATEGY SHOULD MANAGE THIS!!!
+                //person.canMove=true; DISABLED, THE STRATEGY SHOULD MANAGE THIS!!! TODO: are you sure?
 
-                if (hadSymtomps)
+                //the strategy get told of the fact that he's immune only if it knew he was sick.
+                if (hadSymptoms)
                     callBacks.forEach(simulatorCallBack -> simulatorCallBack.personClean(person));
             }
-            //#endregion
-        }
+        });
 
+
+        //#endregion
 
         //#region simulation status return
         Outcome outcome = Outcome.NOTHING;
-        if (alivePopulation.isEmpty()) {
-            outcome = Outcome.ALL_DEAD;
-        } else if (alivePopulation.stream().filter(person -> person.infected).count() == 0) {
-            outcome = Outcome.ALL_HEALED;
-        } else if (resources <= 0) {
-            outcome = Outcome.ECONOMIC_COLLAPSE;
+
+        //TODO: WRITE THIS IN A BETTER WAY!
+        synchronized (alivePopulation){
+            if (alivePopulation.isEmpty()) {
+                outcome = Outcome.ALL_DEAD;
+            } else if (alivePopulation.parallelStream().filter(person -> person.infected).count() == 0) {
+                outcome = Outcome.ALL_HEALED;
+            } else if (resources <= 0) {
+                outcome = Outcome.ECONOMIC_COLLAPSE;
+            }
         }
+
         //#endregion
 
+        //calling the callbacks for the end of the day
         Outcome finalOutcome = outcome;
         callBacks.forEach(simulatorCallBack -> simulatorCallBack.afterExecuteDay(finalOutcome));
+
         return outcome;
     }
 
