@@ -31,7 +31,7 @@ public class DrawablePerson extends GameObject {
     protected ArrayList<DrawablePerson> target;
 
     private Color color = Color.CYAN;
-    private boolean innerYellow = false;
+    private boolean innerYellow = false, canMove = false;
 
     public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson){
         this(simulatorGUI, thisPerson,0,0);
@@ -85,18 +85,30 @@ public class DrawablePerson extends GameObject {
 
     @Override
     protected void draw(Graphics graphics, int x, int y, float scale) {
-        graphics.setColor(color);
+        //calculating circle size
         int scaledSize = (int)(SIZE*scale);
         int halfScaledSize = scaledSize/2;
+        //drawing outer can't move circle
+        if(!canMove){
+            graphics.setColor(Color.CYAN);
+            graphics.fillOval(x-halfScaledSize-1,y-halfScaledSize-1,scaledSize+2,scaledSize+2);
+        }
+
+        //drawing person regular color
+        graphics.setColor(color);
         graphics.fillOval(x-halfScaledSize,y-halfScaledSize,scaledSize,scaledSize);
+
+        //drawing inner yellow circle if this person is green but infected
         if(innerYellow){
             graphics.setColor(Color.YELLOW);
             graphics.fillOval(x-halfScaledSize/2,y-halfScaledSize/2,scaledSize/2,scaledSize/2);
         }
+
     }
 
     public void updateColor() {
         color = thisPerson.getColor();
         innerYellow = color == Color.GREEN && thisPerson.isInfected();
+        canMove = thisPerson.getCanMove();
     }
 }

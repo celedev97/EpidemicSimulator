@@ -1,6 +1,7 @@
 package com.epidemic_simulator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,23 +42,27 @@ public class Simulator {
         return day;
     }
 
-    private final ArrayList<Person> population;
-    private final ArrayList<Person> alivePopulation;
-    private final ArrayList<Person> notQuarantinedPersons;
+    final private ArrayList<Person> population;
+    final private ArrayList<Person> alivePopulation;
+
+    final private List<Person> readOnlyPopulation;
+    final private List<Person> readOnlyAlivePopulation;
+
+    final private ArrayList<Person> notQuarantinedPersons;
 
     public List<Person> getPopulation() {
-        return population;
+        return readOnlyPopulation;
     }
 
     public List<Person> getAlivePopulation() {
-        return alivePopulation;
+        return readOnlyAlivePopulation;
     }
 
     public double r0;
 
     private boolean firstRed = false;
 
-    public void dispose() {
+    public synchronized void dispose() {
         //#region strategies
         //unlinking each strategy from this simulator
         Stream<SimulatorCallBack> strategies = callBacks.stream()
@@ -70,8 +75,8 @@ public class Simulator {
 
         //clearing my references to the callbacks
         callBacks.clear();
-        //setting the array to null (just to be safe)
-        callBacks = null;
+        //setting the array to null (just to be safe) TODO: REMOVE
+        //callBacks = null;
         //now the gc should be able to kick in and clear this Simulator and its callbacks
         //#endregion
 
@@ -157,9 +162,16 @@ public class Simulator {
         infected.infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
         infected.canInfect = true;
 
-        //cloning the
+        //cloning the population to get alive population
         alivePopulation = (ArrayList<Person>) population.clone();
+
+        //creating a preallocated empty list for not quarantined persons
         notQuarantinedPersons = new ArrayList<>(alivePopulation.size());
+
+        //creating read only view for population and alive population (for strategies)
+        readOnlyPopulation = Collections.unmodifiableList(population);
+        readOnlyAlivePopulation = Collections.unmodifiableList(alivePopulation);
+
         //#endregion
 
         //Initializing callback lists
@@ -185,18 +197,17 @@ public class Simulator {
 
         //Vd calculation
         int canMoveCount = notQuarantinedPersons.size();
-        double encountersThisDay = averageEncountersPerDay * canMoveCount / population.size();
-        int intEncountersThisDay = encountersThisDay == (int) encountersThisDay ? (int) encountersThisDay : (int) encountersThisDay + 1;
+        double encountersPerPersonThisDay = averageEncountersPerDay * canMoveCount / population.size();
 
         //R0 calculation TODO: is this really necessary?
-        r0 = encountersThisDay * diseaseDuration * doubleInfectionRate;
+        r0 = encountersPerPersonThisDay * diseaseDuration * doubleInfectionRate;
         if (r0 < 1)
             System.out.println("Disease has been eradicated");
 
-        int encounterToDo = (int) (encountersThisDay * canMoveCount);
+        int encounterToDoThisDay = (int) (encountersPerPersonThisDay * canMoveCount);
 
         if(canMoveCount > 1){
-            for (int i = 0; i < encounterToDo; i++) {
+            for (int i = 0; i < encounterToDoThisDay; i++) {
                 Person p1 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));
                 Person p2 = null;
 
@@ -305,5 +316,7 @@ public class Simulator {
     public boolean getFirstRed() {
         return firstRed;
     }
+
+    //TODO: THE SIMULATOR SHOULD BE SYNCHRONIZED, THE ENGINE AND THE GUI ARE ON SEPARATE THREADS!!!
 
 }
