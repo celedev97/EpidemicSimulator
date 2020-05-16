@@ -334,7 +334,6 @@ public class SimulatorSettings extends JFrame {
     };
 
     private Simulator createSimulator() {
-        //System.gc();TODO: Ask the other members if they want aggressive gc or not.
         try {
             //creating simulator
             Simulator simulator = new Simulator((int)population.getValue(), ((Number)resources.getValue()).longValue(), (int)testPrice.getValue(), ((Number)encountersPerDay.getValue()).doubleValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
@@ -571,9 +570,9 @@ public class SimulatorSettings extends JFrame {
         getJSpinners(container).forEach(jSpinner -> {
             try {
                 jSpinner.commitEdit();
-            } catch (ParseException e) {
-                //TODO: investigate on this!!!
-                e.printStackTrace();
+            } catch (ParseException ignored) {
+                //even if this exception get thrown the spinner will still have a valid value, so there's no need to do anything.
+                ignored.printStackTrace();
             }
         });
     }
