@@ -20,7 +20,7 @@ public abstract class Strategy implements SimulatorCallBack {
         encounters = new HashMap<>();
     }
 
-    public void dispose(){
+    public void dispose() {
         encounters.clear();
         encounters = null;
     }
@@ -97,7 +97,7 @@ public abstract class Strategy implements SimulatorCallBack {
      * @param person              The person to search
      * @return The list of the people that this person has met
      */
-    private final List<Person> findEncounters(HashMap<Person, List<Person>> encounterDictionary, Person person) {
+    private List<Person> findEncounters(HashMap<Person, List<Person>> encounterDictionary, Person person) {
         if (!encounterDictionary.containsKey(person)) {
             ArrayList<Person> temp = new ArrayList<>();
             encounterDictionary.put(person, temp);
