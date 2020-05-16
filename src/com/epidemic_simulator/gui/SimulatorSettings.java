@@ -239,7 +239,9 @@ public class SimulatorSettings extends JFrame {
         GridLayout strategyDataGridLayout = new GridLayout(1,PARAMETERS_PER_ROW);
         strategyDataGridLayout.setHgap(10);
         strategyPanel = new JPanel(strategyDataGridLayout);
+        strategyPanel.setBorder(BorderFactory.createTitledBorder("Strategy parameters"));
         strategyPanel.setName("strategy");
+        strategyPanel.setVisible(false);
         northPanel.add(strategyPanel);
 
         //#region strategy dynamic GUI preparation
@@ -499,16 +501,16 @@ public class SimulatorSettings extends JFrame {
         for(JPanel panel : strategyParametersColumns){
             panel.removeAll();
         }
-
-        //TODO: use visibility, not border
-        strategyPanel.setBorder(null);
         //#endregion
+
+        strategyPanel.setVisible(false);
 
         //#region generating new strategy
         Class strategyClass = ((SelectableStrategy)strategyComboBox.getSelectedItem()).getValue();
         if(strategyClass != null){
-            strategyPanel.setBorder(BorderFactory.createTitledBorder("Strategy parameters"));
             Parameter[] parameters = strategyClass.getDeclaredConstructors()[0].getParameters();
+            strategyPanel.setVisible(parameters.length>1);
+
             //populating the parameters columns with the data from parameters
             //(SKIPPING THE FIRST PARAMETER, THAT'S THE SIMULATOR)
             for (int i = 1; i < parameters.length; i++) {
