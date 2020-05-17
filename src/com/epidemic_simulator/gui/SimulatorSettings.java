@@ -345,9 +345,9 @@ public class SimulatorSettings extends JFrame {
             parametersList.add(0,simulator);
 
             //creating strategy
-            Class choosenStrategy = ((SelectableStrategy) strategyComboBox.getSelectedItem()).getValue();
-            if(choosenStrategy != null)
-                choosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
+            Class chosenStrategy = ((SelectableStrategy) strategyComboBox.getSelectedItem()).getValue();
+            if(chosenStrategy != null)
+                chosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
 
             return simulator;
         } catch (Exception ex) {
@@ -361,15 +361,20 @@ public class SimulatorSettings extends JFrame {
 
     //#region Configuration LOAD/SAVE/RELOAD
     private void setDefaultParameters() {
-        population.setValue(1000);
-        resources.setValue(35000);
-        testPrice.setValue(100);
-        encountersPerDay.setValue(5);
+        int populationValue = 1000;
+        int durationValue = 45;
+        int resourcesValue = durationValue*populationValue -1;
+        int testPriceValue = resourcesValue / (10*populationValue)+1;
+
+        population.setValue(populationValue);
+        resources.setValue(resourcesValue);
+        testPrice.setValue(testPriceValue);
+        encountersPerDay.setValue(1);
 
         infectivity.setValue(50);
         symptomaticity.setValue(50);
         lethality.setValue(50);
-        duration.setValue(40);
+        duration.setValue(durationValue);
 
         strategyComboBox.setSelectedIndex(0);
     }
