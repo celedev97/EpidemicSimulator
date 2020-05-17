@@ -28,14 +28,23 @@ public class SimulatorGUI extends JFrame {
     private Simulator.Outcome lastDayOutCome = Simulator.Outcome.NOTHING;
     //#endregion
 
+    //#region
+    JProgressBar greenBar;
+    JProgressBar orangeBar;
+    JProgressBar blueBar;
+    JProgressBar blackBar;
+    JProgressBar resourcesBar;
+    //#endregion
+
     JFrame settingsFrame;
 
     public SimulatorGUI(JFrame settingsFrame, Simulator simulator){
         super("Epidemic simulator - Visual Simulator");
         this.settingsFrame = settingsFrame;
         this.simulator = simulator;
+        int populationSize = simulator.getPopulation().size();
 
-        //#region creating the Frame
+        //#region Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
 
@@ -48,30 +57,80 @@ public class SimulatorGUI extends JFrame {
         contentPane.add(Engine.renderer, BorderLayout.CENTER);
 
         //#region North panel
-        JPanel northPanel = new JPanel();
-        northPanel.add(new JLabel("DAY: "));
+        JPanel northPanel = new JPanel(new BorderLayout());
+
+        JPanel leftNorthPanel = new JPanel();
+        northPanel.add(leftNorthPanel, BorderLayout.WEST);
+
+        //#region first row
+        JPanel firstRow = new JPanel();
+        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
+        leftNorthPanel.add(firstRow);
+
+        //day panel
+        JPanel dayFlow = new JPanel();
+        firstRow.add(dayFlow);
+
+        dayFlow.add(new JLabel("DAY: "));
         dayLabel = new JLabel("0");
-        northPanel.add(dayLabel);
+        dayFlow.add(dayLabel);
+
+        //data chart TODO: ADD IT
+
+        //#endregion
+
+        //#region second row
+        JPanel secondRow = new JPanel(new GridLayout(5,2));
+        leftNorthPanel.add(secondRow);
+
+        //#region progressbar
+        //creating progressbar
+        greenBar     = new ColoredBar(Color.GREEN, 0, populationSize);
+        orangeBar    = new ColoredBar(Color.ORANGE,0, populationSize);
+        blueBar      = new ColoredBar(Color.BLUE,  0, populationSize);
+        blackBar     = new ColoredBar(Color.BLACK, 0, populationSize);
+        resourcesBar = new ColoredBar(Color.CYAN,  0, (int)(simulator.getResources()/simulator.getTestPrice()));
+
+        //setting values
+        greenBar.setValue(populationSize-1);
+        orangeBar.setValue(1);
+        blueBar.setValue(0);
+        blackBar.setValue(0);
+        resourcesBar.setValue(resourcesBar.getMaximum());
+
+        //creating panels for the bars
+        secondRow.add(new JLabel("Healthy:"));
+        secondRow.add(greenBar);
+        secondRow.add(new JLabel("Infected:"));
+        secondRow.add(orangeBar);
+        secondRow.add(new JLabel("Immune:"));
+        secondRow.add(blueBar);
+        secondRow.add(new JLabel("Dead:"));
+        secondRow.add(blackBar);
+        secondRow.add(new JLabel("Resources:"));
+        secondRow.add(resourcesBar);
+
+        //#endregion progressbar
+
+        //#endregion
+
 
         contentPane.add(northPanel, BorderLayout.NORTH);
 
-        //TODO: add progressbar for resources
-        //TODO: add slider for speed
+
         //#endregion
-        //#endregion
+        //#endregion frame
 
         //Starting the graphic engine
         Engine.start();
         
         //#region Creating and placing drawablePersons
         //calculating the best rows and column configuration for the canvas rateo and the number of Persons that i have
-        int nPersons = simulator.getPopulation().size();
-
         int width = Engine.renderer.getWidth();
         int height = Engine.renderer.getHeight();
 
-        int nx = (int)Math.sqrt(((float)nPersons)*width/height);
-        int ny = (int)Math.sqrt(((float)nPersons)*height/width)+1;
+        int nx = (int)Math.sqrt(((float)populationSize)*width/height);
+        int ny = (int)Math.sqrt(((float)populationSize)*height/width)+1;
 
         //calculating the world size
         int worldX = nx * 20;
@@ -88,7 +147,7 @@ public class SimulatorGUI extends JFrame {
                 DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y);
                 drawablePersonsDictionary.put(person, drawablePerson);
                 drawablePersons.add(drawablePerson);
-                if (++created == nPersons) break creationLoop;
+                if (++created == populationSize) break creationLoop;
             }
         }
         //#endregion
@@ -200,5 +259,21 @@ public class SimulatorGUI extends JFrame {
         //fake main that just start a Setting window and call the start button
         SimulatorSettings settings = new SimulatorSettings();
         settings.startGUIButtonListener.actionPerformed(null);
+    }
+}
+
+class ColoredBar extends JProgressBar{
+
+    public ColoredBar(Color color, int min, int max) {
+        super(min, max);
+        setForeground(color);
+        setBackground(Color.WHITE);
+        setStringPainted(true);
+        setMinimumSize(new Dimension(150,50));
+    }
+
+    @Override
+    public void setValue(int n) {
+        super.setValue(n);
     }
 }
