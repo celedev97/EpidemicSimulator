@@ -35,12 +35,13 @@ public class Simulator {
     //#endregion
 
     //#region Simulation running status
-    private int day = 0;
 
+    private int day = 0;
     public int getDay() {
         return day;
     }
 
+    //#region Population Arrays
     private final ArrayList<Person> population;
     private final ArrayList<Person> alivePopulation;
 
@@ -56,6 +57,7 @@ public class Simulator {
     public List<Person> getAlivePopulation() {
         return readOnlyAlivePopulation;
     }
+    //#endregion
 
     public double r0;
 
@@ -205,6 +207,7 @@ public class Simulator {
 
         if(canMoveCount > 1){
             //TODO: could this be made parallel?
+            //Probably not, this would require synchronization on persons, and could cause a deadlock
             for (int i = 0; i < encounterToDoThisDay; i++) {
                 Person p1 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));
                 Person p2 = null;
@@ -237,9 +240,14 @@ public class Simulator {
                 person.symptoms = true;
                 person.canMove = false;
 
-                //this flag enables the contact-tracing of the strategies
+                //this flag enables the strategies
                 firstRed = true;
-                callBacks.forEach(simulatorCallBack -> simulatorCallBack.personHasSymptoms(person));
+
+                callBacks.forEach(simulatorCallBack -> {
+                    synchronized (simulatorCallBack){
+                        simulatorCallBack.personHasSymptoms(person);
+                    }
+                });
             }
 
             //if the person has symptoms i need to cure them
@@ -267,8 +275,15 @@ public class Simulator {
                 //the strategy get told of the fact that he's immune only if it knew he was sick.
                 if (hadSymptoms) {
                     person.canMove=true;
-                    callBacks.forEach(simulatorCallBack -> simulatorCallBack.personClean(person));
+                    callBacks.forEach(simulatorCallBack -> {
+                        if(!Strategy.class.isAssignableFrom(simulatorCallBack.getClass()) || firstRed){
+                            synchronized (simulatorCallBack){
+                                simulatorCallBack.personClean(person);
+                            }
+                        }
+                    });
                 }
+
             }
         });
 
@@ -295,7 +310,13 @@ public class Simulator {
 
         //calling the callbacks for the end of the day
         Outcome finalOutcome = outcome;
-        callBacks.forEach(simulatorCallBack -> simulatorCallBack.afterExecuteDay(finalOutcome));
+        callBacks.forEach(simulatorCallBack -> {
+            if(!Strategy.class.isAssignableFrom(simulatorCallBack.getClass()) || firstRed){
+                synchronized (simulatorCallBack){
+                    simulatorCallBack.afterExecuteDay(finalOutcome);
+                }
+            }
+        });
 
         return outcome;
     }
@@ -313,7 +334,13 @@ public class Simulator {
         if (person2.canInfect && !person1.infected) {//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
             person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
         }
-        callBacks.forEach(simulatorCallBack -> simulatorCallBack.registerEncounter(person1, person2));
+        callBacks.forEach(simulatorCallBack -> {
+            if(!Strategy.class.isAssignableFrom(simulatorCallBack.getClass()) || firstRed){
+                synchronized (simulatorCallBack){
+                    simulatorCallBack.registerEncounter(person1, person2);
+                }
+            }
+        });
     }
 
     /**
@@ -327,10 +354,6 @@ public class Simulator {
 
         resources -= testPrice;
         return person.canInfect;
-    }
-
-    public boolean getFirstRed() {
-        return firstRed;
     }
 
     //TODO: THE SIMULATOR SHOULD BE SYNCHRONIZED, THE ENGINE AND THE GUI ARE ON SEPARATE THREADS!!!

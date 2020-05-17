@@ -49,9 +49,6 @@ public abstract class Strategy implements SimulatorCallBack {
      */
     @Override
     public final void registerEncounter(Person person1, Person person2) {
-        //i can't register encounters before the first red is found.
-        if (!simulator.getFirstRed()) return;
-
         int day = simulator.getDay();
 
         //get this day encounter dictionary

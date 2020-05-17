@@ -59,21 +59,19 @@ public class ContactTracingLightTest extends Strategy {
                 checkQuarantine(person, simulator.getDay());
         }
 
-        if (simulator.getFirstRed()) {
-            ArrayList<Person> reds = new ArrayList<>();
-            simulator.getAlivePopulation().stream().filter(s -> (Color.RED).equals(s.getColor())).forEach(reds::add); //aggiungo all'array reds tutti i sintomatici
-            for (Person tizio : reds) {
-                List<Person> encounters;
-                encounters = findEncounters(tizio, simulator.developSymptomsMaxDay);  //per ogni sintomatico controllo la lista dei suoi ultimi incontri
-                if (!encounters.isEmpty()) {
-                    for (int i = 0; i < ((encounters.size() * testPercentage) / 100); i++) {     //una percentuale fa il tampone
-                        if (isTestable(encounters, i) && (simulator.testVirus(encounters.get(i))))
-                            quarantine(encounters, i);
-                    }
-                    for (int i = (testPercentage * 100 / encounters.size()); i < encounters.size(); i++) {  //il resto viene messo in quarantena per tot giorni
-                        if (isTestable(encounters, i))
-                            quarantine(encounters, i);
-                    }
+        ArrayList<Person> reds = new ArrayList<>();
+        simulator.getAlivePopulation().stream().filter(s -> (Color.RED).equals(s.getColor())).forEach(reds::add); //aggiungo all'array reds tutti i sintomatici
+        for (Person tizio : reds) {
+            List<Person> encounters;
+            encounters = findEncounters(tizio, simulator.developSymptomsMaxDay);  //per ogni sintomatico controllo la lista dei suoi ultimi incontri
+            if (!encounters.isEmpty()) {
+                for (int i = 0; i < ((encounters.size() * testPercentage) / 100); i++) {     //una percentuale fa il tampone
+                    if (isTestable(encounters, i) && (simulator.testVirus(encounters.get(i))))
+                        quarantine(encounters, i);
+                }
+                for (int i = (testPercentage * 100 / encounters.size()); i < encounters.size(); i++) {  //il resto viene messo in quarantena per tot giorni
+                    if (isTestable(encounters, i))
+                        quarantine(encounters, i);
                 }
             }
         }
