@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-public class CameraMove extends GameObject {//TODO: change with GameScript
+public class CameraMove extends GameObject {
     public float speed;
 
     private float zoomSpeed = 4f;
