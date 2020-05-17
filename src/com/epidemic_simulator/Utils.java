@@ -43,7 +43,6 @@ public class Utils {
      * @throws URISyntaxException could be thrown if the package name is wrong
      */
     public static List<Class> getClassesForPackage(final String pkgName) throws IOException, URISyntaxException {
-        //(and comment it, and PLS JAVADOC)
         final ArrayList<Class> allClasses = new ArrayList<>();
 
         //formatting package with / instead of . to get path
@@ -53,7 +52,6 @@ public class Utils {
 
         //getting root of the package (could be different from the path on disk if the program is being run from inside a jar)
         Path root;
-        //TODO: THIS SHIT HAS YET TO BE TESTED WITH A JAR! PROBABLY NOT WORKING
         if (pkg.toString().startsWith("jar:")) {
             try {
                 root = FileSystems.getFileSystem(pkg).getPath(pkgPath);

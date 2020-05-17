@@ -47,12 +47,17 @@ public class SimulatorGUI extends JFrame {
 
         contentPane.add(Engine.renderer, BorderLayout.CENTER);
 
+        //#region North panel
         JPanel northPanel = new JPanel();
         northPanel.add(new JLabel("DAY: "));
         dayLabel = new JLabel("0");
         northPanel.add(dayLabel);
 
         contentPane.add(northPanel, BorderLayout.NORTH);
+
+        //TODO: add progressbar for resources
+        //TODO: add slider for speed
+        //#endregion
         //#endregion
 
         //Starting the graphic engine
@@ -135,7 +140,6 @@ public class SimulatorGUI extends JFrame {
     };
 
     public void doneMoving(DrawablePerson drawablePerson) {
-        System.out.println("DONE");
         movingPersons--;
         //if there are still people that need to move
         if(toMovePersons.size() != 0){
