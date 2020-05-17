@@ -204,6 +204,7 @@ public class Simulator {
         int encounterToDoThisDay = (int) (encountersPerPersonThisDay * canMoveCount);
 
         if(canMoveCount > 1){
+            //TODO: could this be made parallel?
             for (int i = 0; i < encounterToDoThisDay; i++) {
                 Person p1 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));
                 Person p2 = null;
@@ -221,11 +222,11 @@ public class Simulator {
         resources -= (alivePopulation.size() - canMoveCount);
 
 
-        //#region prosecuzione malattia
+        //#region disease calculations
         //parallel loop over all the alive and infected persons
-        //TODO: parallelize this
         population.parallelStream().filter(person -> person.alive && person.infected).parallel().forEach(person -> {
-            person.daysSinceInfection++;//Altrimenti comincio a contare i giorni entro cui,anche se infetta,l'individuo non può infettare
+            //increasing the number of days passed since the day of the infection
+            person.daysSinceInfection++;
 
             //if this person is green and today is the day they become yellow
             if (!person.canInfect && person.daysSinceInfection == canInfectDay)
@@ -234,6 +235,8 @@ public class Simulator {
             //if this person is yellow and today is the day they become red
             if (person.daysSinceInfection == person.symptomsDevelopmentDay) {
                 person.symptoms = true;
+                person.canMove = false;
+
                 //this flag enables the contact-tracing of the strategies
                 firstRed = true;
                 callBacks.forEach(simulatorCallBack -> simulatorCallBack.personHasSymptoms(person));
@@ -260,11 +263,12 @@ public class Simulator {
                 person.infected = false;
                 person.canInfect = false;
                 person.symptoms = false;
-                //person.canMove=true; DISABLED, THE STRATEGY SHOULD MANAGE THIS!!! TODO: are you sure?
 
                 //the strategy get told of the fact that he's immune only if it knew he was sick.
-                if (hadSymptoms)
+                if (hadSymptoms) {
+                    person.canMove=true;
                     callBacks.forEach(simulatorCallBack -> simulatorCallBack.personClean(person));
+                }
             }
         });
 
@@ -274,15 +278,17 @@ public class Simulator {
         //#region simulation status return
         Outcome outcome = Outcome.NOTHING;
 
-        //TODO: WRITE THIS IN A BETTER WAY!
+        int infectedCount;//TODO: you could increase a counter instead of counting them at every cycle???
         synchronized (alivePopulation){
-            if (alivePopulation.isEmpty()) {
-                outcome = Outcome.ALL_DEAD;
-            } else if (alivePopulation.parallelStream().filter(person -> person.infected).count() == 0) {
-                outcome = Outcome.ALL_HEALED;
-            } else if (resources <= 0) {
-                outcome = Outcome.ECONOMIC_COLLAPSE;
-            }
+            infectedCount = (int) alivePopulation.parallelStream().filter(person -> person.infected).count();
+        }
+
+        if (alivePopulation.isEmpty()) {
+            outcome = Outcome.ALL_DEAD;
+        } else if (infectedCount == 0) {
+            outcome = Outcome.ALL_HEALED;
+        } else if (resources <= 0) {
+            outcome = Outcome.ECONOMIC_COLLAPSE;
         }
 
         //#endregion
