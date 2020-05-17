@@ -188,7 +188,7 @@ public class SimulatorSettings extends JFrame {
         diseaseDataPanel.add(lethalityLabel);
 
         JLabel durationLabel = new JLabel("Duration (D):");
-        lethalityLabel.setToolTipText("The numbers of days that the disease will last in a person body");
+        durationLabel.setToolTipText("The numbers of days that the disease will last in a person body");
         diseaseDataPanel.add(durationLabel);
 
         //adding spinners
