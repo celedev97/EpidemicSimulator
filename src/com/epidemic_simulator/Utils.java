@@ -64,9 +64,9 @@ public class Utils {
 
 
         //walk for all files
-        try (final Stream<Path> allPaths = Files.walk(root)) {
+        try (final Stream<Path> allPaths = Files.walk(root).filter(Files::isRegularFile)) {
             //filter real files (exclude directories)
-            allPaths.filter(Files::isRegularFile).forEach(file -> {
+            allPaths.forEach(file -> {
                 try {
                     //turn path back into package name
                     final String path = file.toString().replace('/', '.').replace('\\', '.');
