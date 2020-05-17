@@ -18,7 +18,7 @@ public class Simulator {
         return resources;
     }
 
-    public final int testPrice;//Costi per le cure
+    private final int testPrice;//Costi per le cure
     private final int cureCost;
     private final double averageEncountersPerDay;//Velocità di incontro media per individuo/numero medio di individui che giornalmente una persona incontra
     //#endregion
@@ -80,6 +80,10 @@ public class Simulator {
         //#endregion
 
         notQuarantinedPersons.clear();
+    }
+
+    public int getTestPrice() {
+        return testPrice;
     }
 
     //#endregion
