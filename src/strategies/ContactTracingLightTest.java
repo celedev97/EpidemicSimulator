@@ -24,7 +24,7 @@ public class ContactTracingLightTest extends Strategy {
     private int testPercentage;
 
     public final Map<Person, Boolean> precautionaryQuarantine;
-    public Map<Person, Integer> quarantineStartDay;
+    public final Map<Person, Integer> quarantineStartDay;
 
     public ContactTracingLightTest(Simulator simulator, int testPercentage) {
         super(simulator);
@@ -37,6 +37,12 @@ public class ContactTracingLightTest extends Strategy {
             precautionaryQuarantine.put(person, false);
             quarantineStartDay.put(person, 0);
         }
+    }
+
+    @Override
+    public void personHasSymptoms (Person person) {
+        super.personHasSymptoms(person);
+        precautionaryQuarantine.put(person, false);
     }
 
     public void checkQuarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
@@ -80,7 +86,6 @@ public class ContactTracingLightTest extends Strategy {
     }
 
     boolean isTestable(List<Person> encounters, int i) {
-        return (encounters.get(i).getColor() != Color.RED) && (encounters.get(i).getColor() != Color.BLUE) && (!precautionaryQuarantine.get(encounters.get(i)));
+        return (encounters.get(i).getColor() != Color.RED) && (encounters.get(i).getColor() != Color.BLACK) && (encounters.get(i).getColor() != Color.BLUE) && (!precautionaryQuarantine.get(encounters.get(i)));
     }
-
 }
