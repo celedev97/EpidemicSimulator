@@ -17,8 +17,9 @@ public class StopEpidemyOnFirstRed extends Strategy {
     public void afterExecuteDay(Simulator.Outcome outcome) {
         if(this.controllo==0){
             data_check=simulator.getDay();
-            System.out.println("DATA: "+data_check+" CANINFECTDAY: "+simulator.canInfectDay+" SYMPTOMSMAXDAY: "+simulator.developSymptomsMaxDay);
-            System.out.println("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
+            //System.out.println("DATA: "+data_check+" CANINFECTDAY: "+simulator.canInfectDay+" SYMPTOMSMAXDAY: "+simulator.developSymptomsMaxDay);
+            //System.out.println("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
+            super.output("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
             for (Person p:simulator.getAlivePopulation()) {
                 p.setCanMove(false);
             }
@@ -26,7 +27,8 @@ public class StopEpidemyOnFirstRed extends Strategy {
         }
         //System.out.println(this.controllo>0&&simulator.getDay()==(data_check+simulator.canInfectDay+simulator.developSymptomsMaxDay));
         if(this.controllo>0&&simulator.getDay()==((data_check+simulator.canInfectDay+1))){
-            System.out.println("START OF THE CONTROLL!");
+            //System.out.println("START OF THE CONTROLL!");
+            super.output("START OF THE CONTROLL!");
             int count=0;
             for (Person p:simulator.getAlivePopulation()){
                 if(!simulator.testVirus(p)){
@@ -34,7 +36,8 @@ public class StopEpidemyOnFirstRed extends Strategy {
                     p.setCanMove(true);
                 }
             }
-            System.out.println(count+" persone rimesse in libertà!");
+            //System.out.println(count+" persone rimesse in libertà!");
+            super.output(count+" PEOPLE FREED!");
             data_check=0;
         }
     }

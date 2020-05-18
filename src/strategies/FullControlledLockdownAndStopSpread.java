@@ -25,6 +25,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
     public void afterExecuteDay(Simulator.Outcome outcome) {
         int data_check = 0;
         if(sintomatici>=this.limite){
+            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" RED'S ->PROCEED TO THE FULL LOCKDOWN FROM TODAY!");
             HashMap<Person,List<Person>>person;
             data_check=simulator.getDay();
             for (int i = 0; i < simulator.getDay(); i++) {
@@ -54,21 +55,21 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                 }
             }
             this.sintomatici=0;
+            super.output(check.size()+" PERSON STILL TO CHECK...");
         }
-        else if(simulator.getDay()<=(data_check+simulator.canInfectDay+simulator.developSymptomsMaxDay) && check.size()>0) {
-            for (Person p : check) {
-                if (p.getColor() == Color.RED) this.personClean(p);
-                check.remove(p);
-            }
-        }
-        else if(simulator.getDay()==(data_check+simulator.canInfectDay+simulator.developSymptomsMaxDay) && check.size()>0) {
+        else if(simulator.getDay()==(data_check+simulator.canInfectDay+1) && check.size()>0) {
+            int count=0;
+            int count2=0;
             for (Person p : check) {
                 if (simulator.testVirus(p)) {
+                    count++;
                     check.remove(p);
                 }
+                count2++;
                 p.setCanMove(true);
                 check.remove(p);
             }
+            super.output(count+" PERSON INFECTED AND "+count2+" PERSON FREE!");
         }
         return;
     }

@@ -9,6 +9,7 @@ public abstract class Strategy implements SimulatorCallBack {
     protected Simulator simulator;
     private ArrayList<Person> population;
     protected long originalResources;
+    private String log;
 
     protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 
@@ -38,6 +39,16 @@ public abstract class Strategy implements SimulatorCallBack {
     @Override
     public void personHasSymptoms(Person person) {
 
+    }
+
+    public void output(String Testo) {
+        this.log=Testo;
+    }
+
+    public String Clean(){
+        String appoggio=this.log;
+        this.log="";
+        return appoggio;
     }
 
     /**

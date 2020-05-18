@@ -76,13 +76,10 @@ public class SimulatorText extends JFrame {
             //simulation loop
             while ((outcome = simulator.executeDay()) == Simulator.Outcome.NOTHING)
                 dayReport();
-
             //#region final report
             finalReport(outcome, startTime);
             //#endregion
         }
-
-
     };
 
     private void dayReport() {
@@ -103,6 +100,7 @@ public class SimulatorText extends JFrame {
         writeOutput("----------\n");
         writeOutput( "resources : " + simulator.getResources() + '\n');
         writeOutput( "R0 factor: " + simulator.r0 + '\n');
+        //writeOutput( "Simulator today says: " + simulator + '\n');
 
         //Scroll to bottom:
         SwingUtilities.invokeLater(() -> {

@@ -279,6 +279,7 @@ public final class Simulator {
                 //this flag enables the strategies
                 firstRed = true;
 
+                //Execute all the simulation operation on the Person
                 callBacks.forEach(simulatorCallBack -> {
                     synchronized (simulatorCallBack){
                         simulatorCallBack.personHasSymptoms(person);
@@ -296,7 +297,6 @@ public final class Simulator {
                     alivePopulation.remove(person);
                 }
                 person.alive = false;
-
                 deads++;
                 infected--;
 
@@ -360,7 +360,6 @@ public final class Simulator {
                 }
             }
         });
-
         return outcome;
     }
 
@@ -408,9 +407,7 @@ public final class Simulator {
     public synchronized void dispose() {
         //#region strategies
         //unlinking each strategy from this simulator
-        Stream<SimulatorCallBack> strategies = callBacks.stream()
-                .filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()));
-
+        Stream<SimulatorCallBack> strategies = callBacks.stream().filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()));
         strategies.forEach(strategy -> {
             ((Strategy) strategy).simulator = null;
             ((Strategy) strategy).dispose();

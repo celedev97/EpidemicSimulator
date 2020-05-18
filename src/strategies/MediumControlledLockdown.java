@@ -30,6 +30,8 @@ public class MediumControlledLockdown extends Strategy {
         ArrayList<Person>check1=new ArrayList<>();
         if(sintomatici>=this.limite){
             int estrazione=(simulator.getAlivePopulation().size()*this.sintomatici)/100;
+            System.out.println("MAXIMUM LIMIT REACHED: "+sintomatici+" RED'S ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
+            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" RED'S ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
             HashMap<Person, List<Person>> p=findEncounters(simulator.getDay());
             Set<Person>key=p.keySet();
             ArrayList<Person>chiavi=new ArrayList<>();
@@ -62,6 +64,7 @@ public class MediumControlledLockdown extends Strategy {
                     i--;
                 }
             }
+            //this.sintomatici=0;
         }
         System.out.println(sintomatici+" "+limite);
         if(check.size()==0){
@@ -88,12 +91,12 @@ public class MediumControlledLockdown extends Strategy {
                 for (Person t:p) {
                     if (t.getColor() == Color.RED) {
                         personClean(t);
-                        System.out.println("!!!!!!");
+                        //System.out.println("!!!!!!");
                         rossi.add(t);
                     }
                 }
                 p.removeAll(rossi);
-                if(simulator.getDay()==data+simulator.canInfectDay+simulator.developSymptomsMaxDay){
+                if(simulator.getDay()==(data+simulator.canInfectDay)){
                     for (Person t:p) {
                         if(!simulator.testVirus(t)){
                             t.setCanMove(true);
