@@ -13,11 +13,10 @@ public class DrawablePerson extends GameObject {
     private static final Random rand = new Random();
 
     private final int SIZE = 10;
-    //MOVEMENT SPEED/PRECISION
 
-    private final int BASE_SPEED = 1000;
+    //MOVEMENT SPEED/PRECISION
     private final float SPEED_VARIANT = .5f;
-    private final int SPEED = BASE_SPEED - (int)(BASE_SPEED*SPEED_VARIANT)+rand.nextInt((int)(BASE_SPEED*SPEED_VARIANT));
+    private final float speed;
 
     private final int POSITION_PRECISION = 2;
 
@@ -33,15 +32,13 @@ public class DrawablePerson extends GameObject {
     private Color color = Color.CYAN;
     private boolean innerYellow = false, canMove = false;
 
-    public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson){
-        this(simulatorGUI, thisPerson,0,0);
-    }
-
-    public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson, float x, float y) {
+    public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson, float x, float y, float speed) {
         super(x,y);
         target = new ArrayList<>();
+
         this.simulatorGUI = simulatorGUI;
         this.thisPerson = thisPerson;
+        this.speed = speed; //TODO: USE THE SPEED VARIANT!!!
         startingPosition = new Vector(position);
     }
 
@@ -58,7 +55,7 @@ public class DrawablePerson extends GameObject {
 
             //(target.position-position).normalized * deltaTime
             offset = target.get(0).position.sub(this.position);
-            movement = offset.normalized().multiplyUpdate(SPEED * Engine.deltaTime);
+            movement = offset.normalized().multiplyUpdate(speed * simulatorGUI.getSpeedMultiplier() * Engine.deltaTime);
             if (movement.magnitude() < offset.magnitude()){
                 //System.out.println("MOVING: "+this+" to "+target.get(0)+"MOVE:"+ movement);
                 position.sumUpdate(movement);
@@ -68,7 +65,8 @@ public class DrawablePerson extends GameObject {
             }
         }else if((offset = startingPosition.sub(position)).magnitude() > POSITION_PRECISION){
 
-            movement = startingPosition.sub(this.position).normalize().multiplyUpdate(SPEED * Engine.deltaTime);
+            movement = startingPosition.sub(this.position).normalize()
+                    .multiplyUpdate(speed * simulatorGUI.getSpeedMultiplier() * Engine.deltaTime);
             if (movement.magnitude() < offset.magnitude()){
                 //System.out.println("GOING BACK: "+position+" to "+startingPosition+"MOVE:"+ movement);
                 position.sumUpdate(movement);

@@ -13,8 +13,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SimulatorGUI extends JFrame {
+    JFrame settingsFrame;
+
     JLabel dayLabel;
 
     //#region Visual simulation data
@@ -28,7 +31,7 @@ public class SimulatorGUI extends JFrame {
     private Simulator.Outcome lastDayOutCome = Simulator.Outcome.NOTHING;
     //#endregion
 
-    //#region
+    //#region ProgressBar
     ColoredBar greenBar;
     ColoredBar orangeBar;
     ColoredBar blueBar;
@@ -36,7 +39,10 @@ public class SimulatorGUI extends JFrame {
     ColoredBar resourcesBar;
     //#endregion
 
-    JFrame settingsFrame;
+    //milliseconds of the last day start, used to fake a sleep in case there are no movements
+    private long lastStart = 0;
+
+    private int minimumDayTime = 3000;
 
     public SimulatorGUI(JFrame settingsFrame, Simulator simulator){
         super("Epidemic simulator - Visual Simulator");
@@ -58,9 +64,12 @@ public class SimulatorGUI extends JFrame {
         float nx = (float)Math.sqrt(((float)simulator.getPopulation().size())*width/height);
         float ny = (float)Math.sqrt(((float)simulator.getPopulation().size())*height/width)+1;
 
+
         //calculating the world size
         float worldX = nx * 20;
         float worldY = ny * 20;
+
+        float worldDiagonal = (float)Math.sqrt((worldX*worldX) + (worldY*worldY));
 
         //creating the persons
         drawablePersonsDictionary = new HashMap<>();
@@ -70,7 +79,7 @@ public class SimulatorGUI extends JFrame {
         for (int y = 0; y < worldY; y+=20){
             for (int x = 0; x < worldX; x+=20){
                 Person person = simulator.getPopulation().get(created);
-                DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y);
+                DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y, worldDiagonal/4);
                 drawablePersonsDictionary.put(person, drawablePerson);
                 drawablePersons.add(drawablePerson);
                 if (++created == simulator.getPopulation().size()) break creationLoop;
@@ -232,6 +241,17 @@ public class SimulatorGUI extends JFrame {
     }
 
     private void startANewDay() {
+        long timePassed = System.currentTimeMillis() - lastStart;
+        long needToSleepTime = (int)(minimumDayTime/getSpeedMultiplier()) - timePassed;
+        if(needToSleepTime>0) {
+            try {
+                Thread.sleep(needToSleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        lastStart = System.currentTimeMillis();
+
         //UPDATING ALL THE COLORS SO THAT THEY STAY FIXED TILL THE END OF THE NEXT DAY
         drawablePersons.forEach(DrawablePerson::updateColor);
 
@@ -284,11 +304,17 @@ public class SimulatorGUI extends JFrame {
     };
 
 
+    public float getSpeedMultiplier() {
+        //TODO: return JSlider value!!!
+        return 1;
+    }
+
     //fake main that just start a Setting window and call the start button, useful for testing purposes
     public static void main(String[] args) {
         SimulatorSettings settings = new SimulatorSettings();
         settings.startGUIButtonListener.actionPerformed(null);
     }
+
 }
 
 class ColoredBar extends JProgressBar{
