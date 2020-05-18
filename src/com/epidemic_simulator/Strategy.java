@@ -41,14 +41,18 @@ public abstract class Strategy implements SimulatorCallBack {
 
     }
 
-    public void output(String Testo) {
-        this.log=Testo;
+    public void output(String text) {
+        if(log.length() == 0)
+            this.log = text;
+        else{
+            this.log += "\n" + text;
+        }
     }
 
-    public String Clean(){
-        String appoggio=this.log;
-        this.log="";
-        return appoggio;
+    public String clearOutput(){
+        String temp = this.log;
+        this.log = "";
+        return temp;
     }
 
     /**
