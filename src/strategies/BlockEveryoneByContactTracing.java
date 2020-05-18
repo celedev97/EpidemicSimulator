@@ -65,6 +65,7 @@ public class BlockEveryoneByContactTracing extends Strategy {
         for (Person contact : findEncounters(person, postIncubation)){
             if(!immunes.contains(contact)){
                 quarantine.put(person, simulator.canInfectDay);
+                person.setCanMove(false);
                 quarantined++;
             }
         }
