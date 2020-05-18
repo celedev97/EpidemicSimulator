@@ -6,36 +6,48 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Simulator {
+public final class Simulator {
 
     //#region Fields/Getters
+
+    //callbacks
     public ArrayList<SimulatorCallBack> callBacks;
 
-    //#region Simulation parameters
-    private long resources;//Numero risorse disponibili
-
+    //#region State data
+    //R
+    private long resources;
     public long getResources() {
         return resources;
     }
 
-    private final int testPrice;//Costi per le cure
-    private final int cureCost;
-    private final double averageEncountersPerDay;//Velocità di incontro media per individuo/numero medio di individui che giornalmente una persona incontra
+    //C
+    public final int testPrice;//Costi per le cure
+    public final int cureCost;
+
+    //V
+    public final double averageEncountersPerDay;
     //#endregion
 
     //#region Disease data
-    public final int infectionRate;//Percentuale di infettività
-    private final double doubleInfectionRate;
+    //I
+    public final int infectionRate;
+    private final double doubleInfectionRate;//this is only used for speeding up r0 calculation
+
+    //S
     public final int symptomsRate;//Percentuale di sintomaticità
+
+    //L
     public final int deathRate;//Percentuale di letalità
 
+    //D
     public final int diseaseDuration;
-    public final int canInfectDay;//Numero giorni di incubazione
-    public final int developSymptomsMaxDay;
+    public final int canInfectDay;//Days for a infected green to turn yellow
+    public final int developSymptomsMaxDay;//The last day on wich a yellow could turn red
     //#endregion
 
     //#region Simulation running status
 
+    //DAY
     private int day = 0;
     public int getDay() {
         return day;
@@ -61,30 +73,47 @@ public class Simulator {
 
     public double r0;
 
+    //flag used to activate the Strategy callbacks
     private boolean firstRed = false;
 
-    public synchronized void dispose() {
-        //#region strategies
-        //unlinking each strategy from this simulator
-        Stream<SimulatorCallBack> strategies = callBacks.stream()
-                .filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()));
+    //#region status counters
+    private int healthy;
+    private int infected;
+    private int immunes;
+    private int deads;
 
-        strategies.forEach(strategy -> {
-            ((Strategy) strategy).simulator = null;
-            ((Strategy) strategy).dispose();
-        });
 
-        //clearing my references to the callbacks
-        callBacks.clear();
-        //now the gc should be able to kick in and clear this Simulator and its callbacks
-        //#endregion
-
-        notQuarantinedPersons.clear();
+    public int getHealthy() {
+        negateStrategyAccess();
+        return healthy;
     }
 
-    public int getTestPrice() {
-        return testPrice;
+    public int getInfected() {
+        negateStrategyAccess();
+        return infected;
     }
+
+    public int getImmunes() {
+        negateStrategyAccess();
+        return immunes;
+    }
+
+    public int getDeads() {
+        return deads;
+    }
+
+    void negateStrategyAccess(){
+        try {
+            Class callerClass = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
+            if(Strategy.class.isAssignableFrom(callerClass)){
+                throw new RuntimeException("Strategies cannot see this.");
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //#endregion
 
     //#endregion
     //#endregion
@@ -160,9 +189,9 @@ public class Simulator {
         }
 
         //Creazione della prima persona infetta che va in giro,il suo canMove=true resta invariato->Un infetto per il momento giallo
-        Person infected = population.get(Utils.random(startingPopulation));
-        infected.infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
-        infected.canInfect = true;
+        Person fistInfected = population.get(Utils.random(startingPopulation));
+        fistInfected.infect(symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, this.diseaseDuration);
+        fistInfected.canInfect = true;
 
         //cloning the population to get alive population
         alivePopulation = (ArrayList<Person>) population.clone();
@@ -179,6 +208,11 @@ public class Simulator {
         //Initializing callback lists
         callBacks = new ArrayList<>();
 
+        //initializing counters
+        healthy  = startingPopulation - 1;
+        infected = 1;
+        immunes  = 0;
+        deads    = 0;
     }
 
     /**
@@ -204,8 +238,6 @@ public class Simulator {
 
         //R0 calculation
         r0 = encountersPerPersonThisDay * diseaseDuration * doubleInfectionRate;
-        if (r0 < 1)
-            System.out.println("Disease has been eradicated");
 
         int encounterToDoThisDay = (int) (encountersPerPersonThisDay * canMoveCount);
 
@@ -264,7 +296,11 @@ public class Simulator {
                     alivePopulation.remove(person);
                 }
                 person.alive = false;
-                return;//this return is to avoid a people dying and then healing itself
+
+                deads++;
+                infected--;
+
+                return;//this return is just to be safe and avoid a people dying and then healing itself
             }
 
             //if this is the day this person heals
@@ -287,6 +323,9 @@ public class Simulator {
                         }
                     });
                 }
+
+                immunes++;
+                infected--;
 
             }
         });
@@ -332,11 +371,13 @@ public class Simulator {
      * @param person2 the second person for this encounter
      */
     private void encounter(Person person1, Person person2) {
-        if (person1.canInfect && !person2.infected) {//Se persona1 è un giallo/infetto e persona2 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona2
-            person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
+        if (person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)){
+            infected++;
+            healthy--;
         }
-        if (person2.canInfect && !person1.infected) {//Se persona2 è un giallo/infetto e persona1 è un verde/sano,simuliamo come cambierà il fato col metodo tryInfect di persona1
-            person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration);
+        if (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)){
+            infected++;
+            healthy--;
         }
         callBacks.forEach(simulatorCallBack -> {
             if(!Strategy.class.isAssignableFrom(simulatorCallBack.getClass()) || firstRed){
@@ -358,6 +399,29 @@ public class Simulator {
 
         resources -= testPrice;
         return person.canInfect;
+    }
+
+
+    /**
+     * TODO: JAVADOC
+     */
+    public synchronized void dispose() {
+        //#region strategies
+        //unlinking each strategy from this simulator
+        Stream<SimulatorCallBack> strategies = callBacks.stream()
+                .filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()));
+
+        strategies.forEach(strategy -> {
+            ((Strategy) strategy).simulator = null;
+            ((Strategy) strategy).dispose();
+        });
+
+        //clearing my references to the callbacks
+        callBacks.clear();
+        //now the gc should be able to kick in and clear this Simulator and its callbacks
+        //#endregion
+
+        notQuarantinedPersons.clear();
     }
 
     //TODO: THE SIMULATOR SHOULD BE SYNCHRONIZED, THE ENGINE AND THE GUI ARE ON SEPARATE THREADS!!!

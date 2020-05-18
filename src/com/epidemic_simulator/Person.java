@@ -71,13 +71,16 @@ public class Person {
     }
 
     //Una volta avvenuto un'incontro tra un individuo sano e uno infetto in movimento,la seguente funzione verrà richiamata per vedere se il soggetto sano può essere stato infetto o meno.
-    protected void tryInfect(int infectionRate, int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay){
-        if(immune) return;//Se il soggetto è immune usciamo subito...
+    protected boolean tryInfect(int infectionRate, int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay){
+        //if this person is already immune or infected than i can't infect it again
+        if(immune || infected) return false;
 
         //check sull'infettività
         if(Utils.randomBool(infectionRate)){//Data la percentuale di infezione(25% ad esempio)Util.randomBool ritornerà true se rientra in quella percentuale di infezione.
             infect(symptomsRate, deathRate, incubation, maxDayForSymptomsDevelopment, healDay);//Se entriamo nell'if abbiamo un'infezione avvenuta
+            return true;
         }
+        return false;
     }
 
     //Una volta che l'infezione è avvenuta verifichiamo con la funzione come il soggetto reagirà alla malattia.
