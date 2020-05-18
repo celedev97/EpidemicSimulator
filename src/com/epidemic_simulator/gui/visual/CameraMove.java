@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 public class CameraMove extends GameObject {
     public float speed;
 
-    private float zoomSpeed = 4f;
+    private float zoomSpeed = 1f;
 
     public boolean checkBounds = false;
     private float minX = Float.MIN_VALUE;
@@ -73,22 +73,7 @@ public class CameraMove extends GameObject {
         int x = 0;
         int y = 0;
 
-        //left/right
-        if(Input.isKeyDown(KeyEvent.VK_LEFT) || Input.isKeyDown(KeyEvent.VK_A)){
-            x--;
-        }else if(Input.isKeyDown(KeyEvent.VK_RIGHT) || Input.isKeyDown(KeyEvent.VK_D)){
-            x++;
-        }
-
-        //up/down
-        if(Input.isKeyDown(KeyEvent.VK_UP) || Input.isKeyDown(KeyEvent.VK_W)){
-            y--;
-        }else if(Input.isKeyDown(KeyEvent.VK_DOWN) || Input.isKeyDown(KeyEvent.VK_S)){
-            y++;
-        }
-
-        Vector movement = new Vector(x,y);
-        Engine.camera.position.sumUpdate(movement.multiply(speed * Engine.deltaTime / Engine.camera.getScale()));
+        Engine.camera.position.sumUpdate(Input.getArrowsVector().multiply(speed * Engine.deltaTime / Engine.camera.getScale()));
 
         //if there's a limit on the X axys
         if(minX != Float.MIN_VALUE){
