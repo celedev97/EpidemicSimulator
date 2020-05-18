@@ -5,7 +5,11 @@ import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.SimulatorCallBack;
 import com.epidemic_simulator.Utils;
 import com.epidemic_simulator.gui.SimulatorSettings;
+
 import dev.federicocapece.jdaze.*;
+import org.knowm.xchart.*;
+import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.markers.Marker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +17,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SimulatorGUI extends JFrame {
     JFrame settingsFrame;
@@ -39,10 +42,31 @@ public class SimulatorGUI extends JFrame {
     ColoredBar resourcesBar;
     //#endregion
 
+    //#region graph
+    private XYChart peopleGraphData;
+    private XChartPanel<XYChart> peopleGraphPanel;
+
+    private ArrayList<Integer> days;
+    private ArrayList<Integer> healthyByDay;
+    private ArrayList<Integer> infectedByDay;
+    private ArrayList<Integer> immuneByDay;
+    private ArrayList<Integer> deadByDay;
+
+
+
+    private XYChart resourcesGraphData;
+    private XChartPanel<XYChart> resourcesGraphPanel;
+
+    private ArrayList<Long> resourcesByDay;
+
+    //#endregion
+
+    JSlider speedSlider;
+
     //milliseconds of the last day start, used to fake a sleep in case there are no movements
     private long lastStart = 0;
 
-    private int minimumDayTime = 3000;
+    private final int MINIMUM_DAY_TIME = 10000;
 
     public SimulatorGUI(JFrame settingsFrame, Simulator simulator){
         super("Epidemic simulator - Visual Simulator");
@@ -58,8 +82,6 @@ public class SimulatorGUI extends JFrame {
         //calculating the best rows and column configuration for the canvas rateo and the number of Persons that i have
         int width = Engine.renderer.getWidth();
         int height = Engine.renderer.getHeight();
-
-        //TODO: RICONTROLLA QUESTO CALCOLO, NON FUNZIONA!!!
 
         float nx = (float)Math.sqrt(((float)simulator.getPopulation().size())*width/height);
         float ny = (float)Math.sqrt(((float)simulator.getPopulation().size())*height/width)+1;
@@ -88,11 +110,14 @@ public class SimulatorGUI extends JFrame {
         //#endregion
 
         //#region Creating and setting the camera script
+        //clamping the worldX and Y to 20
+        worldX =  (int)(worldX / 20) * 20;
+        worldY =  (int)(worldY / 20) * 20;
+
         //creating the camera movement script
         CameraMove cameraScript = new CameraMove(200);
         //centering the camera
-        //TODO: this sucks, discover why (reason is that the last ball is not always at worldX)
-        cameraScript.setPosition(worldX/2f, worldY/2f);
+        cameraScript.setPosition(worldX/2f, worldY/2f -10);
         //setting the camera bounds
         cameraScript.setBound(0,0,worldX,worldY);
 
@@ -100,8 +125,7 @@ public class SimulatorGUI extends JFrame {
         cameraScript.setScales(.2f,30f);
 
         //setting the ideal zoom for the world size
-        //TODO: this sucks, discover why
-        Engine.camera.setScale((float)width/(worldX+40));
+        Engine.camera.setScale((float)height/(worldY+20));
         //#endregion
 
         //linking simulator callbacks to GUI
@@ -113,8 +137,6 @@ public class SimulatorGUI extends JFrame {
     }
 
     private void buildGUI(){
-
-        //#region Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
 
@@ -128,6 +150,7 @@ public class SimulatorGUI extends JFrame {
 
         //#region North panel
         JPanel northPanel = new JPanel(new BorderLayout());
+        contentPane.add(northPanel, BorderLayout.NORTH);
 
         JPanel leftNorthPanel = new JPanel();
         northPanel.add(leftNorthPanel, BorderLayout.WEST);
@@ -144,8 +167,6 @@ public class SimulatorGUI extends JFrame {
         dayFlow.add(new JLabel("DAY: "));
         dayLabel = new JLabel("0");
         dayFlow.add(dayLabel);
-
-        //data chart TODO: ADD IT
 
         //#endregion
 
@@ -199,10 +220,76 @@ public class SimulatorGUI extends JFrame {
 
         //#endregion
 
-        contentPane.add(northPanel, BorderLayout.NORTH);
+        //#region graphs
+
+        //#region people graph
+        //Create graph
+        peopleGraphData = new XYChartBuilder().height(200).width(300).xAxisTitle("Day").theme(Styler.ChartTheme.Matlab).build();
+
+        // style
+        peopleGraphData.getStyler().setLegendVisible(false);
+        peopleGraphData.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+
+        // Series
+        days            = new ArrayList<>(40);
+
+        healthyByDay    = new ArrayList<>(40);
+        infectedByDay   = new ArrayList<>(40);
+        immuneByDay     = new ArrayList<>(40);
+        deadByDay       = new ArrayList<>(40);
+        resourcesByDay  = new ArrayList<>(40);
+
+        int[] zero = new int[]{0};
+
+        XYSeries greenSerie  = peopleGraphData.addSeries("Healthy",  zero, zero);
+        XYSeries orangeSerie = peopleGraphData.addSeries("Infected", zero, zero);
+        XYSeries blueSerie   = peopleGraphData.addSeries("Immunes",  zero, zero);
+        XYSeries blackSerie  = peopleGraphData.addSeries("Deads",    zero, zero);
+
+        //setting line colors
+        greenSerie.setLineColor(Color.GREEN);
+        orangeSerie.setLineColor(Color.ORANGE);
+        blueSerie.setLineColor(Color.BLUE);
+        blackSerie.setLineColor(Color.BLACK);
+
+        Marker none = new org.knowm.xchart.style.markers.None();
+
+        greenSerie.setMarker(none);
+        orangeSerie.setMarker(none);
+        blueSerie.setMarker(none);
+        blackSerie.setMarker(none);
+
+        greenSerie.setSmooth(true);
+        orangeSerie.setSmooth(true);
+        blueSerie.setSmooth(true);
+        blackSerie.setSmooth(true);
+
+        peopleGraphPanel = new XChartPanel<XYChart>(peopleGraphData);
+        leftNorthPanel.add(peopleGraphPanel);
+        //#endregion
+
+
+        resourcesGraphData = new XYChartBuilder().height(200).width(300).xAxisTitle("Day").theme(Styler.ChartTheme.Matlab).build();
+
+        resourcesGraphData.getStyler().setLegendVisible(false);
+        resourcesGraphData.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+        resourcesGraphData.getStyler().setYAxisMin(0.0);
+
+        XYSeries resourcesSerie  = resourcesGraphData.addSeries("Resources", zero, zero);
+        resourcesSerie.setSmooth(true);
+        resourcesSerie.setLineColor(Color.CYAN);
+        resourcesSerie.setMarker(none);
+
+        resourcesGraphPanel = new XChartPanel<XYChart>(resourcesGraphData);
+        leftNorthPanel.add(resourcesGraphPanel);
 
         //#endregion
-        //#endregion frame
+
+        //min = 0.05, max = 3.50, value = 1.00
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 5, 3500,100);
+        northPanel.add(speedSlider, BorderLayout.SOUTH);
+
+        //#endregion
 
 
     }
@@ -242,7 +329,7 @@ public class SimulatorGUI extends JFrame {
 
     private void startANewDay() {
         long timePassed = System.currentTimeMillis() - lastStart;
-        long needToSleepTime = (int)(minimumDayTime/getSpeedMultiplier()) - timePassed;
+        long needToSleepTime = (int)(MINIMUM_DAY_TIME /getSpeedMultiplier()) - timePassed;
         if(needToSleepTime>0) {
             try {
                 Thread.sleep(needToSleepTime);
@@ -263,6 +350,29 @@ public class SimulatorGUI extends JFrame {
         resourcesBar.setValue((int)(simulator.getResources()/simulator.testPrice));
         resourcesBar.setString(""+simulator.getResources());
         //#endregion progressbar
+
+        //#region graph update
+        days.add(simulator.getDay());
+        healthyByDay.add(simulator.getHealthy());
+        infectedByDay.add(simulator.getInfected());
+        immuneByDay.add(simulator.getImmunes());
+        deadByDay.add(simulator.getDeads());
+        resourcesByDay.add(simulator.getResources());
+
+        peopleGraphData.updateXYSeries("Healthy",   days, healthyByDay  , null);
+        peopleGraphData.updateXYSeries("Infected",  days, infectedByDay , null);
+        peopleGraphData.updateXYSeries("Immunes",   days, immuneByDay   , null);
+        peopleGraphData.updateXYSeries("Deads",     days, deadByDay     , null);
+
+        resourcesGraphData.updateXYSeries("Resources", days, resourcesByDay, null);
+
+        peopleGraphPanel.revalidate();
+        peopleGraphPanel.repaint();
+
+        resourcesGraphPanel.revalidate();
+        resourcesGraphPanel.repaint();
+
+        //#endregion
 
         if (lastDayOutCome != Simulator.Outcome.NOTHING) {
             //TODO: start this in another thread? it would allow balls to change color before the OK is pressed
@@ -305,8 +415,9 @@ public class SimulatorGUI extends JFrame {
 
 
     public float getSpeedMultiplier() {
-        //TODO: return JSlider value!!!
-        return 1;
+        //TODO: calculate this on change, don't do this at every function call!
+        return speedSlider.getValue() * 0.01f;
+        //return 1;
     }
 
     //fake main that just start a Setting window and call the start button, useful for testing purposes
