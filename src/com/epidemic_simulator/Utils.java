@@ -1,10 +1,14 @@
 package com.epidemic_simulator;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.*;
 
@@ -111,6 +115,34 @@ public class Utils {
         output = output.charAt(0) + output.substring(1).toLowerCase();
 
         return output;
+    }
+
+
+
+    //TODO: JAVADOC
+    public static List<JSpinner> getJSpinners(final Container c) {
+        Component[] comps = c.getComponents();
+        List<JSpinner> compList = new ArrayList<>();
+        for (Component comp : comps) {
+            if(comp instanceof JSpinner){
+                compList.add((JSpinner)comp);
+            }else if (comp instanceof Container){
+                compList.addAll(getJSpinners((Container) comp));
+            }
+        }
+        return compList;
+    }
+
+    //TODO: JAVADOC
+    public static void forceJSpinnerCommit(Container container) {
+        getJSpinners(container).forEach(jSpinner -> {
+            try {
+                jSpinner.commitEdit();
+            } catch (ParseException ignored) {
+                //even if this exception get thrown the spinner will still have a valid value, so there's no need to do anything.
+                ignored.printStackTrace();
+            }
+        });
     }
 
 }

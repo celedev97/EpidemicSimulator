@@ -29,11 +29,11 @@ public class SimulatorGUI extends JFrame {
     //#endregion
 
     //#region
-    JProgressBar greenBar;
-    JProgressBar orangeBar;
-    JProgressBar blueBar;
-    JProgressBar blackBar;
-    JProgressBar resourcesBar;
+    ColoredBar greenBar;
+    ColoredBar orangeBar;
+    ColoredBar blueBar;
+    ColoredBar blackBar;
+    ColoredBar resourcesBar;
     //#endregion
 
     JFrame settingsFrame;
@@ -42,7 +42,68 @@ public class SimulatorGUI extends JFrame {
         super("Epidemic simulator - Visual Simulator");
         this.settingsFrame = settingsFrame;
         this.simulator = simulator;
-        int populationSize = simulator.getPopulation().size();
+
+        buildGUI();
+
+        //Starting the graphic engine
+        Engine.start();
+
+        //#region Creating and placing drawablePersons
+        //calculating the best rows and column configuration for the canvas rateo and the number of Persons that i have
+        int width = Engine.renderer.getWidth();
+        int height = Engine.renderer.getHeight();
+
+        //TODO: RICONTROLLA QUESTO CALCOLO, NON FUNZIONA!!!
+
+        float nx = (float)Math.sqrt(((float)simulator.getPopulation().size())*width/height);
+        float ny = (float)Math.sqrt(((float)simulator.getPopulation().size())*height/width)+1;
+
+        //calculating the world size
+        float worldX = nx * 20;
+        float worldY = ny * 20;
+
+        //creating the persons
+        drawablePersonsDictionary = new HashMap<>();
+        drawablePersons = new ArrayList<>();
+        int created = 0;
+        creationLoop:
+        for (int y = 0; y < worldY; y+=20){
+            for (int x = 0; x < worldX; x+=20){
+                Person person = simulator.getPopulation().get(created);
+                DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y);
+                drawablePersonsDictionary.put(person, drawablePerson);
+                drawablePersons.add(drawablePerson);
+                if (++created == simulator.getPopulation().size()) break creationLoop;
+            }
+        }
+        //#endregion
+
+        //#region Creating and setting the camera script
+        //creating the camera movement script
+        CameraMove cameraScript = new CameraMove(200);
+        //centering the camera
+        //TODO: this sucks, discover why (reason is that the last ball is not always at worldX)
+        cameraScript.setPosition(worldX/2f, worldY/2f);
+        //setting the camera bounds
+        cameraScript.setBound(0,0,worldX,worldY);
+
+        //calculating the maxCameraZoom
+        cameraScript.setScales(.2f,30f);
+
+        //setting the ideal zoom for the world size
+        //TODO: this sucks, discover why
+        Engine.camera.setScale((float)width/(worldX+40));
+        //#endregion
+
+        //linking simulator callbacks to GUI
+        simulator.callBacks.add(simulatorEventListener);
+
+        addWindowListener(windowListener);
+
+        startANewDay();
+    }
+
+    private void buildGUI(){
 
         //#region Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -79,101 +140,60 @@ public class SimulatorGUI extends JFrame {
 
         //#endregion
 
-        //#region second row
-        JPanel secondRow = new JPanel(new GridLayout(5,2));
-        leftNorthPanel.add(secondRow);
-
         //#region progressbar
+        JPanel progressBarPanel = new JPanel(new GridBagLayout());
+        progressBarPanel.setBorder(BorderFactory.createTitledBorder("Status"));
+        leftNorthPanel.add(progressBarPanel);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridx = 0;
+
+        gbc.gridy = 0;
+        progressBarPanel.add(new JLabel("Healthy:"), gbc);
+        gbc.gridy = 1;
+        progressBarPanel.add(new JLabel("Infected:"), gbc);
+        gbc.gridy = 2;
+        progressBarPanel.add(new JLabel("Immune:"), gbc);
+        gbc.gridy = 3;
+        progressBarPanel.add(new JLabel("Dead:"), gbc);
+        gbc.gridy = 4;
+        progressBarPanel.add(new JLabel("Resources: "), gbc);
+
         //creating progressbar
-        greenBar     = new ColoredBar(Color.GREEN, 0, populationSize);
-        orangeBar    = new ColoredBar(Color.ORANGE,0, populationSize);
-        blueBar      = new ColoredBar(Color.BLUE,  0, populationSize);
-        blackBar     = new ColoredBar(Color.BLACK, 0, populationSize);
-        resourcesBar = new ColoredBar(Color.CYAN,  0, (int)(simulator.getResources()/simulator.getTestPrice()));
+        greenBar     = new ColoredBar(Color.GREEN, 0, simulator.getPopulation().size());
+        orangeBar    = new ColoredBar(Color.ORANGE,0, simulator.getPopulation().size());
+        blueBar      = new ColoredBar(Color.BLUE,  0, simulator.getPopulation().size());
+        blackBar     = new ColoredBar(Color.BLACK, 0, simulator.getPopulation().size());
+        resourcesBar = new ColoredBar(Color.CYAN,  0, (int)(simulator.getResources()/simulator.testPrice));
 
         //setting values
-        greenBar.setValue(populationSize-1);
+        greenBar.setValue(simulator.getPopulation().size()-1);
         orangeBar.setValue(1);
         blueBar.setValue(0);
         blackBar.setValue(0);
         resourcesBar.setValue(resourcesBar.getMaximum());
 
-        //creating panels for the bars
-        secondRow.add(new JLabel("Healthy:"));
-        secondRow.add(greenBar);
-        secondRow.add(new JLabel("Infected:"));
-        secondRow.add(orangeBar);
-        secondRow.add(new JLabel("Immune:"));
-        secondRow.add(blueBar);
-        secondRow.add(new JLabel("Dead:"));
-        secondRow.add(blackBar);
-        secondRow.add(new JLabel("Resources:"));
-        secondRow.add(resourcesBar);
-
-        //#endregion progressbar
+        //adding the bars to the row
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        progressBarPanel.add(greenBar, gbc);
+        gbc.gridy = 1;
+        progressBarPanel.add(orangeBar, gbc);
+        gbc.gridy = 2;
+        progressBarPanel.add(blueBar, gbc);
+        gbc.gridy = 3;
+        progressBarPanel.add(blackBar, gbc);
+        gbc.gridy = 4;
+        progressBarPanel.add(resourcesBar, gbc);
 
         //#endregion
-
 
         contentPane.add(northPanel, BorderLayout.NORTH);
 
-
         //#endregion
         //#endregion frame
-
-        //Starting the graphic engine
-        Engine.start();
-        
-        //#region Creating and placing drawablePersons
-        //calculating the best rows and column configuration for the canvas rateo and the number of Persons that i have
-        int width = Engine.renderer.getWidth();
-        int height = Engine.renderer.getHeight();
-
-        int nx = (int)Math.sqrt(((float)populationSize)*width/height);
-        int ny = (int)Math.sqrt(((float)populationSize)*height/width)+1;
-
-        //calculating the world size
-        int worldX = nx * 20;
-        int worldY = ny * 20;
-
-        //creating the persons
-        drawablePersonsDictionary = new HashMap<>();
-        drawablePersons = new ArrayList<>();
-        int created = 0;
-        creationLoop:
-        for (int y = 0; y < worldY; y+=20){
-            for (int x = 0; x < worldX; x+=20){
-                Person person = simulator.getPopulation().get(created);
-                DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y);
-                drawablePersonsDictionary.put(person, drawablePerson);
-                drawablePersons.add(drawablePerson);
-                if (++created == populationSize) break creationLoop;
-            }
-        }
-        //#endregion
-
-        //#region Creating and setting the camera script
-        //creating the camera movement script
-        CameraMove cameraScript = new CameraMove(200);
-        //centering the camera
-        cameraScript.setPosition(worldX/2f, worldY/2f);
-        //setting the camera bounds
-        cameraScript.setBound(0,0,worldX,worldY);
-
-        //calculating the maxCameraZoom
-        cameraScript.setScales(.2f,30f);
-
-        //setting the ideal zoom for the world size
-        //TODO: this sucks, discover why
-        Engine.camera.setScale((float)width/(worldX+40));
-        //#endregion
-
-        //linking simulator callbacks to GUI
-        simulator.callBacks.add(simulatorEventListener);
-
-        addWindowListener(windowListener);
-
-        startANewDay();
 
 
     }
@@ -212,12 +232,23 @@ public class SimulatorGUI extends JFrame {
     }
 
     private void startANewDay() {
+        //UPDATING ALL THE COLORS SO THAT THEY STAY FIXED TILL THE END OF THE NEXT DAY
+        drawablePersons.forEach(DrawablePerson::updateColor);
+
+        //#region progressbar update
+        greenBar.setValue(simulator.getHealthy());
+        orangeBar.setValue(simulator.getInfected());
+        blueBar.setValue(simulator.getImmunes());
+        blackBar.setValue(simulator.getDeads());
+        resourcesBar.setValue((int)(simulator.getResources()/simulator.testPrice));
+        resourcesBar.setString(""+simulator.getResources());
+        //#endregion progressbar
+
         if (lastDayOutCome != Simulator.Outcome.NOTHING) {
+            //TODO: start this in another thread? it would allow balls to change color before the OK is pressed
             JOptionPane.showMessageDialog(null, "OUTCOME: " + lastDayOutCome);
             return;
         }
-        //UPDATING ALL THE COLORS SO THAT THEY STAY FIXED TILL THE END OF THE NEXT DAY
-        drawablePersons.forEach(drawablePerson -> drawablePerson.updateColor());
 
         //executing all this day simulation
         simulator.executeDay();
@@ -235,7 +266,6 @@ public class SimulatorGUI extends JFrame {
         }
 
         //#endregion
-
     }
 
     private void moveRandomPerson() {
@@ -243,7 +273,6 @@ public class SimulatorGUI extends JFrame {
         toMovePersons.get(index).doMove = true;
         toMovePersons.remove(index);
     }
-
 
     private WindowAdapter windowListener = new WindowAdapter() {
         @Override
@@ -255,25 +284,26 @@ public class SimulatorGUI extends JFrame {
     };
 
 
+    //fake main that just start a Setting window and call the start button, useful for testing purposes
     public static void main(String[] args) {
-        //fake main that just start a Setting window and call the start button
         SimulatorSettings settings = new SimulatorSettings();
         settings.startGUIButtonListener.actionPerformed(null);
     }
 }
 
 class ColoredBar extends JProgressBar{
-
     public ColoredBar(Color color, int min, int max) {
         super(min, max);
         setForeground(color);
         setBackground(Color.WHITE);
         setStringPainted(true);
         setMinimumSize(new Dimension(150,50));
+        setValue(getMinimum());
     }
 
     @Override
     public void setValue(int n) {
         super.setValue(n);
+        setString(""+n);
     }
 }

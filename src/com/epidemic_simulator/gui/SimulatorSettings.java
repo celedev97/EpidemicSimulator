@@ -9,7 +9,6 @@ import com.epidemic_simulator.gui.visual.SimulatorGUI;
 //AWT/SWING
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -21,19 +20,24 @@ import java.io.*;
 import java.lang.reflect.*;
 
 //LIST UTILS
-import java.text.ParseException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class SimulatorSettings extends JFrame {
+    //constants
     private final int PARAMETERS_PER_ROW = 4;
-
     private static final String CONF_EXTENSION = ".simconf.json";
     private static final String DEFAULT_CONF_FILE = "./configuration"+CONF_EXTENSION;
 
     //#region class fields
+
+    //#region Menu
+    private JMenuItem openButton;
+    private JMenuItem saveButton;
+    private JMenuItem defaultButton;
+    private JMenuItem quitButton;
+    //#endregion
 
     //#region state
     private JPanel stateDataPanel;
@@ -62,6 +66,11 @@ public class SimulatorSettings extends JFrame {
     private JPanel strategyPanel;
     //#endregion
 
+    //#region start buttons
+    private JButton startTextButton;
+    private JButton startGUIButton;
+    //#endregion
+
     //dialogue
     private JFileChooser fileChooser;
 
@@ -86,7 +95,36 @@ public class SimulatorSettings extends JFrame {
         setLocation((screenSize.width/2 - windowSize.width/2), (screenSize.height/2 - windowSize.height/2));
         //#endregion
 
-        //#region UI Building
+        buildGUI();
+
+        bindGUI();
+
+        //Show JFrame
+        setVisible(true);
+
+        //file load and save
+        fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.isDirectory() || f.getPath().endsWith(CONF_EXTENSION);
+            }
+
+            @Override
+            public String getDescription() {
+                return "Simulator config file (*"+CONF_EXTENSION+")";
+            }
+        });
+
+        //setting default parameters
+        setDefaultParameters();
+
+        //try to read configuration file if present
+        readConfig(new File(DEFAULT_CONF_FILE));
+
+    }
+
+    private void buildGUI(){
         //creating main panel
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
@@ -111,25 +149,25 @@ public class SimulatorSettings extends JFrame {
         menu.add(file);
 
         //>file>open
-        JMenuItem openButton = new JMenuItem("Open");
+        openButton = new JMenuItem("Open");
         file.add(openButton);
 
         //>file>save
-        JMenuItem saveButton = new JMenuItem("Save");
+        saveButton = new JMenuItem("Save");
         file.add(saveButton);
 
         //>file>-------
         file.addSeparator();
 
         //>file>default
-        JMenuItem defaultButton = new JMenuItem("Load default");
+        defaultButton = new JMenuItem("Load default");
         file.add(defaultButton);
 
         //>file>-------
         file.addSeparator();
 
         //>file>quit
-        JMenuItem quitButton = new JMenuItem("Quit");
+        quitButton = new JMenuItem("Quit");
         file.add(quitButton);
         //#endregion
 
@@ -260,17 +298,17 @@ public class SimulatorSettings extends JFrame {
         //#endregion
 
         JPanel southPanel = new JPanel(new GridLayout(1,2));
-        JButton startTextButton = new JButton("Start Textual Simulation (Quicker)");
-        JButton startGUIButton = new JButton("Start Visual Simulation (Slower)");
+        startTextButton = new JButton("Start Textual Simulation (Quicker)");
+        startGUIButton = new JButton("Start Visual Simulation (Slower)");
         southPanel.add(startTextButton);
         southPanel.add(startGUIButton);
 
         contentPane.add(southPanel, BorderLayout.SOUTH);
 
         //#endregion
+    }
 
-        //#region UI event binding
-
+    private void bindGUI(){
         //Window event binding
         addWindowListener(windowAdapter);
 
@@ -281,40 +319,14 @@ public class SimulatorSettings extends JFrame {
         quitButton.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 
         //Strategy selector binding
-        strategyComboBox.addActionListener(strategyComboboxListener);
+        strategyComboBox.addActionListener(strategyComboBoxListener);
 
         //Start Button binding
         startGUIButton.addActionListener(startGUIButtonListener);
         startTextButton.addActionListener(startTextButtonListener);
-
-        //#endregion
-
-        //Show JFrame
-        setVisible(true);
-
-        //file load and save
-        fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                return f.isDirectory() || f.getPath().endsWith(CONF_EXTENSION);
-            }
-
-            @Override
-            public String getDescription() {
-                return "Simulator config file (*"+CONF_EXTENSION+")";
-            }
-        });
-
-        //setting default parameters
-        setDefaultParameters();
-
-        //try to read configuration file if present
-        readConfig(new File(DEFAULT_CONF_FILE));
-
     }
 
-    //#region Start
+    //#region Start Buttons listeners/methods
     public final ActionListener startTextButtonListener = e -> {
         Simulator simulator;
         if((simulator = createSimulator()) == null) return;
@@ -396,7 +408,7 @@ public class SimulatorSettings extends JFrame {
         System.out.println("READING: "+ file.getPath());
 
         //forcing all the JSpinner to validate any possible input not yet validated (otherwise they can't be written into)
-        forceJSpinnerCommit(this);
+        Utils.forceJSpinnerCommit(this);
 
         try (FileInputStream fileReader = new FileInputStream(file)) {
             //reading the file
@@ -430,7 +442,7 @@ public class SimulatorSettings extends JFrame {
                     Class classValue = strategyComboBox.getItemAt(i).getValue();
                     if((classValue == null && selectedClass.equals("null")) || (classValue != null && selectedClass.equals(classValue.toString())) ){
                         strategyComboBox.setSelectedIndex(i);
-                        strategyComboboxListener.actionPerformed(null);
+                        strategyComboBoxListener.actionPerformed(null);
                         break;
                     }
                 }
@@ -478,28 +490,25 @@ public class SimulatorSettings extends JFrame {
     }
 
     private JSONObject serializeSpinners(JPanel spinnerPanel){
-        forceJSpinnerCommit(spinnerPanel);
+        Utils.forceJSpinnerCommit(spinnerPanel);
 
         //get all the spinners in this
         JSONObject panel = new JSONObject();
         JSONObject values = new JSONObject();
         panel.put(spinnerPanel.getName(), values);
 
-        getJSpinners(spinnerPanel).forEach(jSpinner -> values.put(jSpinner.getName(), jSpinner.getValue()));
+        Utils.getJSpinners(spinnerPanel).forEach(jSpinner -> values.put(jSpinner.getName(), jSpinner.getValue()));
 
         return panel;
     }
 
     private void deserializeSpinners(JPanel dataPanel, JSONObject jsonObject) {
-        getJSpinners(dataPanel).forEach(jSpinner -> {
-            System.out.println("SETTING: "+jSpinner.getName()+" TO "+jsonObject.getNumber(jSpinner.getName()));
-            jSpinner.setValue(jsonObject.getNumber(jSpinner.getName()));
-        });
+        Utils.getJSpinners(dataPanel).forEach(jSpinner -> jSpinner.setValue(jsonObject.getNumber(jSpinner.getName())));
     }
 
     //#endregion
 
-    private ActionListener strategyComboboxListener = e -> {
+    private ActionListener strategyComboBoxListener = e -> {
         //#region clearing old strategy
         strategyParameters.clear();
         for(JPanel panel : strategyParametersColumns){
@@ -509,8 +518,8 @@ public class SimulatorSettings extends JFrame {
 
         strategyPanel.setVisible(false);
 
-        //#region generating new strategy
-        Class strategyClass = ((SelectableStrategy)strategyComboBox.getSelectedItem()).getValue();
+        //#region generating new strategy GUI
+        Class<?> strategyClass = ((SelectableStrategy)strategyComboBox.getSelectedItem()).getValue();
         if(strategyClass != null){
             Parameter[] parameters = strategyClass.getDeclaredConstructors()[0].getParameters();
             strategyPanel.setVisible(parameters.length>1);
@@ -555,34 +564,6 @@ public class SimulatorSettings extends JFrame {
             ((JFrame)e.getSource()).dispose();
         }
     };
-
-    //#region Utils
-
-    private static List<JSpinner> getJSpinners(final Container c) {
-        Component[] comps = c.getComponents();
-        List<JSpinner> compList = new ArrayList<>();
-        for (Component comp : comps) {
-            if(comp instanceof JSpinner){
-                compList.add((JSpinner)comp);
-            }else if (comp instanceof Container){
-                compList.addAll(getJSpinners((Container) comp));
-            }
-        }
-        return compList;
-    }
-
-    public void forceJSpinnerCommit(Container container) {
-        getJSpinners(container).forEach(jSpinner -> {
-            try {
-                jSpinner.commitEdit();
-            } catch (ParseException ignored) {
-                //even if this exception get thrown the spinner will still have a valid value, so there's no need to do anything.
-                ignored.printStackTrace();
-            }
-        });
-    }
-
-    //#endregion
 
     public static void main(String[] args) {
         new SimulatorSettings();
