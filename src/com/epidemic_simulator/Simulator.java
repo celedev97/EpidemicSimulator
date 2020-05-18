@@ -11,7 +11,18 @@ public final class Simulator {
     //#region Fields/Getters
 
     //callbacks
-    public ArrayList<SimulatorCallBack> callBacks;
+    private Strategy strategy;
+    public ArrayList<SimulatorCallBack> callBacks;//TODO: MAKE THIS PRIVATE AND MAKE ADD/REMOVE METHODS
+
+    public Strategy getStrategy(){
+        return strategy;
+    }
+
+    public void setStrategy(Strategy strategy){
+        callBacks.remove(this.strategy);
+        this.strategy = strategy;
+        callBacks.add(strategy);
+    }
 
     //#region State data
     //R
@@ -105,7 +116,7 @@ public final class Simulator {
     void negateStrategyAccess(){
         try {
             Class callerClass = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
-            if(Strategy.class.isAssignableFrom(callerClass)){
+            if(callerClass == strategy.getClass()){
                 throw new RuntimeException("Strategies cannot see this.");
             }
         } catch (ClassNotFoundException e) {
@@ -316,7 +327,7 @@ public final class Simulator {
                 if (hadSymptoms) {
                     person.canMove=true;
                     callBacks.forEach(simulatorCallBack -> {
-                        if(!Strategy.class.isAssignableFrom(simulatorCallBack.getClass()) || firstRed){
+                        if(simulatorCallBack != strategy || firstRed){
                             synchronized (simulatorCallBack){
                                 simulatorCallBack.personClean(person);
                             }
@@ -354,7 +365,7 @@ public final class Simulator {
         //calling the callbacks for the end of the day
         Outcome finalOutcome = outcome;
         callBacks.forEach(simulatorCallBack -> {
-            if(!Strategy.class.isAssignableFrom(simulatorCallBack.getClass()) || firstRed){
+            if(simulatorCallBack != strategy || firstRed){
                 synchronized (simulatorCallBack){
                     simulatorCallBack.afterExecuteDay(finalOutcome);
                 }
@@ -380,7 +391,7 @@ public final class Simulator {
             healthy--;
         }
         callBacks.forEach(simulatorCallBack -> {
-            if(!Strategy.class.isAssignableFrom(simulatorCallBack.getClass()) || firstRed){
+            if(simulatorCallBack != strategy || firstRed){
                 synchronized (simulatorCallBack){
                     simulatorCallBack.registerEncounter(person1, person2);
                 }

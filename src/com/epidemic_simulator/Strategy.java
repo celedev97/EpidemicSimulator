@@ -14,7 +14,7 @@ public abstract class Strategy implements SimulatorCallBack {
 
     public Strategy(Simulator simulator) {
         this.simulator = simulator;
-        simulator.callBacks.add(this);
+        simulator.setStrategy(this);
         originalResources = simulator.getResources();
 
         encounters = new HashMap<>();
