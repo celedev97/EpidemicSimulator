@@ -37,6 +37,8 @@ public class SimulatorSettings extends JFrame {
     private JMenuItem saveButton;
     private JMenuItem defaultButton;
     private JMenuItem quitButton;
+
+    private JMenuItem calculateParameters;
     //#endregion
 
     //#region state
@@ -81,7 +83,7 @@ public class SimulatorSettings extends JFrame {
         //title
         setTitle("Epidemic simulator - Settings");
 
-        //size ()
+        //size
         Dimension windowSize = new Dimension(600, 450);
         //TODO: change window size at the end of the project, accordingly to the most complex strategy
         setSize(windowSize);
@@ -169,6 +171,14 @@ public class SimulatorSettings extends JFrame {
         //>file>quit
         quitButton = new JMenuItem("Quit");
         file.add(quitButton);
+
+        //>edit
+        JMenu edit = new JMenu("Edit");
+        menu.add(edit);
+
+        //>edit>calculateParams
+        calculateParameters = new JMenuItem("Calculate best parameters");
+        edit.add(calculateParameters);
         //#endregion
 
         //#region State Data Panel
@@ -318,6 +328,8 @@ public class SimulatorSettings extends JFrame {
         defaultButton.addActionListener(e -> setDefaultParameters());
         quitButton.addActionListener(e -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
 
+        calculateParameters.addActionListener(e -> setBestParameters());
+
         //Strategy selector binding
         strategyComboBox.addActionListener(strategyComboBoxListener);
 
@@ -373,22 +385,29 @@ public class SimulatorSettings extends JFrame {
 
     //#region Configuration LOAD/SAVE/RELOAD
     private void setDefaultParameters() {
-        int populationValue = 1000;
-        int durationValue = 45;
-        int resourcesValue = durationValue*populationValue -1;
-        int testPriceValue = resourcesValue / (10*populationValue)+1;
+        Utils.forceJSpinnerCommit(this);
 
-        population.setValue(populationValue);
-        resources.setValue(resourcesValue);
-        testPrice.setValue(testPriceValue);
+        population.setValue(1000);
+        resources.setValue(44999);
+        testPrice.setValue(10);
         encountersPerDay.setValue(1);
 
         infectivity.setValue(50);
         symptomaticity.setValue(50);
         lethality.setValue(50);
-        duration.setValue(durationValue);
+        duration.setValue(45);
 
         strategyComboBox.setSelectedIndex(0);
+    }
+
+    private void setBestParameters(){
+        long resourcesValue = (int)duration.getValue()*(int)population.getValue() -1;
+        int testPriceValue = (int)(resourcesValue / (10*(int)population.getValue())+1);
+
+        Utils.forceJSpinnerCommit(this);
+
+        resources.setValue(resourcesValue);
+        testPrice.setValue(testPriceValue);
     }
 
     private ActionListener openButtonListener = e -> {

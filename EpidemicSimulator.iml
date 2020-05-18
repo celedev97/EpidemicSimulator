@@ -9,6 +9,10 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="JDaze" />
     <orderEntry type="library" name="org.json:json:20190722" level="project" />
+<<<<<<< HEAD
     <orderEntry type="library" exported="" name="json-20190722" level="project" />
+=======
+    <orderEntry type="library" name="org.knowm.xchart:xchart:3.6.3" level="project" />
+>>>>>>> c638c56bc4b947fa842ea4fb57e39d336071a6ed
   </component>
 </module>
