@@ -9,7 +9,7 @@ public abstract class Strategy implements SimulatorCallBack {
     protected Simulator simulator;
     private ArrayList<Person> population;
     protected long originalResources;
-    private String log;
+    private String log = "";
 
     protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 
