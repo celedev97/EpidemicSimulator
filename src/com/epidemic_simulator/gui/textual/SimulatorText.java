@@ -99,7 +99,7 @@ public class SimulatorText extends JFrame {
         writeOutput( "BLACK : " + black + '\n', Color.BLACK , "b");
         String messages=simulator.getStrategy().clearOutput();
         if(messages!=""){
-            writeOutput( "SIMULATOR REPORT : " + messages + '\n', Color.CYAN , "b");
+            writeOutput( "SIMULATOR REPORT : " + messages + '\n', Color.cyan , "b");
         }
         writeOutput("----------\n");
         writeOutput( "resources : " + simulator.getResources() + '\n');

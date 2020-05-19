@@ -25,7 +25,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
     public void afterExecuteDay(Simulator.Outcome outcome) {
         int data_check = 0;
         if(sintomatici>=this.limite){
-            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" RED'S ->PROCEED TO THE FULL LOCKDOWN FROM TODAY!");
+            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" CASE CONFIRMED ->PROCEED TO THE FULL LOCKDOWN FROM TODAY!");
             HashMap<Person,List<Person>>person;
             data_check=simulator.getDay();
             for (int i = 0; i < simulator.getDay(); i++) {
