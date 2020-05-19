@@ -1,4 +1,4 @@
-package com.epidemic_simulator;
+package com.epidemic_simulator.exceptions;
 
 public class StrategyForbiddenAccessException extends RuntimeException {
 

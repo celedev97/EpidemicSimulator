@@ -1,5 +1,8 @@
 package com.epidemic_simulator;
 
+import com.epidemic_simulator.exceptions.InvalidSimulationException;
+import com.epidemic_simulator.exceptions.StrategyForbiddenAccessException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
