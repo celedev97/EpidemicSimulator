@@ -11,8 +11,21 @@ public final class Simulator {
     //#region Fields/Getters
 
     //callbacks
-    private Strategy strategy;
-    public ArrayList<SimulatorCallBack> callBacks;//TODO: MAKE THIS PRIVATE AND MAKE ADD/REMOVE METHODS
+    private Strategy strategy = null;
+    private final ArrayList<SimulatorCallBack> callBacks;
+
+    public void addCallBack(SimulatorCallBack callBack){
+        if(strategy != null && Strategy.class.isAssignableFrom(callBack.getClass()))
+            throw new RuntimeException("You can't add multiple strategies to the same simulator");
+        callBacks.add(callBack);
+    }
+
+    public void removeCallBack(SimulatorCallBack callBack){
+        if(callBack == strategy){
+            strategy = null;
+        }
+        callBacks.remove(callBack);
+    }
 
     public Strategy getStrategy(){
         return strategy;

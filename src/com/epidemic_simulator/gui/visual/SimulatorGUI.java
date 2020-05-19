@@ -129,7 +129,7 @@ public class SimulatorGUI extends JFrame {
         //#endregion
 
         //linking simulator callbacks to GUI
-        simulator.callBacks.add(simulatorEventListener);
+        simulator.addCallBack(simulatorEventListener);
 
         addWindowListener(windowListener);
 
