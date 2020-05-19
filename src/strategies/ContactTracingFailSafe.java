@@ -6,7 +6,8 @@ import com.epidemic_simulator.Simulator;
 public class ContactTracingFailSafe extends AggressiveContactTracing {
     float resourcesMinimum;
 
-    public ContactTracingFailSafe(Simulator simulator, int resourcesPercentageForLockDown) {
+
+    public ContactTracingFailSafe(Simulator simulator, @ParameterData(value=95,min=0,max=100) int resourcesPercentageForLockDown) {
         super(simulator);
         resourcesMinimum = originalResources / 100f * resourcesPercentageForLockDown;
     }

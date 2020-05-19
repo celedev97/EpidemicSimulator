@@ -1,15 +1,28 @@
 package com.epidemic_simulator;
 
+import java.lang.annotation.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public abstract class Strategy implements SimulatorCallBack {
     protected Simulator simulator;
     private ArrayList<Person> population;
     protected long originalResources;
     private String log = "";
+
+    //#region Annotations
+    @Documented @Target(ElementType.PARAMETER) @Retention(RUNTIME)
+    public @interface ParameterData {
+        int value();
+        int min() default Integer.MIN_VALUE;
+        int max() default Integer.MAX_VALUE;
+    }
+    //#endregion
 
     protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 

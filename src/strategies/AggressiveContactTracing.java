@@ -48,7 +48,7 @@ public class AggressiveContactTracing extends Strategy {
                 //if he's not clean it means he's infected, so i put him on quarantine till the day that he will heal.
                 }else{
                     System.out.println("DAY ("+simulator.getDay()+"): "+key + " IS INFECTED, DO NOT RELEASE!");
-                    System.out.println("KEEP HIM LOCKED FOR ");
+                    System.out.println("KEEP HIM LOCKED FOR "+(simulator.diseaseDuration - simulator.canInfectDay)+" days");
                     quarantineMap.put(key, simulator.diseaseDuration - simulator.canInfectDay);
                     positives.add(key);
                     quarantineContacts(key, simulator.diseaseDuration - simulator.canInfectDay, toQuarantine);

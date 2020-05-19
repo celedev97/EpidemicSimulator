@@ -2,6 +2,7 @@ package com.epidemic_simulator.gui;
 
 //INTERNAL IMPORTS
 import com.epidemic_simulator.Simulator;
+import com.epidemic_simulator.Strategy;
 import com.epidemic_simulator.Utils;
 import com.epidemic_simulator.gui.textual.SimulatorText;
 import com.epidemic_simulator.gui.visual.SimulatorGUI;
@@ -137,13 +138,11 @@ public class SimulatorSettings extends JFrame {
         contentPane.add(northPanel, BorderLayout.NORTH);
 
         //#region Menu
-        FlowLayout menuFlowLayout = new FlowLayout(FlowLayout.LEFT);
-        menuFlowLayout.setVgap(0);
-        menuFlowLayout.setHgap(0);
-        JPanel menuContainerPanel = new JPanel(menuFlowLayout);
+        JPanel menuContainerPanel = new JPanel(new BorderLayout());
 
         JMenuBar menu = new JMenuBar();
-        menuContainerPanel.add(menu);
+        menuContainerPanel.add(menu, BorderLayout.NORTH);
+
         northPanel.add(menuContainerPanel);
 
         //>file>
@@ -558,9 +557,21 @@ public class SimulatorSettings extends JFrame {
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 strategyParametersColumns[x].add(label);
 
+                //getting the default value
+                int value = 0;
+                int minimum = Integer.MIN_VALUE;
+                int maximum = Integer.MAX_VALUE;
+
+                Strategy.ParameterData[] parameterData = parameters[i].getAnnotationsByType(Strategy.ParameterData.class);
+                if(parameterData.length != 0){
+                    value = parameterData[0].value();
+                    minimum = parameterData[0].min();
+                    maximum = parameterData[0].max();
+                }
+
                 //generating the component
                 JSpinner generatedComponent = null;
-                generatedComponent = new JSpinner();
+                generatedComponent = new JSpinner(new SpinnerNumberModel(value,minimum,maximum,1));
                 generatedComponent.setName(parameters[i].getName());
                 generatedComponent.setAlignmentX(Component.LEFT_ALIGNMENT);
                 strategyParametersColumns[x].add(generatedComponent);
