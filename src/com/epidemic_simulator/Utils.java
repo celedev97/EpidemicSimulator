@@ -118,8 +118,6 @@ public class Utils {
     }
 
 
-
-    //TODO: JAVADOC
     public static List<JSpinner> getJSpinners(final Container c) {
         Component[] comps = c.getComponents();
         List<JSpinner> compList = new ArrayList<>();
@@ -133,7 +131,7 @@ public class Utils {
         return compList;
     }
 
-    //TODO: JAVADOC
+
     public static void forceJSpinnerCommit(Container container) {
         getJSpinners(container).forEach(jSpinner -> {
             try {

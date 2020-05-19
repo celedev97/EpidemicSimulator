@@ -12,6 +12,8 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.Marker;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -52,8 +54,6 @@ public class SimulatorGUI extends JFrame {
     private ArrayList<Integer> immuneByDay;
     private ArrayList<Integer> deadByDay;
 
-
-
     private XYChart resourcesGraphData;
     private XChartPanel<XYChart> resourcesGraphPanel;
 
@@ -62,9 +62,12 @@ public class SimulatorGUI extends JFrame {
     //#endregion
 
     JSlider speedSlider;
+    private float speedSliderValue;
+    private long dayMinimumDuration;
 
     //milliseconds of the last day start, used to fake a sleep in case there are no movements
     private long lastStart = 0;
+    private boolean doSleep = false;
 
     private final int MINIMUM_DAY_TIME = 10000;
 
@@ -74,6 +77,9 @@ public class SimulatorGUI extends JFrame {
         this.simulator = simulator;
 
         buildGUI();
+
+        speedSlider.addChangeListener(changeSpeedListener);
+        changeSpeedListener.stateChanged(new ChangeEvent(speedSlider));
 
         //Starting the graphic engine
         Engine.start();
@@ -294,6 +300,11 @@ public class SimulatorGUI extends JFrame {
 
     }
 
+    private final ChangeListener changeSpeedListener = l ->{
+        speedSliderValue = speedSlider.getValue() * 0.01f;
+        dayMinimumDuration = (int)(MINIMUM_DAY_TIME /getSpeedMultiplier());
+    };
+
     private final SimulatorCallBack simulatorEventListener = new SimulatorCallBack() {
         @Override
         public void personHasSymptoms(Person person) {}
@@ -304,11 +315,13 @@ public class SimulatorGUI extends JFrame {
         @Override
         public void registerEncounter(Person person1, Person person2) {
             drawablePersonsDictionary.get(person1).target.add(drawablePersonsDictionary.get(person2));
+            doSleep = false;
         }
 
         @Override
         public void afterExecuteDay(Simulator.Outcome outcome) {
             lastDayOutCome = outcome;
+
             dayLabel.setText(""+simulator.getDay());
             //resourceBar.setValue(simulator.getResources());
         }
@@ -328,13 +341,15 @@ public class SimulatorGUI extends JFrame {
     }
 
     private void startANewDay() {
-        long timePassed = System.currentTimeMillis() - lastStart;
-        long needToSleepTime = (int)(MINIMUM_DAY_TIME /getSpeedMultiplier()) - timePassed;
-        if(needToSleepTime>0) {
-            try {
-                Thread.sleep(needToSleepTime);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        if(doSleep){
+            long timePassed = System.currentTimeMillis() - lastStart;
+            while (dayMinimumDuration>timePassed){
+                try {
+                    Thread.sleep(10);
+                    timePassed += 10;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         lastStart = System.currentTimeMillis();
@@ -375,10 +390,12 @@ public class SimulatorGUI extends JFrame {
         //#endregion
 
         if (lastDayOutCome != Simulator.Outcome.NOTHING) {
-            //TODO: start this in another thread? it would allow balls to change color before the OK is pressed
+            //TODO: invent something better instead of this shitty dialog, it blocks the colors update
             JOptionPane.showMessageDialog(null, "OUTCOME: " + lastDayOutCome);
             return;
         }
+
+        doSleep = true;
 
         //executing all this day simulation
         simulator.executeDay();
@@ -415,9 +432,7 @@ public class SimulatorGUI extends JFrame {
 
 
     public float getSpeedMultiplier() {
-        //TODO: calculate this on change, don't do this at every function call!
-        return speedSlider.getValue() * 0.01f;
-        //return 1;
+        return speedSliderValue;
     }
 
     //fake main that just start a Setting window and call the start button, useful for testing purposes
