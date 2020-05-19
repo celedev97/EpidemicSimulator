@@ -30,8 +30,8 @@ public class MediumControlledLockdown extends Strategy {
         ArrayList<Person>check1=new ArrayList<>();
         if(sintomatici>=this.limite){
             int estrazione=(simulator.getAlivePopulation().size()*this.sintomatici)/100;
-            System.out.println("MAXIMUM LIMIT REACHED: "+sintomatici+" RED'S ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
-            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" RED'S ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
+            System.out.println("MAXIMUM LIMIT REACHED: "+sintomatici+" INFECTED CONFIRMED->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
+            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" INFECTED CONFIRMED ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
             HashMap<Person, List<Person>> p=findEncounters(simulator.getDay());
             Set<Person>key=p.keySet();
             ArrayList<Person>chiavi=new ArrayList<>();

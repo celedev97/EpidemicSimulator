@@ -97,10 +97,13 @@ public class SimulatorText extends JFrame {
         writeOutput( "RED   : " + red + '\n', Color.RED, "b");
         writeOutput( "BLUE  : " + blue + '\n', Color.BLUE, "b");
         writeOutput( "BLACK : " + black + '\n', Color.BLACK , "b");
+        String messages=simulator.getStrategy().clearOutput();
+        if(messages!=""){
+            writeOutput( "SIMULATOR REPORT : " + messages + '\n', Color.CYAN , "b");
+        }
         writeOutput("----------\n");
         writeOutput( "resources : " + simulator.getResources() + '\n');
         writeOutput( "R0 factor: " + simulator.r0 + '\n');
-        //writeOutput( "Simulator today says: " + simulator + '\n');
 
         //Scroll to bottom:
         SwingUtilities.invokeLater(() -> {

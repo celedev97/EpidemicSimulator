@@ -37,7 +37,7 @@ public class StopEpidemyOnFirstRed extends Strategy {
                 }
             }
             //System.out.println(count+" persone rimesse in libertà!");
-            super.output(count+" PEOPLE FREED!");
+            super.output("RESULT: "+count+" PEOPLE FREED!");
             data_check=0;
         }
     }
