@@ -29,7 +29,7 @@ public class DrawablePerson extends GameObject {
 
     protected ArrayList<DrawablePerson> target;
 
-    private Color color = Color.CYAN;
+    private Color color = Color.GREEN;
     private boolean innerYellow = false, canMove = false;
 
     public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson, float x, float y, float speed) {
@@ -88,7 +88,7 @@ public class DrawablePerson extends GameObject {
         int halfScaledSize = scaledSize/2;
         //drawing outer can't move circle
         if(!canMove){
-            graphics.setColor(Color.CYAN);
+            graphics.setColor(Color.BLACK);
             graphics.fillOval(x-halfScaledSize-1,y-halfScaledSize-1,scaledSize+2,scaledSize+2);
         }
 
