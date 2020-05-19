@@ -2,7 +2,6 @@ package com.epidemic_simulator.gui.textual;
 
 import com.epidemic_simulator.*;
 import com.epidemic_simulator.gui.SimulatorSettings;
-import dev.federicocapece.jdaze.Engine;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -83,23 +82,17 @@ public class SimulatorText extends JFrame {
     };
 
     private void dayReport() {
-        int black = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.BLACK).count();
-        int green = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.GREEN).count();
-        int yellow = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.YELLOW).count();
-        int red = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.RED).count();
-        int blue = (int) simulator.getPopulation().stream().filter(person -> person.getColor() == Color.BLUE).count();
-
-
         writeOutput( "\nDAY " + simulator.getDay() + '\n',"b",18);
         writeOutput("----------\n");
-        writeOutput( "GREEN : " + green + '\n', Color.GREEN, "b");
-        writeOutput( "YELLOW: " + yellow + '\n', Color.YELLOW, "b");
-        writeOutput( "RED   : " + red + '\n', Color.RED, "b");
-        writeOutput( "BLUE  : " + blue + '\n', Color.BLUE, "b");
-        writeOutput( "BLACK : " + black + '\n', Color.BLACK , "b");
+        writeOutput( "GREEN : " + simulator.getGreenCount() + '\n', Color.GREEN, "b");
+        writeOutput( "YELLOW: " + simulator.getYellowCount()  + '\n', Color.YELLOW, "b");
+        writeOutput( "RED   : " + simulator.getRedCount() + '\n', Color.RED, "b");
+        writeOutput( "BLUE  : " + simulator.getBlueCount() + '\n', Color.BLUE, "b");
+        writeOutput( "BLACK : " + simulator.getBlackCount() + '\n', Color.BLACK , "b");
+
         String messages=simulator.getStrategy().clearOutput();
-        if(messages!=""){
-            writeOutput( "SIMULATOR REPORT : " + messages + '\n', Color.cyan , "b");
+        if(messages.length()>0){
+            writeOutput( "SIMULATOR REPORT : " + messages + '\n', Color.CYAN , "b");
         }
         writeOutput("----------\n");
         writeOutput( "resources : " + simulator.getResources() + '\n');

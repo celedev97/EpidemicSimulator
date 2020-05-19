@@ -101,10 +101,16 @@ public final class Simulator {
     private boolean firstRed = false;
 
     //#region status counters
+    //healthy = not infected
     private int healthy;
+    //infected = not healthy
     private int infected;
-    private int immunes;
-    private int deads;
+
+    private int greenCount;
+    private int yellowCount;
+    private int redCount;
+    private int blueCount;
+    private int blackCount;
 
 
     public int getHealthy() {
@@ -117,20 +123,36 @@ public final class Simulator {
         return infected;
     }
 
-    public int getImmunes() {
+    public int getGreenCount() {
         negateStrategyAccess();
-        return immunes;
+        return greenCount;
     }
 
-    public int getDeads() {
-        return deads;
+    public int getYellowCount() {
+        negateStrategyAccess();
+        return yellowCount;
+    }
+
+    public int getRedCount() {
+        negateStrategyAccess();
+        return redCount;
+    }
+
+    public int getBlueCount() {
+        negateStrategyAccess();
+        return blueCount;
+    }
+
+    public int getBlackCount() {
+        return blackCount;
     }
 
     void negateStrategyAccess(){
         try {
             Class callerClass = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
-            if(callerClass == strategy.getClass()){
-                throw new RuntimeException("Strategies cannot see this.");
+            if(strategy != null && callerClass == strategy.getClass()){
+                //TODO: TEST!
+                throw new StrategyForbiddenAccessException();
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -233,10 +255,11 @@ public final class Simulator {
         callBacks = new ArrayList<>();
 
         //initializing counters
-        healthy  = startingPopulation - 1;
-        infected = 1;
-        immunes  = 0;
-        deads    = 0;
+        greenCount = healthy = startingPopulation - 1;
+        yellowCount = infected = 1;
+        redCount = 0;
+        blueCount = 0;
+        blackCount = 0;
     }
 
     /**
@@ -292,13 +315,20 @@ public final class Simulator {
             person.daysSinceInfection++;
 
             //if this person is green and today is the day they become yellow
-            if (!person.canInfect && person.daysSinceInfection == canInfectDay)
+            if (!person.canInfect && person.daysSinceInfection == canInfectDay){
+                yellowCount++;
+                greenCount--;
                 person.canInfect = true;
+            }
 
             //if this person is yellow and today is the day they become red
             if (person.daysSinceInfection == person.symptomsDevelopmentDay) {
                 person.symptoms = true;
                 person.canMove = false;
+
+                //adjusting counters
+                yellowCount--;
+                redCount++;
 
                 //this flag enables the strategies
                 firstRed = true;
@@ -321,7 +351,10 @@ public final class Simulator {
                     alivePopulation.remove(person);
                 }
                 person.alive = false;
-                deads++;
+
+                //adjusting counters
+                blackCount++;
+                redCount--;
                 infected--;
 
                 return;//this return is just to be safe and avoid a people dying and then healing itself
@@ -336,8 +369,14 @@ public final class Simulator {
                 person.canInfect = false;
                 person.symptoms = false;
 
+                blueCount++;
+                infected--;
+
                 //the strategy get told of the fact that he's immune only if it knew he was sick.
-                if (hadSymptoms) {
+                if (!hadSymptoms) {
+                    yellowCount--;
+                }else{
+                    redCount--;
                     person.canMove=true;
                     callBacks.forEach(simulatorCallBack -> {
                         if(simulatorCallBack != strategy || firstRed){
@@ -347,11 +386,8 @@ public final class Simulator {
                         }
                     });
                 }
-
-                immunes++;
-                infected--;
-
             }
+
         });
 
 

@@ -360,8 +360,8 @@ public class SimulatorGUI extends JFrame {
         //#region progressbar update
         greenBar.setValue(simulator.getHealthy());
         orangeBar.setValue(simulator.getInfected());
-        blueBar.setValue(simulator.getImmunes());
-        blackBar.setValue(simulator.getDeads());
+        blueBar.setValue(simulator.getBlueCount());
+        blackBar.setValue(simulator.getBlackCount());
         resourcesBar.setValue((int)(simulator.getResources()/simulator.testPrice));
         resourcesBar.setString(""+simulator.getResources());
         //#endregion progressbar
@@ -370,8 +370,8 @@ public class SimulatorGUI extends JFrame {
         days.add(simulator.getDay());
         healthyByDay.add(simulator.getHealthy());
         infectedByDay.add(simulator.getInfected());
-        immuneByDay.add(simulator.getImmunes());
-        deadByDay.add(simulator.getDeads());
+        immuneByDay.add(simulator.getBlueCount());
+        deadByDay.add(simulator.getBlackCount());
         resourcesByDay.add(simulator.getResources());
 
         peopleGraphData.updateXYSeries("Healthy",   days, healthyByDay  , null);
