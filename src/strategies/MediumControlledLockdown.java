@@ -29,21 +29,26 @@ public class MediumControlledLockdown extends Strategy {
         ArrayList<Person> persone = new ArrayList<>();
         ArrayList<Person> extracted = new ArrayList<>();
         if(sintomatici>=this.limite){
+            int count_check=0;
+            int count_yel=0;
             int estrazione=(simulator.getAlivePopulation().size()*this.sintomatici)/100;
-            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" INFECTED CONFIRMED ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
-
-            //extracting estrazione from alive population
+            //super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" INFECTED CONFIRMED ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
+            //extracting 'estrazione' from alive population
             for (int i = 0; i < estrazione; i++) {
                 Person randomPerson = simulator.getAlivePopulation().get(Utils.random(simulator.getAlivePopulation().size()));
                 if(!extracted.contains(randomPerson)){
                     extracted.add(randomPerson);
                     //testing the extracted person
                     if(simulator.testVirus(randomPerson)){
+                        count_yel++;
                         randomPerson.setCanMove(false);
                         //if it's positive i stop all his encounters
-                        for (Person tizio:findEncounters(randomPerson, 1)) {
-                            tizio.setCanMove(false);
-                            persone.add(tizio);
+                        for (Person tizio:findEncounters(randomPerson, simulator.getDay())) {
+                            if(!persone.contains(tizio)&&(!extracted.contains(tizio))){
+                                count_check++;
+                                tizio.setCanMove(false);
+                                persone.add(tizio);
+                            }
                         }
                     }
                 } else {
@@ -51,10 +56,10 @@ public class MediumControlledLockdown extends Strategy {
                 }
             }
             //this.sintomatici=0;
+            check.put(simulator.getDay(),persone);
+            super.output(count_yel+" YELLOW STOPPED AND STILL "+count_check+" PERSON TO CHECK AT DAY: "+(simulator.getDay()+simulator.canInfectDay+1));
         }
         System.out.println(sintomatici+" "+limite);
-
-        check.put(simulator.getDay(),persone);
         /* cancellare dopo se funziona lo stesso
         if(check.size()==0){
             check.put(simulator.getDay(),persone);
@@ -66,13 +71,16 @@ public class MediumControlledLockdown extends Strategy {
 
         int dayToRemove = -1;
         for (int data:check.keySet()) {
-            if(simulator.getDay()==(data+simulator.canInfectDay)){
+            int count=0;
+            if(simulator.getDay()==(data+simulator.canInfectDay+1)){
                 dayToRemove = data;
                 for (Person t:check.get(data)) {
                     if(!simulator.testVirus(t)){
+                        count++;
                         t.setCanMove(true);
                     }
                 }
+                super.output(count+" PERSON SET FREE!");
             }
         }
         check.remove(dayToRemove);
