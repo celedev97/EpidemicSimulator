@@ -26,85 +26,56 @@ public class MediumControlledLockdown extends Strategy {
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
-        ArrayList<Person>persone = new ArrayList<>();
-        ArrayList<Person>check1=new ArrayList<>();
+        ArrayList<Person> persone = new ArrayList<>();
+        ArrayList<Person> extracted = new ArrayList<>();
         if(sintomatici>=this.limite){
             int estrazione=(simulator.getAlivePopulation().size()*this.sintomatici)/100;
-            System.out.println("MAXIMUM LIMIT REACHED: "+sintomatici+" INFECTED CONFIRMED->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
             super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" INFECTED CONFIRMED ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
-            HashMap<Person, List<Person>> p=findEncounters(simulator.getDay());
-            Set<Person>key=p.keySet();
-            ArrayList<Person>chiavi=new ArrayList<>();
-            for (Person a:key) {
-                chiavi.add(a);
-            }
+
+            //extracting estrazione from alive population
             for (int i = 0; i < estrazione; i++) {
-                Person randomPerson = chiavi.get(Utils.random(chiavi.size()));
-                int controllo=0;
-                for (Person r:check1) {
-                    if(!randomPerson.equals(r)){
-                        controllo=0;
-                        break;
-                    }
-                    else {
-                        controllo++;
-                    }
-                }
-                if(controllo==0){
-                    check1.add(randomPerson);
-                    if(randomPerson.getColor()==Color.YELLOW||randomPerson.getColor()==Color.RED){
+                Person randomPerson = simulator.getAlivePopulation().get(Utils.random(simulator.getAlivePopulation().size()));
+                if(!extracted.contains(randomPerson)){
+                    extracted.add(randomPerson);
+                    //testing the extracted person
+                    if(simulator.testVirus(randomPerson)){
                         randomPerson.setCanMove(false);
-                        for (Person tizio:p.get(randomPerson)) {
+                        //if it's positive i stop all his encounters
+                        for (Person tizio:findEncounters(randomPerson, 1)) {
                             tizio.setCanMove(false);
                             persone.add(tizio);
                         }
                     }
-                }
-                else {
+                } else {
                     i--;
                 }
             }
             //this.sintomatici=0;
         }
         System.out.println(sintomatici+" "+limite);
+
+        check.put(simulator.getDay(),persone);
+        /* cancellare dopo se funziona lo stesso
         if(check.size()==0){
             check.put(simulator.getDay(),persone);
-        }
-        else {
-            int controllo=0;
-            for (Integer data:check.keySet()) {
-                if(data==simulator.getDay()){
-                    ArrayList appoggio=check.get(data);
-                    appoggio.addAll(persone);
-                    check.put(data,appoggio);
-                    controllo++;
-                }
+        } else {
+            if(check.containsKey(simulator.getDay())){
+                check.get(simulator.getDay()).addAll(persone);
             }
-            if(controllo==0){
-                check.put(simulator.getDay(),persone);
-            }
-        }
-        if(check.size()!=0){
-            for (int data:check.keySet()) {
-                ArrayList<Person>p=check.get(data);
-                ArrayList<Person>rossi=new ArrayList<>();
-                for (Person t:p) {
-                    if (t.getColor() == Color.RED) {
-                        personClean(t);
-                        //System.out.println("!!!!!!");
-                        rossi.add(t);
-                    }
-                }
-                p.removeAll(rossi);
-                if(simulator.getDay()==(data+simulator.canInfectDay)){
-                    for (Person t:p) {
-                        if(!simulator.testVirus(t)){
-                            t.setCanMove(true);
-                        }
+        }//*/
+
+        int dayToRemove = -1;
+        for (int data:check.keySet()) {
+            if(simulator.getDay()==(data+simulator.canInfectDay)){
+                dayToRemove = data;
+                for (Person t:check.get(data)) {
+                    if(!simulator.testVirus(t)){
+                        t.setCanMove(true);
                     }
                 }
             }
         }
+        check.remove(dayToRemove);
         System.out.println(sintomatici+" "+limite);
     }
 
