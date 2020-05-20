@@ -55,6 +55,7 @@ public abstract class Strategy implements SimulatorCallBack {
     }
 
     public void output(String text) {
+        System.out.println(text);
         if(log.length() == 0)
             this.log = text;
         else{
