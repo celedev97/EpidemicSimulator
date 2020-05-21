@@ -97,3 +97,5 @@ hs_err_pid*
 #Simulator configuration files
 *.simconf
 *.simconf.*
+.idea/sonarlint/
+.idea/discord.xml
