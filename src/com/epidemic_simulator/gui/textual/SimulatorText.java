@@ -90,9 +90,11 @@ public class SimulatorText extends JFrame {
         writeOutput("BLUE  : " + simulator.getBlueCount() + '\n', Color.BLUE, "b");
         writeOutput("BLACK : " + simulator.getBlackCount() + '\n', Color.BLACK, "b");
 
-        String messages = simulator.getStrategy().clearOutput();
-        if (messages.length() > 0) {
-            writeOutput("SIMULATOR REPORT : " + messages + '\n', Color.CYAN, "b");
+        if (simulator.getStrategy() != null) {
+            String messages = simulator.getStrategy().clearOutput();
+            if (messages.length() > 0) {
+                writeOutput("SIMULATOR REPORT : " + messages + '\n', Color.CYAN, "b");
+            }
         }
         writeOutput("----------\n");
         writeOutput("resources : " + simulator.getResources() + '\n');
@@ -136,8 +138,12 @@ public class SimulatorText extends JFrame {
         writeOutput("Symptomaticity: " + simulator.symptomsRate + '\n', 16);
         writeOutput("Lethality: " + simulator.deathRate + '\n', 16);
         writeOutput("Duration: " + simulator.diseaseDuration + "\n\n", 16);
-        String beforeAtStrategy = simulator.getStrategy().toString().split("@")[0];
-        writeOutput("Strategy used: " + Utils.javaNameToUserString(beforeAtStrategy) + '\n', 16);
+        if (simulator.getStrategy() == null)
+            writeOutput("No strategy used" + '\n', 16);
+        else {
+            String beforeAtStrategy = simulator.getStrategy().toString().split("@")[0];
+            writeOutput("Strategy used: " + Utils.javaNameToUserString(beforeAtStrategy) + '\n', 16);
+        }
 
         writeOutput("\n\n" + (System.currentTimeMillis() - startTime) + " milliseconds passed");
     }
