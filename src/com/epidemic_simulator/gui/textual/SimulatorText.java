@@ -43,10 +43,10 @@ public class SimulatorText extends JFrame {
     private void buildGUI() {
         //#region creating the Frame
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension windowSize = new Dimension((int)(screenSize.width*.3),(int)(screenSize.height*.9));
+        Dimension windowSize = new Dimension((int) (screenSize.width * .3), (int) (screenSize.height * .9));
 
         setSize(windowSize);
-        setLocation((screenSize.width/2 - windowSize.width/2), (screenSize.height/2 - windowSize.height/2) - screenSize.height/30);
+        setLocation((screenSize.width / 2 - windowSize.width / 2), (screenSize.height / 2 - windowSize.height / 2) - screenSize.height / 30);
 
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
@@ -65,7 +65,7 @@ public class SimulatorText extends JFrame {
         //#endregion
     }
 
-    private final Thread simulationThread = new Thread(){
+    private final Thread simulationThread = new Thread() {
         @Override
         public void run() {
             //starting the simulation
@@ -82,21 +82,21 @@ public class SimulatorText extends JFrame {
     };
 
     private void dayReport() {
-        writeOutput( "\nDAY " + simulator.getDay() + '\n',"b",18);
+        writeOutput("\nDAY " + simulator.getDay() + '\n', "b", 18);
         writeOutput("----------\n");
-        writeOutput( "GREEN : " + simulator.getGreenCount() + '\n', Color.GREEN, "b");
-        writeOutput( "YELLOW: " + simulator.getYellowCount()  + '\n', Color.YELLOW, "b");
-        writeOutput( "RED   : " + simulator.getRedCount() + '\n', Color.RED, "b");
-        writeOutput( "BLUE  : " + simulator.getBlueCount() + '\n', Color.BLUE, "b");
-        writeOutput( "BLACK : " + simulator.getBlackCount() + '\n', Color.BLACK , "b");
+        writeOutput("GREEN : " + simulator.getGreenCount() + '\n', Color.GREEN, "b");
+        writeOutput("YELLOW: " + simulator.getYellowCount() + '\n', Color.YELLOW, "b");
+        writeOutput("RED   : " + simulator.getRedCount() + '\n', Color.RED, "b");
+        writeOutput("BLUE  : " + simulator.getBlueCount() + '\n', Color.BLUE, "b");
+        writeOutput("BLACK : " + simulator.getBlackCount() + '\n', Color.BLACK, "b");
 
-        String messages=simulator.getStrategy().clearOutput();
-        if(messages.length()>0){
-            writeOutput( "SIMULATOR REPORT : " + messages + '\n', Color.CYAN , "b");
+        String messages = simulator.getStrategy().clearOutput();
+        if (messages.length() > 0) {
+            writeOutput("SIMULATOR REPORT : " + messages + '\n', Color.CYAN, "b");
         }
         writeOutput("----------\n");
-        writeOutput( "resources : " + simulator.getResources() + '\n');
-        writeOutput( "R0 factor: " + simulator.r0 + '\n');
+        writeOutput("resources : " + simulator.getResources() + '\n');
+        writeOutput("R0 factor: " + simulator.getR0() + '\n');
 
         //Scroll to bottom:
         SwingUtilities.invokeLater(() -> {
@@ -107,13 +107,13 @@ public class SimulatorText extends JFrame {
     }
 
     private void finalReport(Simulator.Outcome outcome, long startTime) {
-        writeOutput( "\nFINAL REPORT:\n", 20, "b", Color.BLACK);
+        writeOutput("\nFINAL REPORT:\n", 20, "b", Color.BLACK);
 
         dayReport();
 
         //finding the appropriate color for the outcome
         Color outcomeColor = Color.BLACK;
-        switch(outcome){
+        switch (outcome) {
             case ALL_HEALED:
                 outcomeColor = Color.GREEN;
                 break;
@@ -127,30 +127,39 @@ public class SimulatorText extends JFrame {
 
         writeOutput(outcome.toString(), "b", 18, outcomeColor);
         writeOutput("\n");
-        writeOutput( "\nSTARTING PARAMETERS:\n", 20, "b", Color.BLACK);
-        writeOutput("Hey, give me the time to implement this...", 10);
+        writeOutput("\nSTARTING PARAMETERS:\n", 20, "b", Color.BLACK);
+        writeOutput("\nPopulation: " + simulator.getPopulation().size() + '\n', 16);
+        writeOutput("Resources: " + simulator.initialResources + '\n', 16);
+        writeOutput("Test Price: " + simulator.testPrice + '\n', 16);
+        writeOutput("Encounters per day: " + simulator.averageEncountersPerDay + "\n\n", 16);
+        writeOutput("Infectivity: " + simulator.infectionRate + '\n', 16);
+        writeOutput("Symptomaticity: " + simulator.symptomsRate + '\n', 16);
+        writeOutput("Lethality: " + simulator.deathRate + '\n', 16);
+        writeOutput("Duration: " + simulator.diseaseDuration + "\n\n", 16);
+        String beforeAtStrategy = simulator.getStrategy().toString().split("@")[0];
+        writeOutput("Strategy used: " + Utils.javaNameToUserString(beforeAtStrategy) + '\n', 16);
 
-        writeOutput( "\n\n" + (System.currentTimeMillis() - startTime) + " milliseconds passed");
+        writeOutput("\n\n" + (System.currentTimeMillis() - startTime) + " milliseconds passed");
     }
 
-    private void writeOutput(String line, Object... styleParams){
+    private void writeOutput(String line, Object... styleParams) {
         SimpleAttributeSet set = new SimpleAttributeSet();
 
         //unpacking params to set style
-        for (Object parameter : styleParams){
-            if(parameter.getClass() == Color.class) {
+        for (Object parameter : styleParams) {
+            if (parameter.getClass() == Color.class) {
                 StyleConstants.setForeground(set, (Color) parameter);
-            }else if(parameter.getClass() == String.class){
+            } else if (parameter.getClass() == String.class) {
                 String style = ((String) parameter).toLowerCase();
 
-                if(style.contains("b"))
-                    StyleConstants.setBold(set,true);
+                if (style.contains("b"))
+                    StyleConstants.setBold(set, true);
 
-                if(style.contains("i"))
-                    StyleConstants.setItalic(set,true);
+                if (style.contains("i"))
+                    StyleConstants.setItalic(set, true);
 
-            }else if(parameter.getClass() == Integer.class){
-                StyleConstants.setFontSize(set, (Integer)parameter);
+            } else if (parameter.getClass() == Integer.class) {
+                StyleConstants.setFontSize(set, (Integer) parameter);
             }
         }
 

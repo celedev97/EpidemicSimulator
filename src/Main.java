@@ -12,7 +12,7 @@ public class Main {
         Simulator sim = null;
 
         try {
-            sim = new Simulator(10000, 449999, 5,0.3f, 50, 50, 50, 45);
+            sim = new Simulator(10000, 449999, 5, 0.3f, 50, 50, 50, 45);
             //new TestEveryOneOnFirstRed(sim);
             //ContactTracingLightTest strategy = new ContactTracingLightTest(sim, 20);
             //MediumControlledLockdown strategy=new MediumControlledLockdown(sim,10);
@@ -39,7 +39,7 @@ public class Main {
             System.out.println("blue  : " + blue);
             System.out.println("black : " + black);
             System.out.println("resources : " + sim.getResources());
-            System.out.println("R0 factor: " + sim.r0);
+            System.out.println("R0 factor: " + sim.getR0());
         }
         System.out.println("\nFinal report:");
         System.out.println(sim.getDay() + "d " + outcome.toString());
@@ -56,7 +56,7 @@ public class Main {
         System.out.println("blue  : " + blue);
         System.out.println("black : " + black);
         System.out.println("resources : " + sim.getResources());
-        System.out.println("R0 factor: " + sim.r0);
+        System.out.println("R0 factor: " + sim.getR0());
 
         long end = System.currentTimeMillis();
         long time = (end - start);

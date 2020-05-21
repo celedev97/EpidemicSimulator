@@ -17,24 +17,24 @@ public final class Simulator {
     private Strategy strategy = null;
     private final ArrayList<SimulatorCallBack> callBacks;
 
-    public void addCallBack(SimulatorCallBack callBack){
-        if(strategy != null && Strategy.class.isAssignableFrom(callBack.getClass()))
+    public void addCallBack(SimulatorCallBack callBack) {
+        if (strategy != null && Strategy.class.isAssignableFrom(callBack.getClass()))
             throw new RuntimeException("You can't add multiple strategies to the same simulator");
         callBacks.add(callBack);
     }
 
-    public void removeCallBack(SimulatorCallBack callBack){
-        if(callBack == strategy){
+    public void removeCallBack(SimulatorCallBack callBack) {
+        if (callBack == strategy) {
             strategy = null;
         }
         callBacks.remove(callBack);
     }
 
-    public Strategy getStrategy(){
+    public Strategy getStrategy() {
         return strategy;
     }
 
-    public void setStrategy(Strategy strategy){
+    public void setStrategy(Strategy strategy) {
         callBacks.remove(this.strategy);
         this.strategy = strategy;
         callBacks.add(strategy);
@@ -43,6 +43,8 @@ public final class Simulator {
     //#region State data
     //R
     private long resources;
+    public final long initialResources;
+
     public long getResources() {
         return resources;
     }
@@ -76,6 +78,7 @@ public final class Simulator {
 
     //DAY
     private int day = 0;
+
     public int getDay() {
         return day;
     }
@@ -98,7 +101,11 @@ public final class Simulator {
     }
     //#endregion
 
-    public double r0;
+    private double r0;
+
+    public double getR0() {
+        return r0;
+    }
 
     //flag used to activate the Strategy callbacks
     private boolean firstRed = false;
@@ -150,10 +157,10 @@ public final class Simulator {
         return blackCount;
     }
 
-    void negateStrategyAccess(){
+    void negateStrategyAccess() {
         try {
             Class callerClass = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
-            if(strategy != null && callerClass == strategy.getClass()){
+            if (strategy != null && callerClass == strategy.getClass()) {
                 //TODO: TEST!
                 throw new StrategyForbiddenAccessException();
             }
@@ -209,7 +216,7 @@ public final class Simulator {
 
         //#region Initializing simulation parameter
         //Dati popolazione/stato
-        this.resources = resources;
+        this.resources = this.initialResources = resources;
         this.testPrice = testPrice;
         this.cureCost = testPrice * 3;
         this.averageEncountersPerDay = averageEncountersPerDay;
@@ -291,7 +298,7 @@ public final class Simulator {
 
         int encounterToDoThisDay = (int) (encountersPerPersonThisDay * canMoveCount);
 
-        if(canMoveCount > 1){
+        if (canMoveCount > 1) {
             //TODO: could this be made parallel?
             //Probably not, this would require synchronization on persons, and could cause a deadlock
             for (int i = 0; i < encounterToDoThisDay; i++) {
@@ -302,7 +309,7 @@ public final class Simulator {
                     p2 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));//Estraiamo un'altra persona...che non sia se stessa
                 }
 
-                encounter(p1,p2);
+                encounter(p1, p2);
             }
         }
         //#endregion
@@ -318,7 +325,7 @@ public final class Simulator {
             person.daysSinceInfection++;
 
             //if this person is green and today is the day they become yellow
-            if (!person.canInfect && person.daysSinceInfection == canInfectDay){
+            if (!person.canInfect && person.daysSinceInfection == canInfectDay) {
                 yellowCount++;
                 greenCount--;
                 person.canInfect = true;
@@ -338,7 +345,7 @@ public final class Simulator {
 
                 //Execute all the simulation operation on the Person
                 callBacks.forEach(simulatorCallBack -> {
-                    synchronized (simulatorCallBack){
+                    synchronized (simulatorCallBack) {
                         simulatorCallBack.personHasSymptoms(person);
                     }
                 });
@@ -350,7 +357,7 @@ public final class Simulator {
 
             //if this is the day this person die
             if (person.daysSinceInfection == person.deathDay) {
-                synchronized (alivePopulation){
+                synchronized (alivePopulation) {
                     alivePopulation.remove(person);
                 }
                 person.alive = false;
@@ -378,12 +385,12 @@ public final class Simulator {
                 //the strategy get told of the fact that he's immune only if it knew he was sick.
                 if (!hadSymptoms) {
                     yellowCount--;
-                }else{
+                } else {
                     redCount--;
-                    person.canMove=true;
+                    person.canMove = true;
                     callBacks.forEach(simulatorCallBack -> {
-                        if(simulatorCallBack != strategy || firstRed){
-                            synchronized (simulatorCallBack){
+                        if (simulatorCallBack != strategy || firstRed) {
+                            synchronized (simulatorCallBack) {
                                 simulatorCallBack.personClean(person);
                             }
                         }
@@ -400,7 +407,7 @@ public final class Simulator {
         Outcome outcome = Outcome.NOTHING;
 
         int infectedCount;//TODO: you could increase a counter instead of counting them at every cycle???
-        synchronized (alivePopulation){
+        synchronized (alivePopulation) {
             infectedCount = (int) alivePopulation.parallelStream().filter(person -> person.infected).count();
         }
 
@@ -417,8 +424,8 @@ public final class Simulator {
         //calling the callbacks for the end of the day
         Outcome finalOutcome = outcome;
         callBacks.forEach(simulatorCallBack -> {
-            if(simulatorCallBack != strategy || firstRed){
-                synchronized (simulatorCallBack){
+            if (simulatorCallBack != strategy || firstRed) {
+                synchronized (simulatorCallBack) {
                     simulatorCallBack.afterExecuteDay(finalOutcome);
                 }
             }
@@ -433,17 +440,17 @@ public final class Simulator {
      * @param person2 the second person for this encounter
      */
     private void encounter(Person person1, Person person2) {
-        if (person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)){
+        if (person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)) {
             infected++;
             healthy--;
         }
-        if (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)){
+        if (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)) {
             infected++;
             healthy--;
         }
         callBacks.forEach(simulatorCallBack -> {
-            if(simulatorCallBack != strategy || firstRed){
-                synchronized (simulatorCallBack){
+            if (simulatorCallBack != strategy || firstRed) {
+                synchronized (simulatorCallBack) {
                     simulatorCallBack.registerEncounter(person1, person2);
                 }
             }
@@ -457,7 +464,7 @@ public final class Simulator {
      * @return true if the virus is found, false if it's not found
      */
     public boolean testVirus(Person person) {
-        if(person.symptoms) return true;
+        if (person.symptoms) return true;
 
         resources -= testPrice;
         return person.canInfect;
