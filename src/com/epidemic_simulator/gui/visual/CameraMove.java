@@ -9,17 +9,12 @@ import java.awt.event.MouseEvent;
 public class CameraMove extends GameObject {
     public float speed;
 
-    private float zoomSpeed = 1f;
-
+    //#region bounds
     public boolean checkBounds = false;
     private float minX = Float.MIN_VALUE;
     private float minY = Float.MIN_VALUE;
     private float maxX = Float.MAX_VALUE;
     private float maxY = Float.MAX_VALUE;
-
-    private float minScale = Float.MIN_VALUE;
-    private float maxScale = Float.MAX_VALUE;
-
 
     public void setBound(float minX, float minY, float maxX, float maxY) {
         checkBounds = true;
@@ -28,7 +23,19 @@ public class CameraMove extends GameObject {
         this.maxX = maxX;
         this.maxY = maxY;
     }
+    //#endregion
 
+    //#region zoom
+    private float zoomSpeed = 1f;
+
+    private float minScale = Float.MIN_VALUE;
+    private float maxScale = Float.MAX_VALUE;
+
+    public void setScales(float minScale, float maxScale) {
+        this.minScale = minScale;
+        this.maxScale = maxScale;
+    }
+    //#endregion
 
     public CameraMove(float speed) {
         super();
@@ -70,9 +77,6 @@ public class CameraMove extends GameObject {
     }
 
     private void cameraMovement() {
-        int x = 0;
-        int y = 0;
-
         Engine.camera.position.sumUpdate(Input.getArrowsVector().multiply(speed * Engine.deltaTime / Engine.camera.getScale()));
 
         //if there's a limit on the X axys
@@ -90,9 +94,5 @@ public class CameraMove extends GameObject {
         }
     }
 
-    public void setScales(float minScale, float maxScale) {
-        this.minScale = minScale;
-        this.maxScale = maxScale;
-    }
 
 }

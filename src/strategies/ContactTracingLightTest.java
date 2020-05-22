@@ -47,7 +47,7 @@ public class ContactTracingLightTest extends Strategy {
 
     public void checkQuarantine(Person person, int currentDay) { //free a person if he got not symptoms and if 5/6 of diseaseDuration passed
         if ((!person.hasSymptoms()) && ((currentDay - quarantineStartDay.get(person)) > Math.ceil((5 * simulator.diseaseDuration) / 6.0))) {
-            person.setCanMove(true);
+            person.canMove = true;
             precautionaryQuarantine.put(person, false);
         }
     }
@@ -80,7 +80,7 @@ public class ContactTracingLightTest extends Strategy {
     public void quarantine(List<Person> encounters, int i) {
         precautionaryQuarantine.put(encounters.get(i), true);
         quarantineStartDay.put(encounters.get(i), simulator.getDay());
-        encounters.get(i).setCanMove(false);
+        encounters.get(i).canMove = false;
     }
 
     boolean isTestable(List<Person> encounters, int i) {

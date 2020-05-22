@@ -1,5 +1,7 @@
 package com.epidemic_simulator;
 
+import com.epidemic_simulator.exceptions.StrategyForbiddenAccessException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -117,7 +119,6 @@ public class Utils {
         return output;
     }
 
-
     public static List<JSpinner> getJSpinners(final Container c) {
         Component[] comps = c.getComponents();
         List<JSpinner> compList = new ArrayList<>();
@@ -131,7 +132,6 @@ public class Utils {
         return compList;
     }
 
-
     public static void forceJSpinnerCommit(Container container) {
         getJSpinners(container).forEach(jSpinner -> {
             try {
@@ -143,4 +143,25 @@ public class Utils {
         });
     }
 
+    public static String getStrategyName(Class<?> strategy) {
+        if (strategy == null)
+            return "No strategy used";
+        return Utils.javaNameToUserString(strategy.toString());
+    }
+
+    public static String getStrategyName(Strategy strategy) {
+        return getStrategyName(strategy.getClass());
+    }
+
+    public static void negateStrategyAccess() {
+        //TODO: TEST!!!
+        try {
+            Class callerClass = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
+            if (Strategy.class.isAssignableFrom(callerClass)) {
+                throw new StrategyForbiddenAccessException("methodName");
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }

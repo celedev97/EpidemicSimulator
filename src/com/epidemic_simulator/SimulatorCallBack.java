@@ -2,12 +2,12 @@ package com.epidemic_simulator;
 
 public interface SimulatorCallBack {
 
-    public void personHasSymptoms(Person person);
+    void personHasSymptoms(Person person);
 
-    public void personClean(Person person);
+    void personClean(Person person);
 
-    public void registerEncounter(Person person1, Person person2);
+    void registerEncounter(Person person1, Person person2);
 
-    public void afterExecuteDay(Simulator.Outcome outcome);
+    void afterExecuteDay(Simulator.Outcome outcome);
 
 }

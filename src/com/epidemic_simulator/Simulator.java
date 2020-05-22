@@ -1,7 +1,6 @@
 package com.epidemic_simulator;
 
 import com.epidemic_simulator.exceptions.InvalidSimulationException;
-import com.epidemic_simulator.exceptions.StrategyForbiddenAccessException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +12,7 @@ public final class Simulator {
 
     //#region Fields/Getters
 
-    //callbacks
+    //#region callbacks
     private Strategy strategy = null;
     private final ArrayList<SimulatorCallBack> callBacks;
 
@@ -34,20 +33,17 @@ public final class Simulator {
         return strategy;
     }
 
-    public String getStrategyName() {
-        if (strategy == null)
-            return "No strategy used";
-        String beforeAtStrategy = strategy.toString().split("@")[0];
-        return Utils.javaNameToUserString(beforeAtStrategy);
-    }
-
     public void setStrategy(Strategy strategy) {
         callBacks.remove(this.strategy);
         this.strategy = strategy;
         callBacks.add(strategy);
     }
+    //#endregion
 
     //#region State data
+    //P
+    public final int startingPopulation;
+
     //R
     private long resources;
     public final long initialResources;
@@ -108,6 +104,7 @@ public final class Simulator {
     }
     //#endregion
 
+    //R0
     private double r0;
 
     public double getR0() {
@@ -131,49 +128,37 @@ public final class Simulator {
 
 
     public int getHealthy() {
-        negateStrategyAccess();
+        Utils.negateStrategyAccess();
         return healthy;
     }
 
     public int getInfected() {
-        negateStrategyAccess();
+        Utils.negateStrategyAccess();
         return infected;
     }
 
     public int getGreenCount() {
-        negateStrategyAccess();
+        Utils.negateStrategyAccess();
         return greenCount;
     }
 
     public int getYellowCount() {
-        negateStrategyAccess();
+        Utils.negateStrategyAccess();
         return yellowCount;
     }
 
     public int getRedCount() {
-        negateStrategyAccess();
+        Utils.negateStrategyAccess();
         return redCount;
     }
 
     public int getBlueCount() {
-        negateStrategyAccess();
+        Utils.negateStrategyAccess();
         return blueCount;
     }
 
     public int getBlackCount() {
         return blackCount;
-    }
-
-    void negateStrategyAccess() {
-        try {
-            Class callerClass = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
-            if (strategy != null && callerClass == strategy.getClass()) {
-                //TODO: TEST!
-                throw new StrategyForbiddenAccessException();
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     //#endregion
@@ -211,30 +196,30 @@ public final class Simulator {
             throw new InvalidSimulationException("Condition not met: R < 10 * P ∗ C");
         if (resources >= ((long) startingPopulation * diseaseDuration))
             throw new InvalidSimulationException("Condition not met: R < P ∗ D");
-
-        //checking that rateos are all between 0 and 100
-        if (infectionRate > 100 || infectionRate < 0)
-            throw new InvalidSimulationException("Infectivity should be between 0 and 100");
-        if (symptomsRate > 100 || symptomsRate < 0)
-            throw new InvalidSimulationException("Symptomaticity should be between 0 and 100");
-        if (deathRate > 100 || deathRate < 0)
-            throw new InvalidSimulationException("Lethality should be between 0 and 100");
         //#endregion
 
         //#region Initializing simulation parameter
-        //Dati popolazione/stato
-        this.resources = this.initialResources = resources;
-        this.testPrice = testPrice;
-        this.cureCost = testPrice * 3;
-        this.averageEncountersPerDay = averageEncountersPerDay;
 
-        //Dati sanitari
+        //#regionDati popolazione/stato
+        this.startingPopulation = startingPopulation;
+        this.resources = this.initialResources = resources;
+        this.averageEncountersPerDay = averageEncountersPerDay;
+        this.testPrice = testPrice;
+
+        //Dati derivati
+        this.cureCost = testPrice * 3;
+        //#endregion
+
+        //#region Dati sanitari
         this.infectionRate = infectionRate;
-        this.doubleInfectionRate = (infectionRate / 100.0);
         this.symptomsRate = symptomsRate;
         this.deathRate = deathRate;
 
+        //Dati derivati
+        this.doubleInfectionRate = (infectionRate / 100.0);
+
         this.r0 = averageEncountersPerDay * diseaseDuration * doubleInfectionRate;
+        //#endregion
 
         //Dati evoluzione della malattia
         this.diseaseDuration = diseaseDuration;
@@ -306,8 +291,6 @@ public final class Simulator {
         int encounterToDoThisDay = (int) (encountersPerPersonThisDay * canMoveCount);
 
         if (canMoveCount > 1) {
-            //TODO: could this be made parallel?
-            //Probably not, this would require synchronization on persons, and could cause a deadlock
             for (int i = 0; i < encounterToDoThisDay; i++) {
                 Person p1 = notQuarantinedPersons.get(Utils.random(notQuarantinedPersons.size()));
                 Person p2 = null;
@@ -324,10 +307,9 @@ public final class Simulator {
         //depleting resources
         resources -= (alivePopulation.size() - canMoveCount);
 
-
         //#region disease calculations
         //parallel loop over all the alive and infected persons
-        population.parallelStream().filter(person -> person.alive && person.infected).parallel().forEach(person -> {
+        population.parallelStream().filter(person -> person.alive && person.infected).forEach(person -> {
             //increasing the number of days passed since the day of the infection
             person.daysSinceInfection++;
 
@@ -352,9 +334,7 @@ public final class Simulator {
 
                 //Execute all the simulation operation on the Person
                 callBacks.forEach(simulatorCallBack -> {
-                    synchronized (simulatorCallBack) {
-                        simulatorCallBack.personHasSymptoms(person);
-                    }
+                    simulatorCallBack.personHasSymptoms(person);
                 });
             }
 
@@ -381,11 +361,13 @@ public final class Simulator {
             if (person.daysSinceInfection == diseaseDuration) {
                 boolean hadSymptoms = person.symptoms;
 
+                //curing person
                 person.immune = true;
                 person.infected = false;
                 person.canInfect = false;
                 person.symptoms = false;
 
+                //adjusting counter
                 blueCount++;
                 infected--;
 
@@ -397,9 +379,7 @@ public final class Simulator {
                     person.canMove = true;
                     callBacks.forEach(simulatorCallBack -> {
                         if (simulatorCallBack != strategy || firstRed) {
-                            synchronized (simulatorCallBack) {
-                                simulatorCallBack.personClean(person);
-                            }
+                            simulatorCallBack.personClean(person);
                         }
                     });
                 }
@@ -407,20 +387,14 @@ public final class Simulator {
 
         });
 
-
         //#endregion
 
         //#region simulation status return
         Outcome outcome = Outcome.NOTHING;
 
-        int infectedCount;//TODO: you could increase a counter instead of counting them at every cycle???
-        synchronized (alivePopulation) {
-            infectedCount = (int) alivePopulation.parallelStream().filter(person -> person.infected).count();
-        }
-
         if (alivePopulation.isEmpty()) {
             outcome = Outcome.ALL_DEAD;
-        } else if (infectedCount == 0) {
+        } else if (infected == 0) {
             outcome = Outcome.ALL_HEALED;
         } else if (resources <= 0) {
             outcome = Outcome.ECONOMIC_COLLAPSE;
@@ -432,9 +406,7 @@ public final class Simulator {
         Outcome finalOutcome = outcome;
         callBacks.forEach(simulatorCallBack -> {
             if (simulatorCallBack != strategy || firstRed) {
-                synchronized (simulatorCallBack) {
-                    simulatorCallBack.afterExecuteDay(finalOutcome);
-                }
+                simulatorCallBack.afterExecuteDay(finalOutcome);
             }
         });
         return outcome;
@@ -447,19 +419,14 @@ public final class Simulator {
      * @param person2 the second person for this encounter
      */
     private void encounter(Person person1, Person person2) {
-        if (person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)) {
-            infected++;
-            healthy--;
-        }
-        if (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration)) {
+        if ((person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))
+            || (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))) {
             infected++;
             healthy--;
         }
         callBacks.forEach(simulatorCallBack -> {
             if (simulatorCallBack != strategy || firstRed) {
-                synchronized (simulatorCallBack) {
-                    simulatorCallBack.registerEncounter(person1, person2);
-                }
+                simulatorCallBack.registerEncounter(person1, person2);
             }
         });
     }
@@ -470,7 +437,7 @@ public final class Simulator {
      * @param person the person to test
      * @return true if the virus is found, false if it's not found
      */
-    public boolean testVirus(Person person) {
+    public synchronized boolean testVirus(Person person) {
         if (person.symptoms) return true;
 
         resources -= testPrice;
@@ -484,21 +451,13 @@ public final class Simulator {
     public synchronized void dispose() {
         //#region strategies
         //unlinking each strategy from this simulator
-        Stream<SimulatorCallBack> strategies = callBacks.stream().filter(callBack -> Strategy.class.isAssignableFrom(callBack.getClass()));
-        strategies.forEach(strategy -> {
-            ((Strategy) strategy).simulator = null;
-            ((Strategy) strategy).dispose();
-        });
+        if(strategy != null){
+            strategy.dispose();
+        }
 
         //clearing my references to the callbacks
         callBacks.clear();
         //now the gc should be able to kick in and clear this Simulator and its callbacks
         //#endregion
-
-        notQuarantinedPersons.clear();
     }
-
-    //TODO: THE SIMULATOR SHOULD BE SYNCHRONIZED, THE ENGINE AND THE GUI ARE ON SEPARATE THREADS!!!
-    //ARE YOU REALLY SURE ABOUT THIS? IF THE GETTERS AREN'T SYNCHRONIZED IT SHOULD BE FINE.
-
 }

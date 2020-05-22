@@ -3,6 +3,8 @@ package com.epidemic_simulator;
 import java.awt.*;
 
 public class Person {
+    public boolean canMove = true; //All'inizio tutti gli individui possono muoversi
+
     //#region DISEASE FLAGS
     protected boolean alive        = true;
     protected boolean infected     = false;
@@ -10,49 +12,26 @@ public class Person {
     protected boolean symptoms     = false;
     protected boolean immune       = false;
 
+    //#region DISEASE FLAGS GETTERS
+    public boolean isAlive() {
+        return alive;
+    }
+    public boolean isInfected() {
+        Utils.negateStrategyAccess();
+        return infected;
+    }
+    public boolean hasSymptoms() {
+        return symptoms;
+    }
+    //#endregion
+
+    //#endregion
+
     //#region DISEASE STATUS
     protected int daysSinceInfection = 0; //Numero giorni passati dal contagio.
     protected int symptomsDevelopmentDay =-1; //Numero giorni entro cui eventualmente presenterà sintomi,-1 dato che la persona potrebbe non svilupparli.
     protected int deathDay =-1; //Numero giorni entro cui eventualmente la persona in questione morirà,-1 dato che la persona potrebbe anche non morire.
     //#endregion
-
-    //#region GETTERS FOR STRATEGIES
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public boolean hasSymptoms() {
-        return symptoms;
-    }
-
-    public boolean isInfected() {
-        String callerName = Thread.currentThread().getStackTrace()[2].getClassName();
-
-        try {
-            Class<?> caller = Class.forName(callerName);
-            if(Strategy.class.isAssignableFrom(caller))
-                throw new RuntimeException("Strategies cannot know if a person is infected");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return infected;
-    }
-
-    //#endregion
-
-    public void setCanMove(boolean canMove) {
-        this.canMove = canMove;
-    }
-
-    public boolean getCanMove() {
-        return canMove;
-    }
-
-    //#endregion
-
-    protected boolean canMove = true; //All'inizio tutti gli individui possono muoversi
 
     public Color getColor(){
         //Se l'individuo ha status-alive=false è sicuramente nero/morto.
@@ -95,4 +74,5 @@ public class Person {
         if(!Utils.randomBool(deathRate)) return;
         deathDay = Utils.random(symptomsDevelopmentDay, healDay-1);//Calcolo di un giorno entro cui la persona morirà.
     }
+
 }

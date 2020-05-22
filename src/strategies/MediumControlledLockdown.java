@@ -41,12 +41,12 @@ public class MediumControlledLockdown extends Strategy {
                     //testing the extracted person
                     if(simulator.testVirus(randomPerson)){
                         count_yel++;
-                        randomPerson.setCanMove(false);
+                        randomPerson.canMove = false;
                         //if it's positive i stop all his encounters
                         for (Person tizio:findEncounters(randomPerson, simulator.getDay())) {
                             if(!persone.contains(tizio)&&(!extracted.contains(tizio))){
                                 count_check++;
-                                tizio.setCanMove(false);
+                                tizio.canMove = false;
                                 persone.add(tizio);
                             }
                         }
@@ -77,7 +77,7 @@ public class MediumControlledLockdown extends Strategy {
                 for (Person t:check.get(data)) {
                     if(!simulator.testVirus(t)){
                         count++;
-                        t.setCanMove(true);
+                        t.canMove = true;
                     }
                 }
                 super.output(count+" PERSON SET FREE!");
@@ -90,13 +90,13 @@ public class MediumControlledLockdown extends Strategy {
     @Override
     public void personHasSymptoms(Person person){
         this.sintomatici++;
-        person.setCanMove(false);
+        person.canMove = false;
     }
 
     @Override
     public void personClean(Person person) {
         this.sintomatici--;
-        person.setCanMove(true);
+        person.canMove = true;
     }
 
 }

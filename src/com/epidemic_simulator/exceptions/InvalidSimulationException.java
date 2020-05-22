@@ -1,7 +1,7 @@
 package com.epidemic_simulator.exceptions;
 
 public class InvalidSimulationException extends Exception{
-    private String message;
+    private final String message;
 
     @Override
     public String getMessage() {
@@ -11,4 +11,5 @@ public class InvalidSimulationException extends Exception{
     public InvalidSimulationException(String message) {
         this.message = message;
     }
+
 }

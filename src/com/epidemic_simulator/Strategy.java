@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public abstract class Strategy implements SimulatorCallBack {
     protected Simulator simulator;
-    private ArrayList<Person> population;
-    protected long originalResources;
+    protected final long originalResources;
     private String log = "";
+
+    protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 
     //#region Annotations
     @Documented @Target(ElementType.PARAMETER) @Retention(RUNTIME)
@@ -24,7 +24,6 @@ public abstract class Strategy implements SimulatorCallBack {
     }
     //#endregion
 
-    protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 
     public Strategy(Simulator simulator) {
         this.simulator = simulator;
@@ -37,22 +36,17 @@ public abstract class Strategy implements SimulatorCallBack {
     public void dispose() {
         encounters.clear();
         encounters = null;
+        simulator = null;
     }
 
     @Override
-    public void afterExecuteDay(Simulator.Outcome outcome) {
-
-    }
+    public void afterExecuteDay(Simulator.Outcome outcome) {}
 
     @Override
-    public void personClean(Person person) {
-
-    }
+    public void personClean(Person person) {}
 
     @Override
-    public void personHasSymptoms(Person person) {
-
-    }
+    public void personHasSymptoms(Person person) {}
 
     public void output(String text) {
         System.out.println(text);

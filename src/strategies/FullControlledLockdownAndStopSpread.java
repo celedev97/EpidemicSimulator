@@ -40,10 +40,10 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                                 }
                                 else if(!simulator.testVirus(p)){
                                     check.add(p);
-                                    p.setCanMove(false);
+                                    p.canMove = false;
                                 }
                                 else{
-                                    p.setCanMove(false);
+                                    p.canMove = false;
                                 }
                             }
                             else {
@@ -51,7 +51,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                             }
                         }
                     }
-                    key.setCanMove(false);
+                    key.canMove = false;
                 }
             }
             this.sintomatici=0;
@@ -66,7 +66,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                     check.remove(p);
                 }
                 count2++;
-                p.setCanMove(true);
+                p.canMove = true;
                 check.remove(p);
             }
             super.output(count+" PERSON INFECTED AND "+count2+" PERSON FREE!");
@@ -78,7 +78,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
     @Override
     public void personHasSymptoms(Person person){
         this.sintomatici++;
-        person.setCanMove(false);
+        person.canMove = false;
     }
 
 }

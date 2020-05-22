@@ -15,7 +15,6 @@ public class DrawablePerson extends GameObject {
     private final int SIZE = 10;
 
     //MOVEMENT SPEED/PRECISION
-    private final float SPEED_VARIANT = .5f;
     private final float speed;
 
     private final int POSITION_PRECISION = 2;
@@ -107,6 +106,6 @@ public class DrawablePerson extends GameObject {
     public void updateColor() {
         color = thisPerson.getColor();
         innerYellow = color == Color.GREEN && thisPerson.isInfected();
-        canMove = thisPerson.getCanMove();
+        canMove = thisPerson.canMove;
     }
 }

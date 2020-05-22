@@ -362,13 +362,12 @@ public class SimulatorGUI extends JFrame {
 
         gbcPar.gridx = 0;
         gbcPar.gridy = 4;
-        parametersPanel.add((new JLabel("Strategy used: " + simulator.getStrategyName())), gbcPar);
+        parametersPanel.add((new JLabel("Strategy used: " + Utils.getStrategyName(simulator.getStrategy()))), gbcPar);
 
         //#endregion
 
         //min = 0.05, max = 3.50, value = 1.00
         speedSlider = new JSlider(JSlider.HORIZONTAL, 5, 3500,100);
-        //northPanel.add(speedSlider, BorderLayout.SOUTH);
         northPanel.add(speedSlider, BorderLayout.CENTER);
 
         //#endregion
@@ -450,10 +449,10 @@ public class SimulatorGUI extends JFrame {
         deadByDay.add(simulator.getBlackCount());
         resourcesByDay.add(simulator.getResources());
 
-        peopleGraphData.updateXYSeries("Healthy",   days, healthyByDay  , null);
-        peopleGraphData.updateXYSeries("Infected",  days, infectedByDay , null);
-        peopleGraphData.updateXYSeries("Immunes",   days, immuneByDay   , null);
-        peopleGraphData.updateXYSeries("Deads",     days, deadByDay     , null);
+        peopleGraphData.updateXYSeries("Healthy",  days, healthyByDay  , null);
+        peopleGraphData.updateXYSeries("Infected", days, infectedByDay , null);
+        peopleGraphData.updateXYSeries("Immunes",  days, immuneByDay   , null);
+        peopleGraphData.updateXYSeries("Deads",    days, deadByDay     , null);
 
         resourcesGraphData.updateXYSeries("Resources", days, resourcesByDay, null);
 

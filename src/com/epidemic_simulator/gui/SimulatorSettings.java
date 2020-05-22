@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class SimulatorSettings extends JFrame {
     //constants
-    private final int PARAMETERS_PER_ROW = 4;
+    private final int PARAMETERS_PER_ROW = 3;
     private static final String CONF_EXTENSION = ".simconf.json";
     private static final String DEFAULT_CONF_FILE = "./configuration"+CONF_EXTENSION;
 
@@ -189,10 +189,21 @@ public class SimulatorSettings extends JFrame {
         northPanel.add(stateDataPanel);
 
         //adding labels
-        stateDataPanel.add(new JLabel("Population (P):"));
-        stateDataPanel.add(new JLabel("Resources (R):"));
-        stateDataPanel.add(new JLabel("Test price (C):"));
-        stateDataPanel.add(new JLabel("Encounters per day (V):"));
+        JLabel temp = new JLabel("Population (P):");
+        temp.setToolTipText("The initial population of the state.");
+        stateDataPanel.add(temp);
+
+        temp = new JLabel("Resources (R):");
+        temp.setToolTipText("The initial resources of the state");
+        stateDataPanel.add(temp);
+
+        temp = new JLabel("Test price (C):");
+        temp.setToolTipText("The price of a test for the virus\n(Cure cost = price test * 3)");
+        stateDataPanel.add(temp);
+
+        temp = new JLabel("Encounters per day (V):");
+        temp.setToolTipText("The number of encounters that every person has each day if everyone is moving.");
+        stateDataPanel.add(temp);
 
         //adding spinners
         population = new JSpinner();
@@ -222,21 +233,21 @@ public class SimulatorSettings extends JFrame {
         northPanel.add(diseaseDataPanel);
 
         //adding labels
-        JLabel infectivityLabel = new JLabel("Infectivity (I):");
-        infectivityLabel.setToolTipText("The percentage of possibility that an infected person could infect another one when they meet");
-        diseaseDataPanel.add(infectivityLabel);
+        temp = new JLabel("Infectivity (I):");
+        temp.setToolTipText("The percentage of possibility that an infected person could infect another one when they meet");
+        diseaseDataPanel.add(temp);
 
-        JLabel symptomaticityLabel = new JLabel("Symptomaticity (S):");
-        symptomaticityLabel.setToolTipText("The percentage of possibility that an infected person could develop symptoms");
-        diseaseDataPanel.add(symptomaticityLabel);
+        temp = new JLabel("Symptomaticity (S):");
+        temp.setToolTipText("The percentage of possibility that an infected person could develop symptoms");
+        diseaseDataPanel.add(temp);
 
-        JLabel lethalityLabel = new JLabel("Lethality (L):");
-        lethalityLabel.setToolTipText("The percentage of possibility that a person with symptoms could die");
-        diseaseDataPanel.add(lethalityLabel);
+        temp = new JLabel("Lethality (L):");
+        temp.setToolTipText("The percentage of possibility that a person with symptoms could die");
+        diseaseDataPanel.add(temp);
 
-        JLabel durationLabel = new JLabel("Duration (D):");
-        durationLabel.setToolTipText("The numbers of days that the disease will last in a person body");
-        diseaseDataPanel.add(durationLabel);
+        temp = new JLabel("Duration (D):");
+        temp.setToolTipText("The numbers of days that the disease will last in a person body");
+        diseaseDataPanel.add(temp);
 
         //adding spinners
         infectivity = new JSpinner(new SpinnerNumberModel(0 , 0, 100, 1));
@@ -335,6 +346,8 @@ public class SimulatorSettings extends JFrame {
         //Start Button binding
         startGUIButton.addActionListener(startGUIButtonListener);
         startTextButton.addActionListener(startTextButtonListener);
+        getRootPane().setDefaultButton(startTextButton);
+        startTextButton.grabFocus();
     }
 
     //#region Start Buttons listeners/methods
@@ -609,13 +622,9 @@ class SelectableStrategy{
         return value;
     }
 
-    public SelectableStrategy(Class value) {
+    public SelectableStrategy(Class<?> value) {
         this.value = value;
-        if(value == null){
-            humanReadableClassName = "No strategy";
-            return;
-        }
-        this.humanReadableClassName = Utils.javaNameToUserString(value.toString());
+        humanReadableClassName = Utils.getStrategyName(value);
     }
 
     @Override

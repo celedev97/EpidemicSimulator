@@ -21,7 +21,7 @@ public class StopEpidemyOnFirstRed extends Strategy {
             //System.out.println("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
             super.output("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
             for (Person p:simulator.getAlivePopulation()) {
-                p.setCanMove(false);
+                p.canMove = false;
             }
             this.controllo++;
         }
@@ -33,7 +33,7 @@ public class StopEpidemyOnFirstRed extends Strategy {
             for (Person p:simulator.getAlivePopulation()){
                 if(!simulator.testVirus(p)){
                     count++;
-                    p.setCanMove(true);
+                    p.canMove = true;
                 }
             }
             //System.out.println(count+" persone rimesse in libertà!");

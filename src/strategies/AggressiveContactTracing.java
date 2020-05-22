@@ -44,7 +44,7 @@ public class AggressiveContactTracing extends Strategy {
                     System.out.println(key + " RELEASE!");
                     //super.output(key + " RELEASE!");
                     toRemove.add(key);
-                    key.setCanMove(true);
+                    key.canMove = true;
                 //if he's not clean it means he's infected, so i put him on quarantine till the day that he will heal.
                 }else{
                     System.out.println("DAY ("+simulator.getDay()+"): "+key + " IS INFECTED, DO NOT RELEASE!");
@@ -72,7 +72,7 @@ public class AggressiveContactTracing extends Strategy {
         System.out.println("DAY ("+simulator.getDay()+"): "+ person + " IS NOW CLEAN!");
         //super.output("DAY ("+simulator.getDay()+"): "+ person + " IS NOW CLEAN!");
         immunes.add(person);
-        person.setCanMove(true);
+        person.canMove = true;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class AggressiveContactTracing extends Strategy {
                 System.out.println("QUARANTINED: " + contact + "("+simulator.getDay()+") FOR ("+simulator.canInfectDay+" days)");
                 //super.output("QUARANTINED: " + contact + "("+simulator.getDay()+") FOR ("+simulator.canInfectDay+" days)");
                 outputMap.put(contact, simulator.canInfectDay);
-                contact.setCanMove(false);
+                contact.canMove = false;
             }
         }
     }
@@ -96,7 +96,7 @@ public class AggressiveContactTracing extends Strategy {
     public void quarantine(Person person, int days){
         if(!positives.contains(person) && !immunes.contains(person)){
             quarantineMap.put(person, simulator.canInfectDay);
-            person.setCanMove(false);
+            person.canMove = false;
             System.out.println("QUARANTINED: " + person + "("+simulator.getDay()+") FOR ("+days+" days)");
             //super.output("QUARANTINED: " + person + "("+simulator.getDay()+") FOR ("+days+" days)");
         }

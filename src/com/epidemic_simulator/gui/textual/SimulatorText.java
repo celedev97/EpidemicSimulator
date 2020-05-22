@@ -2,6 +2,7 @@ package com.epidemic_simulator.gui.textual;
 
 import com.epidemic_simulator.*;
 import com.epidemic_simulator.gui.SimulatorSettings;
+import jdk.jshell.execution.Util;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -9,6 +10,7 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class SimulatorText extends JFrame {
     Simulator simulator;
@@ -101,11 +103,8 @@ public class SimulatorText extends JFrame {
         writeOutput("R0 factor: " + simulator.getR0() + '\n');
 
         //Scroll to bottom:
-        SwingUtilities.invokeLater(() -> {
-            JScrollBar bar = outputScroll.getVerticalScrollBar();
-            bar.setValue(bar.getMaximum());
-        });
-
+        JScrollBar bar = outputScroll.getVerticalScrollBar();
+        bar.setValue(bar.getMaximum());
     }
 
     private void finalReport(Simulator.Outcome outcome, long startTime) {
@@ -138,7 +137,7 @@ public class SimulatorText extends JFrame {
         writeOutput("Symptomaticity: " + simulator.symptomsRate + '\n', 16);
         writeOutput("Lethality: " + simulator.deathRate + '\n', 16);
         writeOutput("Duration: " + simulator.diseaseDuration + "\n\n", 16);
-        writeOutput("Strategy used: " + simulator.getStrategyName() + '\n', 16);
+        writeOutput("Strategy used: " + Utils.getStrategyName(simulator.getStrategy()) + '\n', 16);
 
         writeOutput("\n\n" + (System.currentTimeMillis() - startTime) + " milliseconds passed");
     }
