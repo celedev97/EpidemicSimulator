@@ -167,13 +167,9 @@ public class SimulatorGUI extends JFrame {
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
         leftNorthPanel.add(firstRow);
 
-        JPanel dayProgress = new JPanel();
-        dayProgress.setLayout(new BoxLayout(dayProgress, BoxLayout.Y_AXIS));
-
         //day panel
         JPanel dayFlow = new JPanel();
-        //firstRow.add(dayFlow);
-        dayProgress.add(dayFlow);
+        firstRow.add(dayFlow);
 
         dayType = new JLabel("DAY ");
         dayFlow.add(dayType);
@@ -187,8 +183,8 @@ public class SimulatorGUI extends JFrame {
         //#region progressbar
         JPanel progressBarPanel = new JPanel(new GridBagLayout());
         progressBarPanel.setBorder(BorderFactory.createTitledBorder("Status"));
-        dayProgress.add(progressBarPanel);
-        leftNorthPanel.add(dayProgress);
+        firstRow.add(progressBarPanel);
+        leftNorthPanel.add(firstRow);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
