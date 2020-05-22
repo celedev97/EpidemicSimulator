@@ -24,6 +24,7 @@ public class SimulatorGUI extends JFrame {
     JFrame settingsFrame;
 
     JLabel dayLabel;
+    JLabel dayType;
 
     //#region Visual simulation data
     private Simulator simulator;
@@ -166,20 +167,28 @@ public class SimulatorGUI extends JFrame {
         firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
         leftNorthPanel.add(firstRow);
 
+        JPanel dayProgress = new JPanel();
+        dayProgress.setLayout(new BoxLayout(dayProgress, BoxLayout.Y_AXIS));
+
         //day panel
         JPanel dayFlow = new JPanel();
-        firstRow.add(dayFlow);
+        //firstRow.add(dayFlow);
+        dayProgress.add(dayFlow);
 
-        dayFlow.add(new JLabel("DAY: "));
+        dayType = new JLabel("DAY ");
+        dayFlow.add(dayType);
+        dayType.setFont(dayType.getFont ().deriveFont (30.0f));
         dayLabel = new JLabel("0");
         dayFlow.add(dayLabel);
+        dayLabel.setFont(dayLabel.getFont ().deriveFont (30.0f));
 
         //#endregion
 
         //#region progressbar
         JPanel progressBarPanel = new JPanel(new GridBagLayout());
         progressBarPanel.setBorder(BorderFactory.createTitledBorder("Status"));
-        leftNorthPanel.add(progressBarPanel);
+        dayProgress.add(progressBarPanel);
+        leftNorthPanel.add(dayProgress);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
@@ -212,6 +221,7 @@ public class SimulatorGUI extends JFrame {
 
         //adding the bars to the row
         gbc.anchor = GridBagConstraints.CENTER;
+        gbc.ipadx = 150;
         gbc.gridx = 1;
         gbc.gridy = 0;
         progressBarPanel.add(greenBar, gbc);
@@ -291,9 +301,79 @@ public class SimulatorGUI extends JFrame {
 
         //#endregion
 
+        //#regionparameters
+
+        JPanel parametersPanel = new JPanel(new GridBagLayout());
+        parametersPanel.setBorder(BorderFactory.createTitledBorder("Starting parameters"));
+        leftNorthPanel.add(parametersPanel);
+
+        GridBagConstraints gbcPar = new GridBagConstraints();
+        gbcPar.anchor = GridBagConstraints.WEST;
+        gbcPar.ipadx = 10;
+        gbcPar.ipady = 10;
+
+        gbcPar.gridx = 0;
+
+        gbcPar.gridy = 0;
+        parametersPanel.add(new JLabel("Population:"), gbcPar);
+        gbcPar.gridy = 1;
+        parametersPanel.add(new JLabel("Resources:"), gbcPar);
+        gbcPar.gridy = 2;
+        parametersPanel.add(new JLabel("Test price:"), gbcPar);
+        gbcPar.gridy = 3;
+        parametersPanel.add(new JLabel("Encounters per day:  "), gbcPar);
+
+        gbcPar.anchor = GridBagConstraints.EAST;
+        gbcPar.ipadx = 40;
+
+        gbcPar.gridx = 1;
+        gbcPar.gridy = 0;
+        parametersPanel.add(new JLabel(Integer.toString(simulator.getPopulation().size())), gbcPar);
+        gbcPar.gridy = 1;
+        parametersPanel.add(new JLabel(Long.toString(simulator.initialResources)), gbcPar);
+        gbcPar.gridy = 2;
+        parametersPanel.add(new JLabel(Integer.toString(simulator.testPrice)), gbcPar);
+        gbcPar.gridy = 3;
+        parametersPanel.add(new JLabel(Double.toString(simulator.averageEncountersPerDay)), gbcPar);
+
+        gbcPar.anchor = GridBagConstraints.WEST;
+        gbcPar.ipadx = 10;
+
+        gbcPar.gridx = 2;
+        gbcPar.gridy = 0;
+        parametersPanel.add(new JLabel("Infectivity:"), gbcPar);
+        gbcPar.gridy = 1;
+        parametersPanel.add(new JLabel("Symptomaticity:"), gbcPar);
+        gbcPar.gridy = 2;
+        parametersPanel.add(new JLabel("Lethality:"), gbcPar);
+        gbcPar.gridy = 3;
+        parametersPanel.add(new JLabel("Disease duration:  "), gbcPar);
+
+        gbcPar.anchor = GridBagConstraints.EAST;
+        gbcPar.gridx = 3;
+
+        gbcPar.gridy = 0;
+        parametersPanel.add(new JLabel(Integer.toString(simulator.infectionRate)), gbcPar);
+        gbcPar.gridy = 1;
+        parametersPanel.add(new JLabel(Long.toString(simulator.symptomsRate)), gbcPar);
+        gbcPar.gridy = 2;
+        parametersPanel.add(new JLabel(Integer.toString(simulator.deathRate)), gbcPar);
+        gbcPar.gridy = 3;
+        parametersPanel.add(new JLabel(Double.toString(simulator.diseaseDuration)), gbcPar);
+
+        gbcPar.anchor = GridBagConstraints.WEST;
+        gbcPar.gridwidth = 4;
+
+        gbcPar.gridx = 0;
+        gbcPar.gridy = 4;
+        parametersPanel.add((new JLabel("Strategy used: " + simulator.getStrategyName())), gbcPar);
+
+        //#endregion
+
         //min = 0.05, max = 3.50, value = 1.00
         speedSlider = new JSlider(JSlider.HORIZONTAL, 5, 3500,100);
-        northPanel.add(speedSlider, BorderLayout.SOUTH);
+        //northPanel.add(speedSlider, BorderLayout.SOUTH);
+        northPanel.add(speedSlider, BorderLayout.CENTER);
 
         //#endregion
 
