@@ -138,12 +138,7 @@ public class SimulatorText extends JFrame {
         writeOutput("Symptomaticity: " + simulator.symptomsRate + '\n', 16);
         writeOutput("Lethality: " + simulator.deathRate + '\n', 16);
         writeOutput("Duration: " + simulator.diseaseDuration + "\n\n", 16);
-        if (simulator.getStrategy() == null)
-            writeOutput("No strategy used" + '\n', 16);
-        else {
-            String beforeAtStrategy = simulator.getStrategy().toString().split("@")[0];
-            writeOutput("Strategy used: " + Utils.javaNameToUserString(beforeAtStrategy) + '\n', 16);
-        }
+        writeOutput("Strategy used: " + simulator.getStrategyName() + '\n', 16);
 
         writeOutput("\n\n" + (System.currentTimeMillis() - startTime) + " milliseconds passed");
     }

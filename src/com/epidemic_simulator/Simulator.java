@@ -34,6 +34,13 @@ public final class Simulator {
         return strategy;
     }
 
+    public String getStrategyName() {
+        if (strategy == null)
+            return "No strategy used";
+        String beforeAtStrategy = strategy.toString().split("@")[0];
+        return Utils.javaNameToUserString(beforeAtStrategy);
+    }
+
     public void setStrategy(Strategy strategy) {
         callBacks.remove(this.strategy);
         this.strategy = strategy;
