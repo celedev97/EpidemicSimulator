@@ -96,12 +96,17 @@ ci sarà un contatore di giorni il quale,una volta raggiunto la soglia massima d
 calcolata nel passo precedente,cambierà lo status della persona da verde a giallo e poi,eventualmente,
 da giallo a rosso.
 
+Un'altro dei metodi per il check sanitario di cui si avvale il simulatore è "TestVirus",il metodo usato per il tampone in pratica,
+qui viene passata una persona in input e il simulatore ne controlla lo stato,se l'individuo è sintomatico nemmeno gli 
+viene effettuato il test,altrimenti il metodo
+restituisce True/False a seconda del fatto che quella persona abbia in circolo il virus o meno.
 
-Tutti gli eventuali cambiamenti che vengono fatti all'interno del simulatore vengono registrati da delle chiamate dal nome di **callBacks**,nient'altro
+Tutti gli eventuali cambiamenti che vengono effettuati vengono registrati da delle chiamate dal nome di **callBacks**,nient'altro
 che un arrayList di implementazione dell'interfaccia "SimulatorCallBack" creata per evitare conflitti di gestione parallela,
 ovvero per non avere più strategie in esecuzione all'interno di un simulatore,di fatto ciascun array di "chiamate"
 è linkato verso una e una sola strategia per volta,tant'è che prima di avvenire il link chiamata->Strategy,viene usato
 un metodo "removeCallBack()" che pulisce eventualmente una precedente strategia immessa.
+
 
 Una volta sperimentati gli incontri,aver cambiato lo status delle persone e aver registrato 
 i cambiamenti avvenuti nelle "callBack",
