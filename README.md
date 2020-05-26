@@ -115,7 +115,33 @@ l'esecuzione del programma e stampare uno dei finali elencati precedentemente.
  
 ### Collegamento delle strategie
 
-### Implementazione delle strategie
+###Implementazione delle strategie
+Nel progetto abbiamo implementato,e testato,diverse strategie ognuna delle è diversificate dalle
+altre e ognuna delle quali è specializzata in un determinato settore di gestione della popolazione
+in funzione dei dati che,giorno per giorno,vengono segnalati dal simulatore sul progresso della
+malattia.
+
+Ogni strategia ha lo scopo di riconoscere,ed eventualmente modificare,lo status della persona mediante
+tamponi e in funzione del suo compito e della sua struttura:
+
+- **No Strategy**: la strategia più banale,ma anche la più "Economic-Friendly",sostanzialmente
+si lascia andare la malattia per il suo normale decorso senza testare o bloccare nessuno a seguito
+di un criterio imposto...gli unici costi che si sosterebbero sarebbero quelli di mettere in cura
+un sintomatico presso un ospedale,e sperare che "l'immunità di gregge" possa permettere alla 
+popolazione di "gestire" da soli il virus nel modo migliore possibile.
+
+- **ContactTracingLightTest:** Da quando viene trovato il primo sintomatico, scorre tutta la popolazione in vita,
+e per ogni sintomatico trovato analizza la sua lista degli incontri nei precedenti "developSyntomsMaxDay" giorni.
+Di queste, effettua il tampone ad una percentuale data da "testPercentage",
+se positive vengono messe in quarantena fin quando non si è sicuri abbiano debellato la malattia
+(o fino a quando non sviluppino sintomi).Il resto invece viene messo in quarantena senza controllo del tampone.
+
+- **StopEpidemyOnFirstRed:** La strategia più "aggressiva" di tutte,come suggerisce il nome,non appena
+il simulatore abilita il flag "FirstRed",con la prima persona che presenterà i sintomi,la strategia
+entrerà in azione sottopenendo tutta la popolazione ad un lockdown preventivo che dia il tempo a tutti i
+*potenziali* infetti di,eventualmente,presentare sintomi o di avere il virus in circolo e rilevabile.
+Scaduto l'intervallo di "lockdown" si prosegue con un tampone a tutti coloro che ancora non hanno
+presentato dei sintomi,rimettendo così in libertà tutti e solo gli individui sani.
 
 ### Interfaccia grafica
 
