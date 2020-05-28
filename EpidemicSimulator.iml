@@ -10,5 +10,6 @@
     <orderEntry type="module" module-name="JDaze" />
     <orderEntry type="library" name="org.json:json:20190722" level="project" />
     <orderEntry type="library" name="org.knowm.xchart:xchart:3.6.3" level="project" />
+    <orderEntry type="library" name="org.reflections:reflections:0.9.12" level="project" />
   </component>
 </module>

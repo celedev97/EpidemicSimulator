@@ -42,51 +42,6 @@ public class Utils {
     }
 
     /**
-     * Get the list of classes from a package (inside this same project)
-     * @param pkgName the name of the package that should be scanned
-     * @return a list of classes
-     * @throws IOException actually it shouldn't be thrown theoretically.
-     * @throws URISyntaxException could be thrown if the package name is wrong
-     */
-    public static List<Class> getClassesForPackage(final String pkgName) throws IOException, URISyntaxException {
-        final ArrayList<Class> allClasses = new ArrayList<>();
-
-        //formatting package with / instead of . to get path
-        final String pkgPath = pkgName.replace('.', '/');
-        //getting absolute path on disk
-        final URI pkg = Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource(pkgPath)).toURI();
-
-        //getting root of the package (could be different from the path on disk if the program is being run from inside a jar)
-        Path root;
-        if (pkg.toString().startsWith("jar:")) {
-            try {
-                root = FileSystems.getFileSystem(pkg).getPath(pkgPath);
-            } catch (final FileSystemNotFoundException e) {
-                root = FileSystems.newFileSystem(pkg, Collections.emptyMap()).getPath(pkgPath);
-            }
-        } else {
-            root = Paths.get(pkg);
-        }
-
-
-        //walk for all files
-        try (final Stream<Path> allPaths = Files.walk(root).filter(Files::isRegularFile)) {
-            //filter real files (exclude directories)
-            allPaths.forEach(file -> {
-                try {
-                    //turn path back into package name
-                    final String path = file.toString().replace('/', '.').replace('\\', '.');
-                    final String name = path.substring(path.indexOf(pkgName), path.length() - ".class".length());
-                    allClasses.add(Class.forName(name));
-                } catch (final ClassNotFoundException | StringIndexOutOfBoundsException ignored) {
-                }
-            });
-        }
-        return allClasses;
-    }
-
-
-    /**
      * This functions convert a method or a class name into a human readable string.
      * It only works with strings that do not contains special characters.
      * Example: animalCageBuilder => Animal cage builder
