@@ -103,8 +103,11 @@ public class SimulatorText extends JFrame {
         writeOutput("R0 factor: " + simulator.getR0() + '\n');
 
         //Scroll to bottom:
-        JScrollBar bar = outputScroll.getVerticalScrollBar();
-        bar.setValue(bar.getMaximum());
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar bar = outputScroll.getVerticalScrollBar();
+            bar.setValue(bar.getMaximum());
+        });
+
     }
 
     private void finalReport(Simulator.Outcome outcome, long startTime) {
