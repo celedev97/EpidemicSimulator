@@ -282,7 +282,7 @@ public class SimulatorSettings extends JFrame {
 
         strategyComboBox.addItem(new SelectableStrategy(null));
         try{
-            for(Class<? extends Strategy> clas : new Reflections().getSubTypesOf(Strategy.class)){
+            for(Class<? extends Strategy> clas : new Reflections("").getSubTypesOf(Strategy.class)){
                 strategyComboBox.addItem(new SelectableStrategy(clas));
             }
         }catch (Exception ex){
