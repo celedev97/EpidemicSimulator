@@ -8,14 +8,15 @@ import com.epidemic_simulator.Utils;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+
 
 public class MediumControlledLockdown extends Strategy {
     private int percentualOfStop;
     private int sintomatici=0;
     private int limite=0;
     private HashMap<Integer,ArrayList<Person>> check;
+    private ArrayList<Person>AlreadyInfected=new ArrayList<>();
+    private boolean flag=true;
 
     public MediumControlledLockdown(Simulator simulator,int percentualOfStop) {
         super(simulator);
@@ -28,11 +29,11 @@ public class MediumControlledLockdown extends Strategy {
     public void afterExecuteDay(Simulator.Outcome outcome) {
         ArrayList<Person> persone = new ArrayList<>();
         ArrayList<Person> extracted = new ArrayList<>();
-        if(sintomatici>=this.limite){
+        if(simulator.getRedCount()>=this.limite&&flag){
             int count_check=0;
             int count_yel=0;
-            int estrazione=(simulator.getAlivePopulation().size()*this.sintomatici)/100;
-            //super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" INFECTED CONFIRMED ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
+            int estrazione=((simulator.getAlivePopulation().size()*15)/100)+simulator.getRedCount();
+            //super.output("MAXIMUM LIMIT REACHED: "+simulator.getRedCount()+" INFECTED CONFIRMED ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
             //extracting 'estrazione' from alive population
             for (int i = 0; i < estrazione; i++) {
                 Person randomPerson = simulator.getAlivePopulation().get(Utils.random(simulator.getAlivePopulation().size()));
@@ -55,29 +56,35 @@ public class MediumControlledLockdown extends Strategy {
                     i--;
                 }
             }
-            //this.sintomatici=0;
             check.put(simulator.getDay(),persone);
             super.output(count_yel+" YELLOW STOPPED AND STILL "+count_check+" PERSON TO CHECK AT DAY: "+(simulator.getDay()+simulator.canInfectDay+1));
         }
-        System.out.println(sintomatici+" "+limite);
-        /* cancellare dopo se funziona lo stesso
-        if(check.size()==0){
-            check.put(simulator.getDay(),persone);
-        } else {
-            if(check.containsKey(simulator.getDay())){
-                check.get(simulator.getDay()).addAll(persone);
+        if(simulator.getResources()<=((originalResources*45)/100)){
+            for (int data:check.keySet()) {
+                for (Person t:check.get(data)) {
+                    if(!this.AlreadyInfected.contains(t)){
+                        if(!simulator.testVirus(t)){
+                            t.canMove = true;
+                        }
+                    }
+                }
             }
-        }//*/
-
+            check.clear();
+            flag=false;
+        }
+        System.out.println(sintomatici+" "+limite);
         int dayToRemove = -1;
         for (int data:check.keySet()) {
             int count=0;
             if(simulator.getDay()==(data+simulator.canInfectDay+1)){
                 dayToRemove = data;
                 for (Person t:check.get(data)) {
-                    if(!simulator.testVirus(t)){
-                        count++;
-                        t.canMove = true;
+                    if(!this.AlreadyInfected.contains(t)){
+                        if(!simulator.testVirus(t)){
+                            count++;
+                            t.canMove = true;
+                        }
+                        else this.AlreadyInfected.add(t);
                     }
                 }
                 super.output(count+" PERSON SET FREE!");
