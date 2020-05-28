@@ -16,7 +16,6 @@ di progetto di Metodologie di Programmazione dell'anno accademico 2019/2020.
     - [Versioning](#versioning)
     - [Autori](#autori)
     - [License](#license)
-    - [Ringraziamenti](#ringraziamenti)
     
 
 ## Come iniziare
@@ -169,10 +168,3 @@ che hanno partecipato in questo progetto.
 ## License
 
 Il progetto è rilasciato sotto licenza MIT - vedere il file [LICENSE.md](LICENSE.md) per i dettagli.
-
-## Ringraziamenti
-
-* Un gigantesco grazie all'utente 
-[tirz](https://stackoverflow.com/users/4718768/tirz)
-per l'idea di usare il `ClassLoader` in congiunzione al `FileSystem` al fine di ottenere tutte le classi in un package.
-
