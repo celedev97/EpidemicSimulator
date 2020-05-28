@@ -19,11 +19,11 @@ di progetto di Metodologie di Programmazione dell'anno accademico 2019/2020.
     - [Ringraziamenti](#ringraziamenti)
     
 
-##Come iniziare
+## Come iniziare
 
 Come ottenere una copia modificabile del progetto.
 
-###IDE
+### IDE
 
 Il progetto è stato fatto con l'IDE IntelliJ IDEA (di JetBrains),
 perciò è consigliato -anche se non indispensabile-
@@ -32,7 +32,7 @@ utilizzare IntelliJ IDEA come IDE per la modifica e/o la compilazione del proget
 IntelliJ IDEA è scaricabile gratuitamente nella sua versione community al seguente link:
 [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
-###Dipendenze
+### Dipendenze
 
 Il progetto utilizza le seguenti librerie:
 
@@ -115,7 +115,7 @@ l'esecuzione del programma e stampare uno dei finali elencati precedentemente.
  
 ### Collegamento delle strategie
 
-###Implementazione delle strategie
+### Implementazione delle strategie
 Nel progetto abbiamo implementato,e testato,diverse strategie ognuna delle è diversificate dalle
 altre e ognuna delle quali è specializzata in un determinato settore di gestione della popolazione
 in funzione dei dati che,giorno per giorno,vengono segnalati dal simulatore sul progresso della
@@ -156,7 +156,7 @@ presentato dei sintomi,rimettendo così in libertà tutti e solo gli individui s
 Come sistema di controllo di versione abbiamo utilizzato [Git](https://git-scm.com/),
 sfruttando come hosting [GitHub](https://github.com).
 
-##Autori
+## Autori
 
 - **Federico Capece** - [fc-dev](https://github.com/fc-dev)
 - **Paolo Luciano** - [Paoletto123](https://github.com/Paoletto123)
