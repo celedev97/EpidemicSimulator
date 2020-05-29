@@ -86,13 +86,11 @@ public class MediumControlledLockdown extends Strategy {
             if(simulator.getDay()==(data+simulator.canInfectDay+1)){
                 dayToRemove = data;
                 for (Person t:check.get(data)) {
-                    if(!this.AlreadyInfected.contains(t)){
                         if(!simulator.testVirus(t)){
                             count++;
                             t.canMove = true;
                         }
                         else this.AlreadyInfected.add(t);
-                    }
                 }
                 super.output(count+" PERSON SET FREE!");
             }
@@ -103,12 +101,10 @@ public class MediumControlledLockdown extends Strategy {
     public void EmergencyCheck(){
         for (int data:check.keySet()) {
             for (Person t:check.get(data)) {
-                if(!this.AlreadyInfected.contains(t)){
                     if(!simulator.testVirus(t)){
                         t.canMove = true;
                     }
                     else this.AlreadyInfected.add(t);
-                }
             }
         }
     }
