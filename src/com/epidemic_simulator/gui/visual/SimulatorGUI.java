@@ -19,6 +19,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public class SimulatorGUI extends JFrame {
     JFrame settingsFrame;
@@ -366,9 +367,28 @@ public class SimulatorGUI extends JFrame {
 
         //#endregion
 
+        JPanel sliderBox = new JPanel();
+        sliderBox.setLayout(new BoxLayout(sliderBox, BoxLayout.Y_AXIS));
+
+        JLabel sliderLabel = new JLabel("Simulator speed", JLabel.CENTER);
+        sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sliderBox.add(sliderLabel);
+
         //min = 0.05, max = 3.50, value = 1.00
         speedSlider = new JSlider(JSlider.HORIZONTAL, 5, 3500,100);
-        northPanel.add(speedSlider, BorderLayout.CENTER);
+        sliderBox.add(speedSlider);
+        speedSlider.setMajorTickSpacing(698);
+        speedSlider.setMinorTickSpacing(349);
+        speedSlider.setPaintTicks(true);
+        sliderBox.setBorder(BorderFactory.createEmptyBorder(80,0,0, 0));
+
+        Hashtable labelTable = new Hashtable();
+        labelTable.put(5, new JLabel("0,05x"));
+        labelTable.put(3500, new JLabel("3.50x"));
+        speedSlider.setLabelTable(labelTable);
+        speedSlider.setPaintLabels(true);
+
+        northPanel.add(sliderBox, BorderLayout.CENTER);
 
         //#endregion
 
