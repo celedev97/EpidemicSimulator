@@ -334,7 +334,9 @@ public final class Simulator {
 
                 //Execute all the simulation operation on the Person
                 callBacks.forEach(simulatorCallBack -> {
-                    simulatorCallBack.personHasSymptoms(person);
+                    synchronized (simulatorCallBack) {
+                        simulatorCallBack.personHasSymptoms(person);
+                    }
                 });
             }
 
@@ -379,7 +381,9 @@ public final class Simulator {
                     person.canMove = true;
                     callBacks.forEach(simulatorCallBack -> {
                         if (simulatorCallBack != strategy || firstRed) {
-                            simulatorCallBack.personClean(person);
+                            synchronized (simulatorCallBack) {
+                                simulatorCallBack.personClean(person);
+                            }
                         }
                     });
                 }
