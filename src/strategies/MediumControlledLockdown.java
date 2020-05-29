@@ -4,8 +4,6 @@ import com.epidemic_simulator.Person;
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 import com.epidemic_simulator.Utils;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,7 +43,7 @@ public class MediumControlledLockdown extends Strategy {
                         randomPerson.canMove = false;
                         //if it's positive i stop all his encounters
                         for (Person tizio:findEncounters(randomPerson, simulator.getDay())) {
-                            if(!persone.contains(tizio)&&(!extracted.contains(tizio))){
+                            if(!persone.contains(tizio)&&(!extracted.contains(tizio))&&(!AlreadyInfected.contains(tizio))){
                                 count_check++;
                                 tizio.canMove = false;
                                 persone.add(tizio);
@@ -60,19 +58,28 @@ public class MediumControlledLockdown extends Strategy {
             super.output(count_yel+" YELLOW STOPPED AND STILL "+count_check+" PERSON TO CHECK AT DAY: "+(simulator.getDay()+simulator.canInfectDay+1));
         }
         if(simulator.getResources()<=((originalResources*45)/100)){
-            for (int data:check.keySet()) {
-                for (Person t:check.get(data)) {
-                    if(!this.AlreadyInfected.contains(t)){
-                        if(!simulator.testVirus(t)){
-                            t.canMove = true;
-                        }
-                    }
-                }
-            }
+            EmergencyCheck();//Metodo usato per fare l'ultimo dei check laddove le risorse stiano scendendo troppo...
             check.clear();
             flag=false;
         }
         System.out.println(sintomatici+" "+limite);
+        TimeCheck();//Metodo richiamato giornalmente per verificare eventualmente le persone inserite in "check"...
+        System.out.println(sintomatici+" "+limite);
+    }
+
+    @Override
+    public void personHasSymptoms(Person person){
+        this.sintomatici++;
+        person.canMove = false;
+    }
+
+    @Override
+    public void personClean(Person person) {
+        this.sintomatici--;
+        person.canMove = true;
+    }
+
+    public void TimeCheck(){
         int dayToRemove = -1;
         for (int data:check.keySet()) {
             int count=0;
@@ -91,19 +98,18 @@ public class MediumControlledLockdown extends Strategy {
             }
         }
         check.remove(dayToRemove);
-        System.out.println(sintomatici+" "+limite);
     }
 
-    @Override
-    public void personHasSymptoms(Person person){
-        this.sintomatici++;
-        person.canMove = false;
+    public void EmergencyCheck(){
+        for (int data:check.keySet()) {
+            for (Person t:check.get(data)) {
+                if(!this.AlreadyInfected.contains(t)){
+                    if(!simulator.testVirus(t)){
+                        t.canMove = true;
+                    }
+                    else this.AlreadyInfected.add(t);
+                }
+            }
+        }
     }
-
-    @Override
-    public void personClean(Person person) {
-        this.sintomatici--;
-        person.canMove = true;
-    }
-
 }
