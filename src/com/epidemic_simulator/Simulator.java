@@ -309,8 +309,8 @@ public final class Simulator {
         resources -= (alivePopulation.size() - canMoveCount);
 
         //#region disease calculations
-        //parallel loop over all the alive and infected persons
-        population.parallelStream().filter(person -> person.alive && person.infected).forEach(person -> {
+        //loop over all the alive and infected persons
+        population.stream().filter(person -> person.alive && person.infected).forEach(person -> {
             //increasing the number of days passed since the day of the infection
             person.daysSinceInfection++;
 
