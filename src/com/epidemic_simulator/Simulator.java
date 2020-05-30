@@ -37,7 +37,8 @@ public final class Simulator {
     public void setStrategy(Strategy strategy) {
         callBacks.remove(this.strategy);
         this.strategy = strategy;
-        callBacks.add(strategy);
+        if(strategy != null)
+            callBacks.add(strategy);
     }
     //#endregion
 
