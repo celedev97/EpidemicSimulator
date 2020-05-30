@@ -2,6 +2,7 @@ package com.epidemic_simulator;
 
 import com.epidemic_simulator.exceptions.InvalidSimulationException;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -413,6 +414,20 @@ public final class Simulator {
                 simulatorCallBack.afterExecuteDay(finalOutcome);
             }
         });
+
+        if(yellowCount <0 || redCount <0 || (greenCount+yellowCount+redCount+blueCount+blackCount) < startingPopulation){
+            int realGreens = (int)population.stream().filter(person -> person.getColor() == Color.GREEN).count();
+            int realYellows = (int)population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
+            int realReds = (int)population.stream().filter(person -> person.getColor() == Color.RED).count();
+            int realBlues = (int)population.stream().filter(person -> person.getColor() == Color.BLUE).count();
+            int realBlacks = (int)population.stream().filter(person -> person.getColor() == Color.BLACK).count();
+
+            if((greenCount+yellowCount+redCount+blueCount+blackCount)< startingPopulation){
+                throw new RuntimeException("what the actual fucking fuck?");
+            }
+            throw new RuntimeException("diobestia");
+        }
+
         return outcome;
     }
 
