@@ -157,7 +157,9 @@ l'immissione di soli caratteri numerici, ponendo anche i vincoli di intervalli a
 valori minimi e massimi regolato tramite le Annotazioni.  
 Per la scelta della strategia viene usato
 invece un ComboBox e le relative strategie vengono estrapolate tramite Reflection, in modo che
-ad ogni cambio o aggiunta di strategia cambi anche la voce all'interno del ComboBox.
+ad ogni cambio o aggiunta di strategia cambi anche la voce all'interno del ComboBox. Nelle strategie
+che prevedono anche un parametro da inserire, comparirà anche uno Spinner per la sua immissione.
+![](./gui.jpg)
 
 #### Simulatore testuale
 La variante testuale del simulatore non è altro che il classico output testuale con formattazione, sfondo
