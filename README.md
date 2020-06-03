@@ -13,6 +13,12 @@ di progetto di Metodologie di Programmazione dell'anno accademico 2019/2020.
         - [Configurazione di avvio](#configurazione-di-avvio)
         - [Creazione JAR](#creazione-jar)
     - [Discussione del progetto](#discussione-del-progetto)
+        - [Struttura del simulatore](#struttura-del-simulatore)
+        - [Implementazione delle strategie](#implementazione-delle-strategie)
+        - [Interfaccia grafica](#interfaccia-grafica)
+            - [Settings](#settings)
+            - [Simulatore testuale](#simulatore-testuale)
+            - [Simulatore grafico](#simulatore-grafico)
     - [Versioning](#versioning)
     - [Autori](#autori)
     - [License](#license)
@@ -111,44 +117,61 @@ il simulatore effettua un ultimo controllo in funzione delle risorse e della pop
 ritorna un eventuale outcome per fermare
 l'esecuzione del programma e stampare uno dei finali elencati precedentemente.
 
- 
-### Collegamento delle strategie
 
 ### Implementazione delle strategie
-Nel progetto abbiamo implementato,e testato,diverse strategie ognuna delle è diversificate dalle
-altre e ognuna delle quali è specializzata in un determinato settore di gestione della popolazione
-in funzione dei dati che,giorno per giorno,vengono segnalati dal simulatore sul progresso della
-malattia.
+Nel progetto abbiamo implementato e testato diverse strategie, cercando di strutturarle in maniera 
+diversificata rispetto alle altre e ognuna delle quali è specializzata in un determinato settore di
+gestione della popolazione in funzione dei dati che, giorno per giorno, vengono segnalati dal simulatore
+sul progresso della malattia.
 
-Ogni strategia ha lo scopo di riconoscere,ed eventualmente modificare,lo status della persona mediante
+Ogni strategia ha lo scopo di riconoscere (ed eventualmente modificare) lo status della persona mediante
 tamponi e in funzione del suo compito e della sua struttura:
 
-- **No Strategy**: la strategia più banale,ma anche la più "Economic-Friendly",sostanzialmente
+- **No Strategy**: la strategia più banale, ma anche la più "Economic-Friendly": sostanzialmente
 si lascia andare la malattia per il suo normale decorso senza testare o bloccare nessuno a seguito
-di un criterio imposto...gli unici costi che si sosterebbero sarebbero quelli di mettere in cura
-un sintomatico presso un ospedale,e sperare che "l'immunità di gregge" possa permettere alla 
+di un criterio imposto. Gli unici costi che si sosterebbero sarebbero quelli per mettere in cura
+un sintomatico presso un ospedale e sperare che "l'immunità di gregge" possa permettere alla 
 popolazione di "gestire" da soli il virus nel modo migliore possibile.
 
 - **ContactTracingLightTest:** Da quando viene trovato il primo sintomatico, scorre tutta la popolazione in vita,
 e per ogni sintomatico trovato analizza la sua lista degli incontri nei precedenti "developSyntomsMaxDay" giorni.
-Di queste, effettua il tampone ad una percentuale data da "testPercentage",
-se positive vengono messe in quarantena fin quando non si è sicuri abbiano debellato la malattia
-(o fino a quando non sviluppino sintomi).Il resto invece viene messo in quarantena senza controllo del tampone.
+Di questi, effettua il tampone ad una percentuale data da "testPercentage",
+se positivi vengono messi in quarantena fin quando non si è sicuri abbiano debellato la malattia
+(o fino a quando non sviluppino sintomi). Il resto invece viene messo in quarantena preventiva senza controllo del tampone.
 
-- **StopEpidemyOnFirstRed:** La strategia più "aggressiva" di tutte,come suggerisce il nome,non appena
-il simulatore abilita il flag "FirstRed",con la prima persona che presenterà i sintomi,la strategia
-entrerà in azione sottopenendo tutta la popolazione ad un lockdown preventivo che dia il tempo a tutti i
-*potenziali* infetti di,eventualmente,presentare sintomi o di avere il virus in circolo e rilevabile.
+- **StopEpidemyOnFirstRed:** La strategia più "aggressiva" di tutte, come suggerisce il nome. Non appena
+il simulatore abilita il flag "FirstRed" (quindi non appena la prima persona presenterà i sintomi), la strategia
+entrerà in azione sottoponendo tutta la popolazione ad un lockdown preventivo che dia il tempo a tutti i
+*potenziali* infetti di, eventualmente, presentare sintomi o di avere il virus in circolo e rilevabile.
 Scaduto l'intervallo di "lockdown" si prosegue con un tampone a tutti coloro che ancora non hanno
-presentato dei sintomi,rimettendo così in libertà tutti e solo gli individui sani.
+presentato dei sintomi, rimettendo così in libertà tutti e solo gli individui sani.
 
 ### Interfaccia grafica
 
 #### Settings
+Avviando il programma, compare subito l'interfaccia grafica in cui inserire tutti i parametri
+necessari alla simulazione e la strategia da utilizzare (compreso l'uso di nessuna strategia).
+L'inserimento dei parametri è regolato tramite l'uso di Spinner, in questo modo viene limitata
+l'immissione di soli caratteri numerici, ponendo anche i vincoli di intervalli a numeri interi
+(o a una cifra decimale nel caso del numero di incontri **V**). È presente anche il controllo dei
+valori minimi e massimi regolato tramite le Annotazioni.  
+Per la scelta della strategia viene usato
+invece un ComboBox e le relative strategie vengono estrapolate tramite Reflection, in modo che
+ad ogni cambio o aggiunta di strategia cambi anche la voce all'interno del ComboBox.
 
 #### Simulatore testuale
+La variante testuale del simulatore non è altro che il classico output testuale con formattazione, sfondo
+e colori adeguati. Viene stampato il resoconto dettagliato giorno per giorno della popolazione (sani, infetti, sintomatici, guariti e deceduti)
+e la variazione del fattore R0. Alla fine della simulazione, viene riportato il relativo outcome (tutti guariti,
+collasso economico o tutti morti) e il riepilogo dei parametri iniziali.
 
 #### Simulatore grafico
+Per la variante grafica del simulatore, sono stati usati i tool messi a disposizione da awt e swing,
+facendo uso dei layout più comuni come il BoxLayout e il GridBagLayout. L'interfaccia è sostanzialmente
+costituita da 2 blocchi fondamentali: la parte centrale, in cui sono visibili graficamente e in tempo
+reale gli "incontri" fra le persone (contrassegnate con i loro rispettivi colori), e la parte superiore, dove 
+sono stati collocati i dati relativi al simulatore aggiornati giorno dopo giorno sotto forma di barre e di grafici,
+i parametri iniziali inseriti nel simulatore e uno slider per settare la velocità della simulazione.
 
 ## Versioning
 
