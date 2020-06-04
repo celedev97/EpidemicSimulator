@@ -166,8 +166,9 @@ la strategia prima di farla entrare in azione.
 Quando la soglia di limite viene superata,la strategia provvederà a calcolare una certa 
 percentuale di persone che andranno controllate,sul numero totale di individui che in quel
 preciso momento hanno la facoltà di movimento(*quindi Verdi e/o Gialli*).
-Tale percentuale è sempre un complessivo 15% delle persone in movimento,a cui vengono 
-sommate ulteriori "n" persone da estrarre(*dove il parametro "n" corrisponde al numero di 
+Tale percentuale viene fornita dall'utente e indica in termini di percentuale
+la dimensione di "default" di ogni blocco di persone in movimento su cui effettuare il controllo,
+a tale valore vengono sommate ulteriori "n" persone da estrarre(*dove il parametro "n" corrisponde al numero di 
 rossi rilevati dal simulatore*).
 Per ognuna delle persone che ho,randomicamente,estratto ne effettuo un tampone e se risultano
 essere positive,non solo si blocca l'individuo in questione,**ma anche tutte le altre persone

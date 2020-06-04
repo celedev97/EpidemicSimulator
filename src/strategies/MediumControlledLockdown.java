@@ -17,12 +17,14 @@ public class MediumControlledLockdown extends Strategy {
     private HashMap<Integer,ArrayList<Person>> check;
     private ArrayList<Person>AlreadyInfected=new ArrayList<>();
     private boolean flag=true;
+    private int percentualOfBlock=0;
 
-    public MediumControlledLockdown(Simulator simulator,int percentualOfStop) {
+    public MediumControlledLockdown(Simulator simulator,int percentualOfStop,int percentualOfBlock) {
         super(simulator);
         this.percentualOfStop=percentualOfStop;
         this.limite=(simulator.getAlivePopulation().size()*percentualOfStop)/100;
         check= new HashMap<>();
+        this.percentualOfBlock=percentualOfBlock;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class MediumControlledLockdown extends Strategy {
         if(simulator.getRedCount()>=this.limite&&flag){
             int count_check=0;
             int count_yel=0;
-            int estrazione=((simulator.getAlivePopulation().size()*15)/100)+simulator.getRedCount();
+            int estrazione=((simulator.getAlivePopulation().size()*this.percentualOfBlock)/100)+simulator.getRedCount();
             //super.output("MAXIMUM LIMIT REACHED: "+simulator.getRedCount()+" INFECTED CONFIRMED ->PROCEED TO EXTRACTION OF: "+estrazione+" PEOPLE!");
             //extracting 'estrazione' from alive population
             for (int i = 0; i < estrazione; i++) {
