@@ -4,6 +4,8 @@ import com.epidemic_simulator.Person;
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 import com.epidemic_simulator.Utils;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 

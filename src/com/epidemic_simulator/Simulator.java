@@ -370,7 +370,7 @@ public final class Simulator {
                 person.infected = false;
                 person.canInfect = false;
                 person.symptoms = false;
-
+                person.canMove=true;
                 //adjusting counter
                 blueCount++;
                 infected--;

@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 //JSON/FILE
+import javassist.tools.reflect.Reflection;
 import org.json.*;
 import org.reflections.Reflections;
 
@@ -26,6 +27,7 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SimulatorSettings extends JFrame {
     //constants

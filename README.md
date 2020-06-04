@@ -120,9 +120,10 @@ l'esecuzione del programma e stampare uno dei finali elencati precedentemente.
 
 ### Implementazione delle strategie
 Nel progetto abbiamo implementato e testato diverse strategie, cercando di strutturarle in maniera 
-diversificata rispetto alle altre e ognuna delle quali è specializzata in un determinato settore di
+diversificata rispetto all'altra.
+Ogni strategia è dotata di una propria specializzazione in un determinato settore di
 gestione della popolazione in funzione dei dati che, giorno per giorno, vengono segnalati dal simulatore
-sul progresso della malattia.
+sul decorso e l'evoluzione della malattia.
 
 Ogni strategia ha lo scopo di riconoscere (ed eventualmente modificare) lo status della persona mediante
 tamponi e in funzione del suo compito e della sua struttura:
@@ -132,6 +133,15 @@ si lascia andare la malattia per il suo normale decorso senza testare o bloccare
 di un criterio imposto. Gli unici costi che si sosterebbero sarebbero quelli per mettere in cura
 un sintomatico presso un ospedale e sperare che "l'immunità di gregge" possa permettere alla 
 popolazione di "gestire" da soli il virus nel modo migliore possibile.
+
+- **Pecentage Lockdown and Stop Spread**:Una strategia che ha il semplice compito di 
+effettuare il lockdown di una certa percentuale di persone immesse da tastiera al
+primo rosso/sintomatico che si presenta;ma che in
+più consente di effettuare anche dei controlli preventivi sulla popolazione lasciata in
+movimento laddove il numero di sintomatici dovesse salire troppo,e **solo se** la percentuale
+di risorse attualmente disponibile è superiore a una certa soglia(*nel nostro
+caso del 35%*)tale che possa permettere
+un minimo al simulatore,dopo i controlli dei tamponi,di progredire senza collassi economici.
 
 - **ContactTracingLightTest:** Da quando viene trovato il primo sintomatico, scorre tutta la popolazione in vita,
 e per ogni sintomatico trovato analizza la sua lista degli incontri nei precedenti "developSyntomsMaxDay" giorni.
@@ -145,6 +155,36 @@ entrerà in azione sottoponendo tutta la popolazione ad un lockdown preventivo c
 *potenziali* infetti di, eventualmente, presentare sintomi o di avere il virus in circolo e rilevabile.
 Scaduto l'intervallo di "lockdown" si prosegue con un tampone a tutti coloro che ancora non hanno
 presentato dei sintomi, rimettendo così in libertà tutti e solo gli individui sani.
+
+- **Medium Controlled Lockdown:** Questa Strategia è stata pensata per effettuare dei 
+Lockdown preventivi,e contenuti,in funzione del numero dei sintomatici attualmente
+rilevati dal simulatore.
+Al momento del lancio del simulatore la strategia richiederà un certo parametro da parte
+dell'utente,dal nome di **"Percentual of Stop"**,come suggerisce il nome stesso,tale parametro serve
+a indicare quanto tempo far aspettare,in termini di percentuale di sintomatici,
+la strategia prima di farla entrare in azione.
+Quando la soglia di limite viene superata,la strategia provvederà a calcolare una certa 
+percentuale di persone che andranno controllate,sul numero totale di individui che in quel
+preciso momento hanno la facoltà di movimento(*quindi Verdi e/o Gialli*).
+Tale percentuale è sempre un complessivo 15% delle persone in movimento,a cui vengono 
+sommate ulteriori "n" persone da estrarre(*dove il parametro "n" corrisponde al numero di 
+rossi rilevati dal simulatore*).
+Per ognuna delle persone che ho,randomicamente,estratto ne effettuo un tampone e se risultano
+essere positive,non solo si blocca l'individuo in questione,**ma anche tutte le altre persone
+che quest'ultimo ha incontrato nei giorni precedenti**,poichè potrebbero essere dei "potenziali"
+infetti,tali persone vengono inserite in un'apposita struttura dati:**check**,e attenderanno
+il periodo minimo di incubazione prima di essere testati da un tampone ed,eventualmente,
+rilasciati.
+Se la strategia durante il corso della sua esecuzione dovesse notare che le risorse 
+scendono al di sotto una certa soglia(*nel nostro caso del 45%*),viene effettuato in ogni
+caso il controllo sulle persone contenute in **check**,anche se l'intervallo di incubazione
+non viene raggiunto,rilasciando i sani rilevati e tenendo fermi eventuali asintomatici,abilitando
+infine un **flag booleano** che non faccia più attivare la strategia,e lasci andare ormai il tutto per il
+suo normale decorso.
+Seguendo questa formula riusciamo sempre a effettuare lockdown più eterogenei e regolati
+in funzione del numero effettivo di sintomatici che riscontriamo nel decorso dell'epidemia,ed
+eventualmente riusciamo anche ad avere una sorta  di "safe-mode" laddove il tutto stia 
+richiedendo uno sforzo eccessivo,in termini di risorse.
 
 ### Interfaccia grafica
 
