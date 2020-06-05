@@ -118,49 +118,49 @@ public final class Simulator {
 
     //#region status counters
     //healthy = not infected
-    private Counter healthy;
+    private int healthy;
     //infected = not healthy
-    private Counter infected;
+    private int infected;
 
-    private Counter greenCount;
-    private Counter yellowCount;
-    private Counter redCount;
-    private Counter blueCount;
-    private Counter blackCount;
+    private int greenCount;
+    private int yellowCount;
+    private int redCount;
+    private int blueCount;
+    private int blackCount;
 
 
     public int getHealthy() {
         Utils.negateStrategyAccess();
-        return healthy.get();
+        return healthy;
     }
 
     public int getInfected() {
         Utils.negateStrategyAccess();
-        return infected.get();
+        return infected;
     }
 
     public int getGreenCount() {
         Utils.negateStrategyAccess();
-        return greenCount.get();
+        return greenCount;
     }
 
     public int getYellowCount() {
         Utils.negateStrategyAccess();
-        return yellowCount.get();
+        return yellowCount;
     }
 
     public int getRedCount() {
         Utils.negateStrategyAccess();
-        return redCount.get();
+        return redCount;
     }
 
     public int getBlueCount() {
         Utils.negateStrategyAccess();
-        return blueCount.get();
+        return blueCount;
     }
 
     public int getBlackCount() {
-        return blackCount.get();
+        return blackCount;
     }
 
     //#endregion
@@ -259,14 +259,11 @@ public final class Simulator {
         callBacks = new ArrayList<>();
 
         //initializing counters
-        healthy = new Counter(startingPopulation - 1);
-        infected = new Counter(1);
-
-        greenCount  = new Counter(healthy.get());
-        yellowCount = new Counter(infected.get());
-        redCount    = new Counter(0);
-        blueCount   = new Counter(0);
-        blackCount  = new Counter(0);
+        greenCount = healthy = startingPopulation - 1;
+        yellowCount = infected = 1;
+        redCount = 0;
+        blueCount = 0;
+        blackCount = 0;
     }
 
     /**
@@ -314,14 +311,14 @@ public final class Simulator {
 
         //#region disease calculations
         //loop over all the alive and infected persons
-        population.parallelStream().filter(person -> person.alive && person.infected).forEach(person -> {
+        population.stream().filter(person -> person.alive && person.infected).forEach(person -> {
             //increasing the number of days passed since the day of the infection
             person.daysSinceInfection++;
 
             //if this person is green and today is the day they become yellow
             if (!person.canInfect && person.daysSinceInfection == canInfectDay) {
-                yellowCount.increase();
-                greenCount.decrease();
+                yellowCount++;
+                greenCount--;
                 person.canInfect = true;
             }
 
@@ -331,8 +328,8 @@ public final class Simulator {
                 person.canMove = false;
 
                 //adjusting counters
-                yellowCount.decrease();
-                redCount.increase();
+                yellowCount--;
+                redCount++;
 
                 //this flag enables the strategies
                 firstRed = true;
@@ -357,9 +354,9 @@ public final class Simulator {
                 person.alive = false;
 
                 //adjusting counters
-                blackCount.increase();
-                redCount.decrease();
-                infected.decrease();
+                blackCount++;
+                redCount--;
+                infected--;
 
                 return;//this return is just to be safe and avoid a people dying and then healing itself
             }
@@ -375,14 +372,14 @@ public final class Simulator {
                 person.symptoms = false;
                 person.canMove=true;
                 //adjusting counter
-                blueCount.increase();
-                infected.decrease();
+                blueCount++;
+                infected--;
 
                 //the strategy get told of the fact that he's immune only if it knew he was sick.
                 if (!hadSymptoms) {
-                    yellowCount.decrease();
+                    yellowCount--;
                 } else {
-                    redCount.decrease();
+                    redCount--;
                     person.canMove = true;
                     callBacks.forEach(simulatorCallBack -> {
                         if (simulatorCallBack != strategy || firstRed) {
@@ -403,7 +400,7 @@ public final class Simulator {
 
         if (alivePopulation.isEmpty()) {
             outcome = Outcome.ALL_DEAD;
-        } else if (infected.get() == 0) {
+        } else if (infected == 0) {
             outcome = Outcome.ALL_HEALED;
         } else if (resources <= 0) {
             outcome = Outcome.ECONOMIC_COLLAPSE;
@@ -419,15 +416,14 @@ public final class Simulator {
             }
         });
 
-        if(yellowCount.get() <0 || redCount.get() <0 ||
-                (greenCount.get()+yellowCount.get()+redCount.get()+blueCount.get()+blackCount.get()) < startingPopulation){
+        if(yellowCount <0 || redCount <0 || (greenCount+yellowCount+redCount+blueCount+blackCount) < startingPopulation){
             int realGreens = (int)population.stream().filter(person -> person.getColor() == Color.GREEN).count();
             int realYellows = (int)population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
             int realReds = (int)population.stream().filter(person -> person.getColor() == Color.RED).count();
             int realBlues = (int)population.stream().filter(person -> person.getColor() == Color.BLUE).count();
             int realBlacks = (int)population.stream().filter(person -> person.getColor() == Color.BLACK).count();
 
-            if((greenCount.get()+yellowCount.get()+redCount.get()+blueCount.get()+blackCount.get())< startingPopulation){
+            if((greenCount+yellowCount+redCount+blueCount+blackCount)< startingPopulation){
                 throw new RuntimeException("what the actual fucking fuck?");
             }
             throw new RuntimeException("diobestia");
@@ -445,8 +441,8 @@ public final class Simulator {
     private void encounter(Person person1, Person person2) {
         if ((person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))
             || (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))) {
-            infected.increase();
-            healthy.decrease();
+            infected++;
+            healthy--;
         }
         callBacks.forEach(simulatorCallBack -> {
             if (simulatorCallBack != strategy || firstRed) {
@@ -483,39 +479,5 @@ public final class Simulator {
         callBacks.clear();
         //now the gc should be able to kick in and clear this Simulator and its callbacks
         //#endregion
-    }
-}
-
-class Counter{
-    private int value;
-
-    //#region Getters and setters
-    public synchronized int get(){
-        return value;
-    }
-
-    public synchronized void set(int value) {
-        this.value = value;
-    }
-    //#endregion
-
-    //constructor
-    public Counter(int value){
-        this.value = value;
-    }
-
-    //#region increase/decrease
-    public synchronized void increase(){
-        value++;
-    }
-    public synchronized void decrease(){
-        value--;
-    }
-    //#endregion
-
-
-    @Override
-    public String toString() {
-        return Integer.toString(value);
     }
 }

@@ -50,7 +50,7 @@ public class Person {
     }
 
     //Una volta avvenuto un'incontro tra un individuo sano e uno infetto in movimento,la seguente funzione verrà richiamata per vedere se il soggetto sano può essere stato infetto o meno.
-    protected synchronized boolean tryInfect(int infectionRate, int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay){
+    protected boolean tryInfect(int infectionRate, int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay){
         //if this person is already immune or infected than i can't infect it again
         if(immune || infected) return false;
 
