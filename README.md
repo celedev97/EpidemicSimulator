@@ -228,7 +228,7 @@ sfruttando come hosting [GitHub](https://github.com).
 - **Bruno Benedetto Domingo** - [Bruner4](https://github.com/Bruner4)
 
 Per ulteriori dettagli vedere la lista dei
-[contributors](https://github.com/your/project/contributors)
+[contributors](https://github.com/fc-dev/EpidemicSimulator/contributors)
 che hanno partecipato in questo progetto.
 
 ## License
