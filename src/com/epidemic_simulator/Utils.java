@@ -105,6 +105,8 @@ public class Utils {
     }
 
     public static String getStrategyName(Strategy strategy) {
+        if(strategy == null)
+            return getStrategyName((Class)null);
         return getStrategyName(strategy.getClass());
     }
 
