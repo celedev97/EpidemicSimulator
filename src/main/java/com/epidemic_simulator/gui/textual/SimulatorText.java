@@ -2,7 +2,6 @@ package com.epidemic_simulator.gui.textual;
 
 import com.epidemic_simulator.*;
 import com.epidemic_simulator.gui.SimulatorSettings;
-import jdk.jshell.execution.Util;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -10,7 +9,6 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 public class SimulatorText extends JFrame {
     Simulator simulator;

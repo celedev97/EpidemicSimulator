@@ -111,7 +111,7 @@ public class Utils {
     }
 
     public static void negateStrategyAccess() {
-        //TODO: TEST!!!
+        //TODO: TEST!!! TODO: REPLACE WITH AN ASSERTION!!!
         try {
             Class callerClass = Class.forName(Thread.currentThread().getStackTrace()[2].getClassName());
             if (Strategy.class.isAssignableFrom(callerClass)) {
