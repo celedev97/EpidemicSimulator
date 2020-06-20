@@ -4,7 +4,6 @@ import com.epidemic_simulator.Person;
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 import com.epidemic_simulator.Utils;
-import jdk.jshell.execution.Util;
 
 import java.util.ArrayList;
 
