@@ -1,0 +1,7 @@
+
+com.epidemic_simulator
+com.epidemic_simulator.exceptions
+com.epidemic_simulator.gui
+com.epidemic_simulator.gui.textual
+com.epidemic_simulator.gui.visual
+strategies
