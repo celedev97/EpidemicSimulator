@@ -38,6 +38,7 @@
 
     <build>
         <plugins>
+            <!--Compiling plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -52,6 +53,7 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+            <!--JAR PLUGIN-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -77,8 +79,37 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--JAVADOC PLUGIN-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <reportOutputDirectory>${basedir}/docs</reportOutputDirectory>
+                    <destDir>./</destDir>
+                </configuration>
+            </plugin>
         </plugins>
 
     </build>
+
+    <!--reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.6</version>
+                <reportSets>
+                    <reportSet>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <mvn site>
+        </plugins>
+    </reporting-->
 
 </project>
