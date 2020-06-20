@@ -44,7 +44,7 @@ public class Utils {
     /**
      * This functions convert a method or a class name into a human readable string.
      * It only works with strings that do not contains special characters.
-     * Example: animalCageBuilder => Animal cage builder
+     * Example: animalCageBuilder - Animal cage builder
      * @param javaName the method or class name
      * @return the human readable string
      */

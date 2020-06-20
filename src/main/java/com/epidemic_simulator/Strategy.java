@@ -130,7 +130,7 @@ public abstract class Strategy implements SimulatorCallBack {
      * NOTE: this is the same as doing encounters.get(dayNum), but it performs some additional error checking
      *
      * @param dayNum the number of the day that should be looked up
-     * @return
+     * @return The dictionary of the encounters for that day
      */
     protected final HashMap<Person, List<Person>> findEncounters(int dayNum) {
         //if this day doesn't exists in the encounters dictionary i add it
