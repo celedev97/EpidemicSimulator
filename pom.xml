@@ -88,6 +88,8 @@
                 <configuration>
                     <reportOutputDirectory>${basedir}/docs</reportOutputDirectory>
                     <destDir>./</destDir>
+
+                    <notimestamp>true</notimestamp>
                 </configuration>
             </plugin>
         </plugins>
