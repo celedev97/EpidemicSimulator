@@ -76,13 +76,13 @@ var activeTableTab = "activeTableTab";
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -111,29 +111,14 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">Utils</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
+<div class="block">Utility class for the Epidemic Simulator project.<BR>
+ It contains some method for extracting random numbers easily, some other for reflections and some utilities for UI.</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<ul class="blockList">
-<li class="blockList"><a name="constructor.summary">
-<!--   -->
-</a>
-<h3>Constructor Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Constructor Summary table, listing constructors, and an explanation">
-<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colOne" scope="col">Constructor and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#Utils--">Utils</a></span>()</code>&nbsp;</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- ========== METHOD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.summary">
@@ -148,29 +133,41 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#forceJSpinnerCommit-java.awt.Container-">forceJSpinnerCommit</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt">Container</a>&nbsp;container)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#forceJSpinnerCommit-java.awt.Container-">forceJSpinnerCommit</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt">Container</a>&nbsp;container)</code>
+<div class="block">Force the commit of pending edits on all the <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing"><code>JSpinner</code></a>s inside a <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt"><code>Container</code></a> and its children.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing">JSpinner</a>&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#getJSpinners-java.awt.Container-">getJSpinners</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt">Container</a>&nbsp;c)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#getJSpinners-java.awt.Container-">getJSpinners</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt">Container</a>&nbsp;container)</code>
+<div class="block">Extract all the <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing"><code>JSpinner</code></a>s from a <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt"><code>Container</code></a> recursively.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#getStrategyName-java.lang.Class-">getStrategyName</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;strategy)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#getStrategyName-java.lang.Class-">getStrategyName</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;strategy)</code>
+<div class="block">Convert a strategy class into a user readable string.</div>
+</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#getStrategyName-com.epidemic_simulator.Strategy-">getStrategyName</a></span>(<a href="../../com/epidemic_simulator/Strategy.html" title="class in com.epidemic_simulator">Strategy</a>&nbsp;strategy)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#getStrategyName-com.epidemic_simulator.Strategy-">getStrategyName</a></span>(<a href="../../com/epidemic_simulator/Strategy.html" title="class in com.epidemic_simulator">Strategy</a>&nbsp;strategy)</code>
+<div class="block">Convert a strategy into a user readable string.</div>
+</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#javaNameToUserString-java.lang.String-">javaNameToUserString</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;javaName)</code>
-<div class="block">This functions convert a method or a class name into a human readable string.</div>
+<div class="block">This functions convert a method or a class name into a human readable string.<BR>
+ It only works with strings that do not contains special characters.<BR>
+ Example: animalCageBuilder - Animal cage builder</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#negateStrategyAccess--">negateStrategyAccess</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#negateStrategyAccess--">negateStrategyAccess</a></span>()</code>
+<div class="block">Throw an exception if there's a strategy in the calls stack.</div>
+</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static int</code></td>
@@ -188,7 +185,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Utils.html#randomBool-int-">randomBool</a></span>(int&nbsp;truePercentage)</code>
-<div class="block">Generate a boolean, that has *truePercentage*% possibilities of being true.</div>
+<div class="block">Generate a boolean, that has <code>truePercentage</code>% possibilities of being true.</div>
 </td>
 </tr>
 </table>
@@ -207,23 +204,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<ul class="blockList">
-<li class="blockList"><a name="constructor.detail">
-<!--   -->
-</a>
-<h3>Constructor Detail</h3>
-<a name="Utils--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>Utils</h4>
-<pre>public&nbsp;Utils()</pre>
-</li>
-</ul>
-</li>
-</ul>
 <!-- ============ METHOD DETAIL ========== -->
 <ul class="blockList">
 <li class="blockList"><a name="method.detail">
@@ -271,7 +251,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>randomBool</h4>
 <pre>public static&nbsp;boolean&nbsp;randomBool(int&nbsp;truePercentage)</pre>
-<div class="block">Generate a boolean, that has *truePercentage*% possibilities of being true.</div>
+<div class="block">Generate a boolean, that has <code>truePercentage</code>% possibilities of being true.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>truePercentage</code> - The percentage rate for the value true.</dd>
@@ -287,8 +267,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>javaNameToUserString</h4>
 <pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;javaNameToUserString(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;javaName)</pre>
-<div class="block">This functions convert a method or a class name into a human readable string.
- It only works with strings that do not contains special characters.
+<div class="block">This functions convert a method or a class name into a human readable string.<BR>
+ It only works with strings that do not contains special characters.<BR>
  Example: animalCageBuilder - Animal cage builder</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -304,7 +284,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getJSpinners</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing">JSpinner</a>&gt;&nbsp;getJSpinners(<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt">Container</a>&nbsp;c)</pre>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing">JSpinner</a>&gt;&nbsp;getJSpinners(<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt">Container</a>&nbsp;container)</pre>
+<div class="block">Extract all the <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing"><code>JSpinner</code></a>s from a <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt"><code>Container</code></a> recursively.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>container</code> - the container to use for the search</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util"><code>List</code></a> of JSpinners found</dd>
+</dl>
 </li>
 </ul>
 <a name="forceJSpinnerCommit-java.awt.Container-">
@@ -314,6 +301,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>forceJSpinnerCommit</h4>
 <pre>public static&nbsp;void&nbsp;forceJSpinnerCommit(<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt">Container</a>&nbsp;container)</pre>
+<div class="block">Force the commit of pending edits on all the <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing"><code>JSpinner</code></a>s inside a <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt"><code>Container</code></a> and its children.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>container</code> - the container to use for the search</dd>
+</dl>
 </li>
 </ul>
 <a name="getStrategyName-java.lang.Class-">
@@ -323,6 +315,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getStrategyName</h4>
 <pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getStrategyName(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&lt;?&gt;&nbsp;strategy)</pre>
+<div class="block">Convert a strategy class into a user readable string.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>strategy</code> - The strategy class</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the strategy name as a user readable string.</dd>
+</dl>
 </li>
 </ul>
 <a name="getStrategyName-com.epidemic_simulator.Strategy-">
@@ -332,6 +331,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getStrategyName</h4>
 <pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getStrategyName(<a href="../../com/epidemic_simulator/Strategy.html" title="class in com.epidemic_simulator">Strategy</a>&nbsp;strategy)</pre>
+<div class="block">Convert a strategy into a user readable string.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>strategy</code> - The strategy</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the strategy name as a user readable string.</dd>
+</dl>
 </li>
 </ul>
 <a name="negateStrategyAccess--">
@@ -341,6 +347,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>negateStrategyAccess</h4>
 <pre>public static&nbsp;void&nbsp;negateStrategyAccess()</pre>
+<div class="block">Throw an exception if there's a strategy in the calls stack.</div>
 </li>
 </ul>
 </li>
@@ -398,13 +405,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

@@ -203,7 +203,11 @@ implements <a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.html#afterExecuteDay-com.epidemic_simulator.Simulator.Outcome-">afterExecuteDay</a></span>(<a href="../../com/epidemic_simulator/Simulator.Outcome.html" title="enum in com.epidemic_simulator">Simulator.Outcome</a>&nbsp;outcome)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.html#afterExecuteDay-com.epidemic_simulator.Simulator.Outcome-">afterExecuteDay</a></span>(<a href="../../com/epidemic_simulator/Simulator.Outcome.html" title="enum in com.epidemic_simulator">Simulator.Outcome</a>&nbsp;outcome)</code>
+<div class="block">This method is called every time the <a href="../../com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a> finishes the simulation of a day.<BR>
+ It can be useful for cctivating a strategy every day,
+ or for running the Simulator in another <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html?is-external=true" title="class or interface in java.lang"><code>Thread</code></a>, and having callbacks.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
@@ -233,11 +237,18 @@ implements <a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.html#personClean-com.epidemic_simulator.Person-">personClean</a></span>(<a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.html#personClean-com.epidemic_simulator.Person-">personClean</a></span>(<a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>
+<div class="block">This method is called
+ every time a <a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a> become <a href="../../com/epidemic_simulator/Person.html#immune"><code>Person.immune</code></a>
+ after they had <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a>.</div>
+</td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms</a></span>(<a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms</a></span>(<a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>
+<div class="block">This method is called
+ every time a <a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a> develop <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a>.</div>
+</td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
@@ -337,9 +348,15 @@ implements <a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="
 <li class="blockList">
 <h4>afterExecuteDay</h4>
 <pre>public&nbsp;void&nbsp;afterExecuteDay(<a href="../../com/epidemic_simulator/Simulator.Outcome.html" title="enum in com.epidemic_simulator">Simulator.Outcome</a>&nbsp;outcome)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../com/epidemic_simulator/SimulatorCallBack.html#afterExecuteDay-com.epidemic_simulator.Simulator.Outcome-">SimulatorCallBack</a></code></span></div>
+<div class="block">This method is called every time the <a href="../../com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a> finishes the simulation of a day.<BR>
+ It can be useful for cctivating a strategy every day,
+ or for running the Simulator in another <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html?is-external=true" title="class or interface in java.lang"><code>Thread</code></a>, and having callbacks.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../com/epidemic_simulator/SimulatorCallBack.html#afterExecuteDay-com.epidemic_simulator.Simulator.Outcome-">afterExecuteDay</a></code>&nbsp;in interface&nbsp;<code><a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator">SimulatorCallBack</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>outcome</code> - the outcome</dd>
 </dl>
 </li>
 </ul>
@@ -350,9 +367,15 @@ implements <a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="
 <li class="blockList">
 <h4>personClean</h4>
 <pre>public&nbsp;void&nbsp;personClean(<a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../com/epidemic_simulator/SimulatorCallBack.html#personClean-com.epidemic_simulator.Person-">SimulatorCallBack</a></code></span></div>
+<div class="block">This method is called
+ every time a <a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a> become <a href="../../com/epidemic_simulator/Person.html#immune"><code>Person.immune</code></a>
+ after they had <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../com/epidemic_simulator/SimulatorCallBack.html#personClean-com.epidemic_simulator.Person-">personClean</a></code>&nbsp;in interface&nbsp;<code><a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator">SimulatorCallBack</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>person</code> - the person that healed from having symptoms</dd>
 </dl>
 </li>
 </ul>
@@ -363,9 +386,14 @@ implements <a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="
 <li class="blockList">
 <h4>personHasSymptoms</h4>
 <pre>public&nbsp;void&nbsp;personHasSymptoms(<a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../com/epidemic_simulator/SimulatorCallBack.html#personHasSymptoms-com.epidemic_simulator.Person-">SimulatorCallBack</a></code></span></div>
+<div class="block">This method is called
+ every time a <a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a> develop <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../com/epidemic_simulator/SimulatorCallBack.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms</a></code>&nbsp;in interface&nbsp;<code><a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator">SimulatorCallBack</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>person</code> - the person that developed symptoms</dd>
 </dl>
 </li>
 </ul>

@@ -84,11 +84,21 @@
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><a href="../../../com/epidemic_simulator/exceptions/InvalidSimulationException.html" title="class in com.epidemic_simulator.exceptions">InvalidSimulationException</a></td>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">This Exception can be thrown when trying to instantiate a <a href="../../../com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a>
+ with invalid parameters (according to the project specs).</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><a href="../../../com/epidemic_simulator/exceptions/StrategyForbiddenAccessException.html" title="class in com.epidemic_simulator.exceptions">StrategyForbiddenAccessException</a></td>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">This Exception can be thrown when trying to access data that the Strategy shouldn't access at all.<BR>
+ It is a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang"><code>RuntimeException</code></a> so there's no need to surround all the function calls
+ to <a href="../../../com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a> getters with try/catch.<BR>
+ <BR>
+ This should <b>never</b> be thrown unless a Strategy try to do an illegal operation.<BR>
+ (For example accessing the number of yellows without testing them)</div>
+</td>
 </tr>
 </tbody>
 </table>

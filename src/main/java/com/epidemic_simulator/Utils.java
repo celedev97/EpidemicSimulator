@@ -2,6 +2,7 @@ package com.epidemic_simulator;
 
 import com.epidemic_simulator.exceptions.StrategyForbiddenAccessException;
 
+import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -14,8 +15,17 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.*;
 
+/**
+ * Utility class for the Epidemic Simulator project.<BR>
+ * It contains some method for extracting random numbers easily, some other for reflections and some utilities for UI.
+ */
 public class Utils {
-    /** Generate a random int between 0 and maxValue(excluded)
+
+    private Utils(){}
+
+    /**
+     * Generate a random int between 0 and maxValue(excluded)
+     *
      * @param maxValue the maximum value to generate (excluded)
      * @return the random number
      */
@@ -23,7 +33,9 @@ public class Utils {
         return random(0,maxValue);
     }
 
-    /** Generate a random int between minValue(included) and maxValue(excluded)
+    /**
+     * Generate a random int between minValue(included) and maxValue(excluded)
+     *
      * @param minValue the minimum value to generate
      * @param maxValue the maximum value to generate (excluded)
      * @return the random number
@@ -33,7 +45,9 @@ public class Utils {
     }
 
 
-    /** Generate a boolean, that has *truePercentage*% possibilities of being true.
+    /**
+     * Generate a boolean, that has {@code truePercentage}% possibilities of being true.
+     *
      * @param truePercentage The percentage rate for the value true.
      * @return the boolean generated.
      */
@@ -42,9 +56,10 @@ public class Utils {
     }
 
     /**
-     * This functions convert a method or a class name into a human readable string.
-     * It only works with strings that do not contains special characters.
+     * This functions convert a method or a class name into a human readable string.<BR>
+     * It only works with strings that do not contains special characters.<BR>
      * Example: animalCageBuilder - Animal cage builder
+     *
      * @param javaName the method or class name
      * @return the human readable string
      */
@@ -74,8 +89,14 @@ public class Utils {
         return output;
     }
 
-    public static List<JSpinner> getJSpinners(final Container c) {
-        Component[] comps = c.getComponents();
+    /**
+     * Extract all the {@link JSpinner}s from a {@link Container} recursively.
+     *
+     * @param container the container to use for the search
+     * @return The {@link List} of JSpinners found
+     */
+    public static List<JSpinner> getJSpinners(final Container container) {
+        Component[] comps = container.getComponents();
         List<JSpinner> compList = new ArrayList<>();
         for (Component comp : comps) {
             if(comp instanceof JSpinner){
@@ -87,6 +108,11 @@ public class Utils {
         return compList;
     }
 
+    /**
+     * Force the commit of pending edits on all the {@link JSpinner}s inside a {@link Container} and its children.
+     *
+     * @param container the container to use for the search
+     */
     public static void forceJSpinnerCommit(Container container) {
         getJSpinners(container).forEach(jSpinner -> {
             try {
@@ -98,18 +124,34 @@ public class Utils {
         });
     }
 
+    /**
+     * Convert a strategy class into a user readable string.
+     *
+     * @param strategy The strategy class
+     * @return the strategy name as a user readable string.
+     */
     public static String getStrategyName(Class<?> strategy) {
         if (strategy == null)
             return "No strategy used";
         return Utils.javaNameToUserString(strategy.toString());
     }
 
+    /**
+     * Convert a strategy into a user readable string.
+     *
+     * @param strategy The strategy
+     * @return the strategy name as a user readable string.
+     */
     public static String getStrategyName(Strategy strategy) {
         if(strategy == null)
             return getStrategyName((Class)null);
         return getStrategyName(strategy.getClass());
     }
 
+    /**
+     * Throw an exception if there's a strategy in the calls stack.
+     *
+     */
     public static void negateStrategyAccess() {
         //TODO: TEST!!! TODO: REPLACE WITH AN ASSERTION!!!
         try {

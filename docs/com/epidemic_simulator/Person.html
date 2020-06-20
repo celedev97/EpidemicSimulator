@@ -111,6 +111,8 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">Person</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
+<div class="block">/**
+ An object that represent a person and their health status.</div>
 </li>
 </ul>
 </div>
@@ -131,39 +133,59 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#alive">alive</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#alive">alive</a></span></code>
+<div class="block">If this is set to true the person is alive, it's true by default.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#canInfect">canInfect</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#canInfect">canInfect</a></span></code>
+<div class="block">If this is set to true the person has enough virus to infect other people in case they meet.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#canMove">canMove</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#canMove">canMove</a></span></code>
+<div class="block">If this is set to true the person is allowed to move, it's true by default.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#daysSinceInfection">daysSinceInfection</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#daysSinceInfection">daysSinceInfection</a></span></code>
+<div class="block">The days since when this person was infected.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#deathDay">deathDay</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#deathDay">deathDay</a></span></code>
+<div class="block">The number of the day in which this person will die.<br>
+ If this person will not die it is <code>-1</code> by default.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#immune">immune</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#immune">immune</a></span></code>
+<div class="block">If this is set to true the person is immune to the disease and can't be infected.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#infected">infected</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#infected">infected</a></span></code>
+<div class="block">If this is set to true the person is infected and its disease status will be updated everyday.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#symptoms">symptoms</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#symptoms">symptoms</a></span></code>
+<div class="block">If this is set to true the person is showing symptoms of the disease.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#symptomsDevelopmentDay">symptomsDevelopmentDay</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#symptomsDevelopmentDay">symptomsDevelopmentDay</a></span></code>
+<div class="block">The number of the day in which this person will develop symptoms.<br>
+ If this person will not develop symptoms it is is <code>-1</code> by default.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -199,11 +221,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#getColor--">getColor</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#getColor--">getColor</a></span>()</code>
+<div class="block">Get the Color representing the health status of this person according to the project specs.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#hasSymptoms--">hasSymptoms</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#hasSymptoms--">hasSymptoms</a></span>()</code>
+<div class="block">Get the <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>symptoms</code></a> flag.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
@@ -211,15 +237,26 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
       int&nbsp;deathRate,
       int&nbsp;incubation,
       int&nbsp;maxDayForSymptomsDevelopment,
-      int&nbsp;healDay)</code>&nbsp;</td>
+      int&nbsp;healDay)</code>
+<div class="block">This method effectively infect this Person.<br>
+ The person is infected by setting their <a href="../../com/epidemic_simulator/Person.html#infected"><code>infected</code></a> to <code>true</code>.<br>
+ <br>
+ This method also decides the future development of the disease for this person.<br>
+ It will extract a booleans based on the <code>symptomsRate</code>
+ and if it's true it will decide the day on which this person will develop <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>symptoms</code></a>.</div>
+</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#isAlive--">isAlive</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#isAlive--">isAlive</a></span>()</code>
+<div class="block">Get the <a href="../../com/epidemic_simulator/Person.html#alive"><code>alive</code></a> flag.</div>
+</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#isInfected--">isInfected</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Person.html#isInfected--">isInfected</a></span>()</code>
+<div class="block">Get the <a href="../../com/epidemic_simulator/Person.html#infected"><code>infected</code></a> flag.</div>
+</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
@@ -228,7 +265,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
          int&nbsp;deathRate,
          int&nbsp;incubation,
          int&nbsp;maxDayForSymptomsDevelopment,
-         int&nbsp;healDay)</code>&nbsp;</td>
+         int&nbsp;healDay)</code>
+<div class="block">This method is called every time an <a href="../../com/epidemic_simulator/Person.html#infected"><code>infected</code></a> person and a not infected one meets.<br>
+ This method extract a boolean based on <code>infectionRate</code>, if it's true then it proceed to call <a href="../../com/epidemic_simulator/Person.html#infect-int-int-int-int-int-"><code>infect(int, int, int, int, int)</code></a></div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -259,6 +299,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>canMove</h4>
 <pre>public&nbsp;boolean canMove</pre>
+<div class="block">If this is set to true the person is allowed to move, it's true by default.</div>
 </li>
 </ul>
 <a name="alive">
@@ -268,6 +309,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>alive</h4>
 <pre>protected&nbsp;boolean alive</pre>
+<div class="block">If this is set to true the person is alive, it's true by default.</div>
 </li>
 </ul>
 <a name="infected">
@@ -277,6 +319,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>infected</h4>
 <pre>protected&nbsp;boolean infected</pre>
+<div class="block">If this is set to true the person is infected and its disease status will be updated everyday.</div>
 </li>
 </ul>
 <a name="canInfect">
@@ -286,6 +329,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>canInfect</h4>
 <pre>protected&nbsp;boolean canInfect</pre>
+<div class="block">If this is set to true the person has enough virus to infect other people in case they meet.</div>
 </li>
 </ul>
 <a name="symptoms">
@@ -295,6 +339,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>symptoms</h4>
 <pre>protected&nbsp;boolean symptoms</pre>
+<div class="block">If this is set to true the person is showing symptoms of the disease.
+ <br>By default a person that has symptoms will not be able to move, and will consume more resources.</div>
 </li>
 </ul>
 <a name="immune">
@@ -304,6 +350,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>immune</h4>
 <pre>protected&nbsp;boolean immune</pre>
+<div class="block">If this is set to true the person is immune to the disease and can't be infected.
+ <br><b>NOTE:</b> The fact that a person is immune doesn't necessarily mean that they're allowed to move.</div>
 </li>
 </ul>
 <a name="daysSinceInfection">
@@ -313,6 +361,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>daysSinceInfection</h4>
 <pre>protected&nbsp;int daysSinceInfection</pre>
+<div class="block">The days since when this person was infected.</div>
 </li>
 </ul>
 <a name="symptomsDevelopmentDay">
@@ -322,6 +371,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>symptomsDevelopmentDay</h4>
 <pre>protected&nbsp;int symptomsDevelopmentDay</pre>
+<div class="block">The number of the day in which this person will develop symptoms.<br>
+ If this person will not develop symptoms it is is <code>-1</code> by default.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../com/epidemic_simulator/Person.html#symptoms"><code>symptoms</code></a></dd>
+</dl>
 </li>
 </ul>
 <a name="deathDay">
@@ -331,6 +386,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>deathDay</h4>
 <pre>protected&nbsp;int deathDay</pre>
+<div class="block">The number of the day in which this person will die.<br>
+ If this person will not die it is <code>-1</code> by default.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../com/epidemic_simulator/Person.html#alive"><code>alive</code></a></dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -365,6 +426,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>isAlive</h4>
 <pre>public&nbsp;boolean&nbsp;isAlive()</pre>
+<div class="block">Get the <a href="../../com/epidemic_simulator/Person.html#alive"><code>alive</code></a> flag.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the flag value</dd>
+</dl>
 </li>
 </ul>
 <a name="isInfected--">
@@ -374,6 +440,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>isInfected</h4>
 <pre>public&nbsp;boolean&nbsp;isInfected()</pre>
+<div class="block">Get the <a href="../../com/epidemic_simulator/Person.html#infected"><code>infected</code></a> flag.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the flag value</dd>
+</dl>
 </li>
 </ul>
 <a name="hasSymptoms--">
@@ -383,6 +454,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>hasSymptoms</h4>
 <pre>public&nbsp;boolean&nbsp;hasSymptoms()</pre>
+<div class="block">Get the <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>symptoms</code></a> flag.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the flag value</dd>
+</dl>
 </li>
 </ul>
 <a name="getColor--">
@@ -392,6 +468,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getColor</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a>&nbsp;getColor()</pre>
+<div class="block">Get the Color representing the health status of this person according to the project specs.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Color</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt"><code>Color</code></a></dd>
+</dl>
 </li>
 </ul>
 <a name="tryInfect-int-int-int-int-int-int-">
@@ -406,6 +489,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                             int&nbsp;incubation,
                             int&nbsp;maxDayForSymptomsDevelopment,
                             int&nbsp;healDay)</pre>
+<div class="block">This method is called every time an <a href="../../com/epidemic_simulator/Person.html#infected"><code>infected</code></a> person and a not infected one meets.<br>
+ This method extract a boolean based on <code>infectionRate</code>, if it's true then it proceed to call <a href="../../com/epidemic_simulator/Person.html#infect-int-int-int-int-int-"><code>infect(int, int, int, int, int)</code></a></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>infectionRate</code> - The infection rate.</dd>
+<dd><code>symptomsRate</code> - The symptoms rate.</dd>
+<dd><code>deathRate</code> - The death rate.</dd>
+<dd><code>incubation</code> - The number of incubation days.</dd>
+<dd><code>maxDayForSymptomsDevelopment</code> - The max number of days for symptoms development.</dd>
+<dd><code>healDay</code> - The number of days in which the disease will cure itself.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if this person gets infected, false otherwise</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../com/epidemic_simulator/Person.html#infect-int-int-int-int-int-"><code>infect(int, int, int, int, int)</code></a></dd>
+</dl>
 </li>
 </ul>
 <a name="infect-int-int-int-int-int-">
@@ -419,6 +517,22 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                       int&nbsp;incubation,
                       int&nbsp;maxDayForSymptomsDevelopment,
                       int&nbsp;healDay)</pre>
+<div class="block">This method effectively infect this Person.<br>
+ The person is infected by setting their <a href="../../com/epidemic_simulator/Person.html#infected"><code>infected</code></a> to <code>true</code>.<br>
+ <br>
+ This method also decides the future development of the disease for this person.<br>
+ It will extract a booleans based on the <code>symptomsRate</code>
+ and if it's true it will decide the day on which this person will develop <a href="../../com/epidemic_simulator/Person.html#symptoms"><code>symptoms</code></a>.
+ If the extracted boolean is true it will also extract another boolean based on the <code>deathRate</code>
+ and if it's true it will decide the day on which this person will die <a href="../../com/epidemic_simulator/Person.html#alive"><code>alive</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>symptomsRate</code> - the symptoms rate</dd>
+<dd><code>deathRate</code> - the death rate</dd>
+<dd><code>incubation</code> - the incubation</dd>
+<dd><code>maxDayForSymptomsDevelopment</code> - the max day for symptoms development</dd>
+<dd><code>healDay</code> - the heal day</dd>
+</dl>
 </li>
 </ul>
 </li>

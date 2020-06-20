@@ -2,24 +2,65 @@ package com.epidemic_simulator;
 
 import java.awt.*;
 
+/**
+/**
+ * An object that represent a person and their health status.
+ */
 public class Person {
-    public boolean canMove = true; //All'inizio tutti gli individui possono muoversi
+    /**
+     * If this is set to true the person is allowed to move, it's true by default.
+     */
+    public boolean canMove = true;
 
     //#region DISEASE FLAGS
+    /**
+     * If this is set to true the person is alive, it's true by default.
+     */
     protected boolean alive        = true;
+    /**
+     * If this is set to true the person is infected and its disease status will be updated everyday.
+     */
     protected boolean infected     = false;
+    /**
+     * If this is set to true the person has enough virus to infect other people in case they meet.
+     */
     protected boolean canInfect    = false;
+    /**
+     * If this is set to true the person is showing symptoms of the disease.
+     * <br>By default a person that has symptoms will not be able to move, and will consume more resources.
+     */
     protected boolean symptoms     = false;
+    /**
+     * If this is set to true the person is immune to the disease and can't be infected.
+     * <br><b>NOTE:</b> The fact that a person is immune doesn't necessarily mean that they're allowed to move.
+     */
     protected boolean immune       = false;
 
     //#region DISEASE FLAGS GETTERS
+    /**
+     * Get the {@link #alive} flag.
+     *
+     * @return the flag value
+     */
     public boolean isAlive() {
         return alive;
     }
+
+    /**
+     * Get the {@link #infected} flag.
+     *
+     * @return the flag value
+     */
     public boolean isInfected() {
         Utils.negateStrategyAccess();
         return infected;
     }
+
+    /**
+     * Get the {@link #symptoms} flag.
+     *
+     * @return the flag value
+     */
     public boolean hasSymptoms() {
         return symptoms;
     }
@@ -28,11 +69,29 @@ public class Person {
     //#endregion
 
     //#region DISEASE STATUS
-    protected int daysSinceInfection = 0; //Numero giorni passati dal contagio.
-    protected int symptomsDevelopmentDay =-1; //Numero giorni entro cui eventualmente presenterà sintomi,-1 dato che la persona potrebbe non svilupparli.
-    protected int deathDay =-1; //Numero giorni entro cui eventualmente la persona in questione morirà,-1 dato che la persona potrebbe anche non morire.
+    /**
+     * The days since when this person was infected.
+     */
+    protected int daysSinceInfection = 0;
+    /**
+     * The number of the day in which this person will develop symptoms.<br>
+     * If this person will not develop symptoms it is is {@code -1} by default.
+     * @see #symptoms
+     */
+    protected int symptomsDevelopmentDay =-1;
+    /**
+     * The number of the day in which this person will die.<br>
+     * If this person will not die it is {@code -1} by default.
+     * @see #alive
+     */
+    protected int deathDay =-1;
     //#endregion
 
+    /**
+     * Get the Color representing the health status of this person according to the project specs.
+     * @see java.awt.Color
+     * @return the Color
+     */
     public Color getColor(){
         //Se l'individuo ha status-alive=false è sicuramente nero/morto.
         if(!alive) return Color.BLACK;
@@ -49,7 +108,19 @@ public class Person {
         return Color.RED;
     }
 
-    //Una volta avvenuto un'incontro tra un individuo sano e uno infetto in movimento,la seguente funzione verrà richiamata per vedere se il soggetto sano può essere stato infetto o meno.
+    /**
+     * This method is called every time an {@link #infected} person and a not infected one meets.<br>
+     * This method extract a boolean based on {@code infectionRate}, if it's true then it proceed to call {@link #infect}
+     * @see #infect
+     *
+     * @param infectionRate                The infection rate.
+     * @param symptomsRate                 The symptoms rate.
+     * @param deathRate                    The death rate.
+     * @param incubation                   The number of incubation days.
+     * @param maxDayForSymptomsDevelopment The max number of days for symptoms development.
+     * @param healDay                      The number of days in which the disease will cure itself.
+     * @return true if this person gets infected, false otherwise
+     */
     protected boolean tryInfect(int infectionRate, int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay){
         //if this person is already immune or infected than i can't infect it again
         if(immune || infected) return false;
@@ -62,7 +133,22 @@ public class Person {
         return false;
     }
 
-    //Una volta che l'infezione è avvenuta verifichiamo con la funzione come il soggetto reagirà alla malattia.
+    /**
+     * This method effectively infect this Person.<br>
+     * The person is infected by setting their {@link #infected} to {@code true}.<br>
+     * <br>
+     * This method also decides the future development of the disease for this person.<br>
+     * It will extract a booleans based on the {@code symptomsRate}
+     * and if it's true it will decide the day on which this person will develop {@link #symptoms}.
+     * If the extracted boolean is true it will also extract another boolean based on the {@code deathRate}
+     * and if it's true it will decide the day on which this person will die {@link #alive}.
+     *
+     * @param symptomsRate                 the symptoms rate
+     * @param deathRate                    the death rate
+     * @param incubation                   the incubation
+     * @param maxDayForSymptomsDevelopment the max day for symptoms development
+     * @param healDay                      the heal day
+     */
     protected void infect(int symptomsRate, int deathRate, int incubation, int maxDayForSymptomsDevelopment, int healDay) {
         infected = true;//La persona passerà a questo punto il suo attributo 'infected' a true.
 

@@ -77,7 +77,11 @@
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#addCallBack-com.epidemic_simulator.SimulatorCallBack-">addCallBack(SimulatorCallBack)</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/SimulatorCallBack.html#afterExecuteDay-com.epidemic_simulator.Simulator.Outcome-">afterExecuteDay(Simulator.Outcome)</a></span> - Method in interface com.epidemic_simulator.<a href="com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator">SimulatorCallBack</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This method is called every time the <a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a> finishes the simulation of a day.<BR>
+ It can be useful for cctivating a strategy every day,
+ or for running the Simulator in another <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html?is-external=true" title="class or interface in java.lang"><code>Thread</code></a>, and having callbacks.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Strategy.html#afterExecuteDay-com.epidemic_simulator.Simulator.Outcome-">afterExecuteDay(Simulator.Outcome)</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Strategy.html" title="class in com.epidemic_simulator">Strategy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="strategies/AggressiveContactTracing.html#afterExecuteDay-com.epidemic_simulator.Simulator.Outcome-">afterExecuteDay(Simulator.Outcome)</a></span> - Method in class strategies.<a href="strategies/AggressiveContactTracing.html" title="class in strategies">AggressiveContactTracing</a></dt>
@@ -103,7 +107,9 @@
 <dt><span class="memberNameLink"><a href="strategies/AggressiveContactTracing.html#AggressiveContactTracing-com.epidemic_simulator.Simulator-">AggressiveContactTracing(Simulator)</a></span> - Constructor for class strategies.<a href="strategies/AggressiveContactTracing.html" title="class in strategies">AggressiveContactTracing</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#alive">alive</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">If this is set to true the person is alive, it's true by default.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#averageEncountersPerDay">averageEncountersPerDay</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -117,11 +123,15 @@
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/gui/visual/CameraMove.html#CameraMove-float-">CameraMove(float)</a></span> - Constructor for class com.epidemic_simulator.gui.visual.<a href="com/epidemic_simulator/gui/visual/CameraMove.html" title="class in com.epidemic_simulator.gui.visual">CameraMove</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#canInfect">canInfect</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">If this is set to true the person has enough virus to infect other people in case they meet.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#canInfectDay">canInfectDay</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#canMove">canMove</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">If this is set to true the person is allowed to move, it's true by default.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/gui/visual/CameraMove.html#checkBounds">checkBounds</a></span> - Variable in class com.epidemic_simulator.gui.visual.<a href="com/epidemic_simulator/gui/visual/CameraMove.html" title="class in com.epidemic_simulator.gui.visual">CameraMove</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="strategies/ContactTracingLightTest.html#checkQuarantine-com.epidemic_simulator.Person-int-">checkQuarantine(Person, int)</a></span> - Method in class strategies.<a href="strategies/ContactTracingLightTest.html" title="class in strategies">ContactTracingLightTest</a></dt>
@@ -158,9 +168,14 @@
 <h2 class="title">D</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#daysSinceInfection">daysSinceInfection</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The days since when this person was infected.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#deathDay">deathDay</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The number of the day in which this person will die.<br>
+ If this person will not die it is <code>-1</code> by default.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#deathRate">deathRate</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#developSymptomsMaxDay">developSymptomsMaxDay</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
@@ -213,7 +228,9 @@
  NOTE: this is the same as doing encounters.get(dayNum), but it performs some additional error checking</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#forceJSpinnerCommit-java.awt.Container-">forceJSpinnerCommit(Container)</a></span> - Static method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Force the commit of pending edits on all the <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing"><code>JSpinner</code></a>s inside a <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt"><code>Container</code></a> and its children.</div>
+</dd>
 <dt><a href="strategies/FullControlledLockdownAndStopSpread.html" title="class in strategies"><span class="typeNameLink">FullControlledLockdownAndStopSpread</span></a> - Class in <a href="strategies/package-summary.html">strategies</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="strategies/FullControlledLockdownAndStopSpread.html#FullControlledLockdownAndStopSpread-com.epidemic_simulator.Simulator-int-">FullControlledLockdownAndStopSpread(Simulator, int)</a></span> - Constructor for class strategies.<a href="strategies/FullControlledLockdownAndStopSpread.html" title="class in strategies">FullControlledLockdownAndStopSpread</a></dt>
@@ -231,7 +248,9 @@
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#getBlueCount--">getBlueCount()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#getColor--">getColor()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get the Color representing the health status of this person according to the project specs.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#getDay--">getDay()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#getGreenCount--">getGreenCount()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
@@ -241,7 +260,9 @@
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#getInfected--">getInfected()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#getJSpinners-java.awt.Container-">getJSpinners(Container)</a></span> - Static method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Extract all the <a href="https://docs.oracle.com/javase/8/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing"><code>JSpinner</code></a>s from a <a href="https://docs.oracle.com/javase/8/docs/api/java/awt/Container.html?is-external=true" title="class or interface in java.awt"><code>Container</code></a> recursively.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/exceptions/InvalidSimulationException.html#getMessage--">getMessage()</a></span> - Method in exception com.epidemic_simulator.exceptions.<a href="com/epidemic_simulator/exceptions/InvalidSimulationException.html" title="class in com.epidemic_simulator.exceptions">InvalidSimulationException</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#getPopulation--">getPopulation()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
@@ -257,9 +278,13 @@
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#getStrategy--">getStrategy()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#getStrategyName-java.lang.Class-">getStrategyName(Class&lt;?&gt;)</a></span> - Static method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Convert a strategy class into a user readable string.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#getStrategyName-com.epidemic_simulator.Strategy-">getStrategyName(Strategy)</a></span> - Static method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Convert a strategy into a user readable string.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#getYellowCount--">getYellowCount()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -269,7 +294,9 @@
 <h2 class="title">H</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#hasSymptoms--">hasSymptoms()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get the <a href="com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a> flag.</div>
+</dd>
 </dl>
 <a name="I:I">
 <!--   -->
@@ -277,23 +304,43 @@
 <h2 class="title">I</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#immune">immune</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">If this is set to true the person is immune to the disease and can't be infected.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#infect-int-int-int-int-int-">infect(int, int, int, int, int)</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This method effectively infect this Person.<br>
+ The person is infected by setting their <a href="com/epidemic_simulator/Person.html#infected"><code>Person.infected</code></a> to <code>true</code>.<br>
+ <br>
+ This method also decides the future development of the disease for this person.<br>
+ It will extract a booleans based on the <code>symptomsRate</code>
+ and if it's true it will decide the day on which this person will develop <a href="com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#infected">infected</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">If this is set to true the person is infected and its disease status will be updated everyday.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#infectionRate">infectionRate</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#initialResources">initialResources</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/epidemic_simulator/exceptions/InvalidSimulationException.html" title="class in com.epidemic_simulator.exceptions"><span class="typeNameLink">InvalidSimulationException</span></a> - Exception in <a href="com/epidemic_simulator/exceptions/package-summary.html">com.epidemic_simulator.exceptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This Exception can be thrown when trying to instantiate a <a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a>
+ with invalid parameters (according to the project specs).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/exceptions/InvalidSimulationException.html#InvalidSimulationException-java.lang.String-">InvalidSimulationException(String)</a></span> - Constructor for exception com.epidemic_simulator.exceptions.<a href="com/epidemic_simulator/exceptions/InvalidSimulationException.html" title="class in com.epidemic_simulator.exceptions">InvalidSimulationException</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Instantiates a new Invalid simulation exception.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#isAlive--">isAlive()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get the <a href="com/epidemic_simulator/Person.html#alive"><code>Person.alive</code></a> flag.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#isInfected--">isInfected()</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Get the <a href="com/epidemic_simulator/Person.html#infected"><code>Person.infected</code></a> flag.</div>
+</dd>
 </dl>
 <a name="I:J">
 <!--   -->
@@ -302,7 +349,9 @@
 <dl>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#javaNameToUserString-java.lang.String-">javaNameToUserString(String)</a></span> - Static method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
 <dd>
-<div class="block">This functions convert a method or a class name into a human readable string.</div>
+<div class="block">This functions convert a method or a class name into a human readable string.<BR>
+ It only works with strings that do not contains special characters.<BR>
+ Example: animalCageBuilder - Animal cage builder</div>
 </dd>
 </dl>
 <a name="I:M">
@@ -316,12 +365,6 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/gui/visual/SimulatorGUI.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class com.epidemic_simulator.gui.visual.<a href="com/epidemic_simulator/gui/visual/SimulatorGUI.html" title="class in com.epidemic_simulator.gui.visual">SimulatorGUI</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="Main.html" title="class in &lt;Unnamed&gt;"><span class="typeNameLink">Main</span></a> - Class in <a href="package-summary.html">&lt;Unnamed&gt;</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="Main.html#Main--">Main()</a></span> - Constructor for class <a href="Main.html" title="class in &lt;Unnamed&gt;">Main</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="Main.html#main-java.lang.String:A-">main(String[])</a></span> - Static method in class <a href="Main.html" title="class in &lt;Unnamed&gt;">Main</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="strategies/MediumControlledLockdown.html" title="class in strategies"><span class="typeNameLink">MediumControlledLockdown</span></a> - Class in <a href="strategies/package-summary.html">strategies</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="strategies/MediumControlledLockdown.html#MediumControlledLockdown-com.epidemic_simulator.Simulator-int-int-">MediumControlledLockdown(Simulator, int, int)</a></span> - Constructor for class strategies.<a href="strategies/MediumControlledLockdown.html" title="class in strategies">MediumControlledLockdown</a></dt>
@@ -333,7 +376,9 @@
 <h2 class="title">N</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#negateStrategyAccess--">negateStrategyAccess()</a></span> - Static method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Throw an exception if there's a strategy in the calls stack.</div>
+</dd>
 </dl>
 <a name="I:O">
 <!--   -->
@@ -359,11 +404,18 @@
 <dt><span class="memberNameLink"><a href="strategies/PercentageLockdownAndPartialStopSpread.html#PercentageLockdownAndPartialStopSpread-com.epidemic_simulator.Simulator-int-">PercentageLockdownAndPartialStopSpread(Simulator, int)</a></span> - Constructor for class strategies.<a href="strategies/PercentageLockdownAndPartialStopSpread.html" title="class in strategies">PercentageLockdownAndPartialStopSpread</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><span class="typeNameLink">Person</span></a> - Class in <a href="com/epidemic_simulator/package-summary.html">com.epidemic_simulator</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">/**
+ An object that represent a person and their health status.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#Person--">Person()</a></span> - Constructor for class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/SimulatorCallBack.html#personClean-com.epidemic_simulator.Person-">personClean(Person)</a></span> - Method in interface com.epidemic_simulator.<a href="com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator">SimulatorCallBack</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This method is called
+ every time a <a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a> become <a href="com/epidemic_simulator/Person.html#immune"><code>Person.immune</code></a>
+ after they had <a href="com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Strategy.html#personClean-com.epidemic_simulator.Person-">personClean(Person)</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Strategy.html" title="class in com.epidemic_simulator">Strategy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="strategies/AggressiveContactTracing.html#personClean-com.epidemic_simulator.Person-">personClean(Person)</a></span> - Method in class strategies.<a href="strategies/AggressiveContactTracing.html" title="class in strategies">AggressiveContactTracing</a></dt>
@@ -371,7 +423,10 @@
 <dt><span class="memberNameLink"><a href="strategies/MediumControlledLockdown.html#personClean-com.epidemic_simulator.Person-">personClean(Person)</a></span> - Method in class strategies.<a href="strategies/MediumControlledLockdown.html" title="class in strategies">MediumControlledLockdown</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/SimulatorCallBack.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms(Person)</a></span> - Method in interface com.epidemic_simulator.<a href="com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator">SimulatorCallBack</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This method is called
+ every time a <a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a> develop <a href="com/epidemic_simulator/Person.html#symptoms"><code>Person.symptoms</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Strategy.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms(Person)</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Strategy.html" title="class in com.epidemic_simulator">Strategy</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="strategies/AggressiveContactTracing.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms(Person)</a></span> - Method in class strategies.<a href="strategies/AggressiveContactTracing.html" title="class in strategies">AggressiveContactTracing</a></dt>
@@ -416,10 +471,13 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#randomBool-int-">randomBool(int)</a></span> - Static method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
 <dd>
-<div class="block">Generate a boolean, that has *truePercentage*% possibilities of being true.</div>
+<div class="block">Generate a boolean, that has <code>truePercentage</code>% possibilities of being true.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/SimulatorCallBack.html#registerEncounter-com.epidemic_simulator.Person-com.epidemic_simulator.Person-">registerEncounter(Person, Person)</a></span> - Method in interface com.epidemic_simulator.<a href="com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator">SimulatorCallBack</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This method is called every time two <a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a>s meets,
+ it can be used for keeping a log of every meeting.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Strategy.html#registerEncounter-com.epidemic_simulator.Person-com.epidemic_simulator.Person-">registerEncounter(Person, Person)</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Strategy.html" title="class in com.epidemic_simulator">Strategy</a></dt>
 <dd>
 <div class="block">Register that the person1 and the person2 met today
@@ -454,7 +512,11 @@
 <div class="block">Enum for the possible outcomes of a day execution.</div>
 </dd>
 <dt><a href="com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator"><span class="typeNameLink">SimulatorCallBack</span></a> - Interface in <a href="com/epidemic_simulator/package-summary.html">com.epidemic_simulator</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This interface declares the methods necessary for the <a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a> to issue ecallbacks to an object.<BR>
+ <b>NOTE:</b> The Simulator only calls the methods of the SimulatorCallBacks that are registered.<BR>
+ <b>NOTE:</b> The Simulator <b>never</b> calls methods of a Strategy before the first red person has been found.<BR></div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/gui/visual/DrawablePerson.html#simulatorGUI">simulatorGUI</a></span> - Variable in class com.epidemic_simulator.gui.visual.<a href="com/epidemic_simulator/gui/visual/DrawablePerson.html" title="class in com.epidemic_simulator.gui.visual">DrawablePerson</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/epidemic_simulator/gui/visual/SimulatorGUI.html" title="class in com.epidemic_simulator.gui.visual"><span class="typeNameLink">SimulatorGUI</span></a> - Class in <a href="com/epidemic_simulator/gui/visual/package-summary.html">com.epidemic_simulator.gui.visual</a></dt>
@@ -490,13 +552,27 @@
 <dt><a href="com/epidemic_simulator/Strategy.ParameterData.html" title="annotation in com.epidemic_simulator"><span class="typeNameLink">Strategy.ParameterData</span></a> - Annotation Type in <a href="com/epidemic_simulator/package-summary.html">com.epidemic_simulator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/epidemic_simulator/exceptions/StrategyForbiddenAccessException.html" title="class in com.epidemic_simulator.exceptions"><span class="typeNameLink">StrategyForbiddenAccessException</span></a> - Exception in <a href="com/epidemic_simulator/exceptions/package-summary.html">com.epidemic_simulator.exceptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This Exception can be thrown when trying to access data that the Strategy shouldn't access at all.<BR>
+ It is a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang"><code>RuntimeException</code></a> so there's no need to surround all the function calls
+ to <a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a> getters with try/catch.<BR>
+ <BR>
+ This should <b>never</b> be thrown unless a Strategy try to do an illegal operation.<BR>
+ (For example accessing the number of yellows without testing them)</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/exceptions/StrategyForbiddenAccessException.html#StrategyForbiddenAccessException-java.lang.String-">StrategyForbiddenAccessException(String)</a></span> - Constructor for exception com.epidemic_simulator.exceptions.<a href="com/epidemic_simulator/exceptions/StrategyForbiddenAccessException.html" title="class in com.epidemic_simulator.exceptions">StrategyForbiddenAccessException</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Instantiates a new Strategy forbidden access exception.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#symptoms">symptoms</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">If this is set to true the person is showing symptoms of the disease.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#symptomsDevelopmentDay">symptomsDevelopmentDay</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The number of the day in which this person will develop symptoms.<br>
+ If this person will not develop symptoms it is is <code>-1</code> by default.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Simulator.html#symptomsRate">symptomsRate</a></span> - Variable in class com.epidemic_simulator.<a href="com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator">Simulator</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -516,7 +592,10 @@
 <dt><span class="memberNameLink"><a href="strategies/MediumControlledLockdown.html#TimeCheck--">TimeCheck()</a></span> - Method in class strategies.<a href="strategies/MediumControlledLockdown.html" title="class in strategies">MediumControlledLockdown</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/Person.html#tryInfect-int-int-int-int-int-int-">tryInfect(int, int, int, int, int, int)</a></span> - Method in class com.epidemic_simulator.<a href="com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">This method is called every time an <a href="com/epidemic_simulator/Person.html#infected"><code>Person.infected</code></a> person and a not infected one meets.<br>
+ This method extract a boolean based on <code>infectionRate</code>, if it's true then it proceed to call <a href="com/epidemic_simulator/Person.html#infect-int-int-int-int-int-"><code>Person.infect(int, int, int, int, int)</code></a></div>
+</dd>
 </dl>
 <a name="I:U">
 <!--   -->
@@ -530,9 +609,10 @@
 <dt><span class="memberNameLink"><a href="com/epidemic_simulator/gui/visual/DrawablePerson.html#updateColor--">updateColor()</a></span> - Method in class com.epidemic_simulator.gui.visual.<a href="com/epidemic_simulator/gui/visual/DrawablePerson.html" title="class in com.epidemic_simulator.gui.visual">DrawablePerson</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator"><span class="typeNameLink">Utils</span></a> - Class in <a href="com/epidemic_simulator/package-summary.html">com.epidemic_simulator</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/epidemic_simulator/Utils.html#Utils--">Utils()</a></span> - Constructor for class com.epidemic_simulator.<a href="com/epidemic_simulator/Utils.html" title="class in com.epidemic_simulator">Utils</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Utility class for the Epidemic Simulator project.<BR>
+ It contains some method for extracting random numbers easily, some other for reflections and some utilities for UI.</div>
+</dd>
 </dl>
 <a name="I:V">
 <!--   -->
