@@ -5,7 +5,7 @@ import com.epidemic_simulator.Simulator;
 
 public class ContactTracingFailSafe extends AggressiveContactTracing {
     float resourcesMinimum;
-
+    boolean lockDown = false;
 
     public ContactTracingFailSafe(Simulator simulator, @ParameterData(value=95,min=0,max=100) int resourcesPercentageForLockDown) {
         super(simulator);
@@ -16,10 +16,11 @@ public class ContactTracingFailSafe extends AggressiveContactTracing {
     public void afterExecuteDay(Simulator.Outcome outcome) {
         super.afterExecuteDay(outcome);
 
-        if(simulator.getResources() <= resourcesMinimum){
+        if(!lockDown && simulator.getResources() <= resourcesMinimum){
             super.output("TRIGGERED EMERGENCY LOCKDOWN!!!");
-            resourcesMinimum = 0;
+            lockDown = true;
             simulator.getAlivePopulation().forEach(person -> quarantine(person, simulator.canInfectDay));
+            //TODO: controlla il modo in cui metti le persone in quarantena, perché la quarantena sembra durare più del normale!
         }
     }
 

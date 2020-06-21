@@ -279,7 +279,7 @@ public class SimulatorSettings extends JFrame {
         strategyComboBox = new JComboBox<>();
         strategySelectorPanel.add(strategyComboBox);
 
-        //#region strategies combobox population
+        //#region strategies comboBox population
         strategyParameters = new ArrayList<>();
 
         strategyComboBox.addItem(new SelectableStrategy(null));
@@ -581,9 +581,10 @@ public class SimulatorSettings extends JFrame {
 
                 Strategy.ParameterData[] parameterData = parameters[i].getAnnotationsByType(Strategy.ParameterData.class);
                 if(parameterData.length != 0){
-                    value = parameterData[0].value();
-                    minimum = parameterData[0].min();
-                    maximum = parameterData[0].max();
+                    //TODO: ADATTA STO COSO AHO!
+                    value = (int) parameterData[0].value();
+                    minimum = (int) parameterData[0].min();
+                    maximum = (int) parameterData[0].max();
                 }
 
                 //generating the component

@@ -18,9 +18,12 @@ public final class Simulator {
     private final ArrayList<SimulatorCallBack> callBacks;
 
     public void addCallBack(SimulatorCallBack callBack) {
-        if (strategy != null && Strategy.class.isAssignableFrom(callBack.getClass()))
-            throw new RuntimeException("You can't add multiple strategies to the same simulator");
-        callBacks.add(callBack);
+        if(Strategy.class.isAssignableFrom(callBack.getClass())){
+            if (strategy != null) throw new RuntimeException("You can't add multiple strategies to the same simulator");
+            setStrategy((Strategy)callBack);
+        }else {
+            callBacks.add(callBack);
+        }
     }
 
     public void removeCallBack(SimulatorCallBack callBack) {
