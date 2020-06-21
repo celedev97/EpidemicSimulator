@@ -2,18 +2,12 @@ package com.epidemic_simulator;
 
 import com.epidemic_simulator.exceptions.StrategyForbiddenAccessException;
 
-import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.net.*;
-import java.nio.file.*;
 import java.text.ParseException;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.*;
 
 /**
  * Utility class for the Epidemic Simulator project.<BR>
