@@ -15,6 +15,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
     private ArrayList<Person> check;
     private int dataCheck = 0;
     private boolean flag=true;
+    private ArrayList<Person> YelFound=new ArrayList<>();
 
     public FullControlledLockdownAndStopSpread(Simulator simulator, int percentualOfStop) {
         super(simulator);
@@ -32,23 +33,29 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
             for (int i = 0; i < simulator.getDay(); i++) {
                 person = findEncounters(i);
                 for (Person key : person.keySet()) {
-                    if (key.getColor() == Color.YELLOW) {
-                        for (int y = 0; y < (findEncounters(key, i).size()); y++) {
-                            Person p = findEncounters(key, i).get(y);
-                            if (simulator.getResources() >= simulator.testPrice) {
-                                if (p.getColor() == Color.RED) {
-                                    personClean(p);
-                                } else if (!simulator.testVirus(p)) {
-                                    check.add(p);
-                                    p.canMove = false;
+                    if (!YelFound.contains(key)) {
+                        if (key.getColor()==Color.YELLOW) {
+                            YelFound.add(key);
+                            for (int y = 0; y < (findEncounters(key, i).size()); y++) {
+                                Person p = findEncounters(key, i).get(y);
+                                if (simulator.getResources() >= simulator.testPrice) {
+                                    if (p.getColor() == Color.RED) {
+                                        personClean(p);
+                                    } else if(!check.contains(p)) {
+                                        if(!simulator.testVirus(p)){
+                                            check.add(p);
+                                        }
+                                        else {
+                                            YelFound.add(p);
+                                        }
+                                        p.canMove = false;
+                                    }
                                 } else {
-                                    p.canMove = false;
+                                    return;
                                 }
-                            } else {
-                                return;
                             }
+                            key.canMove = false;
                         }
-                        key.canMove = false;
                     }
                 }
             }
@@ -58,15 +65,22 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
             int count = 0;
             int count2 = 0;
             for (Person p : check) {
-                if (simulator.testVirus(p)) {
-                    count++;
-                    //check.remove(p);
+                if(!YelFound.contains(p)){
+                    if (simulator.testVirus(p)) {
+                        count++;
+                        YelFound.add(p);
+                        //check.remove(p);
+                    }
+                    else {
+                        count2++;
+                        p.canMove = true;
+                        //check.remove(p);
+                    }
                 }
-                count2++;
-                p.canMove = true;
-                //check.remove(p);
             }
             super.output(count + " PEOPLE INFECTED AND " + count2 + " FREE PEOPLE!");
+            flag=true;
+            check.clear();
         }
     }
 
