@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * The Epidemic Simulator core class, it does all the Simulation-related stuff
+ * by handling the prosecution of days, the encounters and the disease status of every {@link Person}.
+ */
 public final class Simulator {
 
     //#region Fields/Getters
@@ -17,6 +21,12 @@ public final class Simulator {
     private Strategy strategy = null;
     private final ArrayList<SimulatorCallBack> callBacks;
 
+    /**
+     * Add a callback to the list of callbacks that will have their methods called in the right situations.
+     *
+     * @throws RuntimeException if you try to add a {@link Strategy} as a callback to a Simulator that already has one.
+     * @param callBack the call back to add
+     */
     public void addCallBack(SimulatorCallBack callBack) {
         if(Strategy.class.isAssignableFrom(callBack.getClass())){
             if (strategy != null) throw new RuntimeException("You can't add multiple strategies to the same simulator");
@@ -26,6 +36,11 @@ public final class Simulator {
         }
     }
 
+    /**
+     * Remove a callback to the list of callbacks that will have their methods called in the right situations.
+     *
+     * @param callBack the call back to remove
+     */
     public void removeCallBack(SimulatorCallBack callBack) {
         if (callBack == strategy) {
             strategy = null;
@@ -33,10 +48,20 @@ public final class Simulator {
         callBacks.remove(callBack);
     }
 
+    /**
+     * Get the {@link Strategy} currently linked to this Simulator.
+     *
+     * @return the strategy
+     */
     public Strategy getStrategy() {
         return strategy;
     }
 
+    /**
+     * Set the {@link Strategy} currently linked to this Simulator.
+     *
+     * @param strategy the strategy to link
+     */
     public void setStrategy(Strategy strategy) {
         callBacks.remove(this.strategy);
         this.strategy = strategy;
@@ -46,47 +71,83 @@ public final class Simulator {
     //#endregion
 
     //#region State data
-    //P
+    /**
+     * The starting population (P).
+     */
     public final int startingPopulation;
 
-    //R
     private long resources;
+    /**
+     * The initial resources (R).
+     */
     public final long initialResources;
 
+    /**
+     * Gets the current resources that this Simulator has.
+     *
+     * @return the resources
+     */
     public long getResources() {
         return resources;
     }
 
-    //C
-    public final int testPrice;//Costi per le cure
+
+    /**
+     * The test price (C).
+     */
+    public final int testPrice;
+    /**
+     * The cost for curing a person for a day (3 * C)
+     */
     public final int cureCost;
 
-    //V
+    /**
+     * The average encounters per {@link Person} per day when everyone can move (V).
+     */
     public final double averageEncountersPerDay;
     //#endregion
 
+
     //#region Disease data
-    //I
+    /**
+     * The infection rate (I).
+     */
     public final int infectionRate;
     private final double doubleInfectionRate;//this is only used for speeding up r0 calculation
 
-    //S
+    /**
+     * The Symptoms rate (S).
+     */
     public final int symptomsRate;//Percentuale di sintomaticità
 
-    //L
+    /**
+     * The Death rate (L).
+     */
     public final int deathRate;//Percentuale di letalità
 
-    //D
+    /**
+     * The Disease duration (D).
+     */
     public final int diseaseDuration;
-    public final int canInfectDay;//Days for a infected green to turn yellow
-    public final int developSymptomsMaxDay;//The last day on wich a yellow could turn red
+    /**
+     * Days necessary for an infected green to turn yellow
+     */
+    public final int canInfectDay;
+    /**
+     * The last day since the start of the disease in which a yellow could turn red.
+     */
+    public final int developSymptomsMaxDay;
     //#endregion
 
     //#region Simulation running status
-
-    //DAY
     private int day = 0;
 
+    /**
+     * Gets the number of days since the beginning of the simulation.
+     * It can be useful for contact-tracing or for day-based activations of {@link Strategy}
+     *
+     * @return the day
+     */
     public int getDay() {
         return day;
     }
@@ -100,18 +161,36 @@ public final class Simulator {
 
     private final ArrayList<Person> notQuarantinedPersons;
 
+    /**
+     * Return a readOnly instance of the population list.<BR>
+     * Trying to edit the list in illegal ways will result in a RuntimeException<BR>
+     * (ex: deleting a red person so you don't need to heal them)
+     *
+     * @return the population
+     */
     public List<Person> getPopulation() {
         return readOnlyPopulation;
     }
 
+    /**
+     * Return a readOnly instance of the alive population list.<BR>
+     * Trying to edit the list in illegal ways will result in a RuntimeException<BR>
+     * (ex: deleting a red person so you don't need to heal them)
+     * @return the alive population
+     */
     public List<Person> getAlivePopulation() {
         return readOnlyAlivePopulation;
     }
     //#endregion
 
-    //R0
     private double r0;
 
+    /**
+     * Gets the R0 factor.<BR>
+     * Mostly useless but it can be used for output logs.
+     *
+     * @return the r0
+     */
     public double getR0() {
         return r0;
     }
@@ -132,36 +211,79 @@ public final class Simulator {
     private int blackCount;
 
 
+    /**
+     * Gets the number of healthy people.<BR>
+     * It is illegal for strategies to access this.
+     *
+     * @return the number of healthy people
+     */
     public int getHealthy() {
         Utils.negateStrategyAccess();
         return healthy;
     }
 
+    /**
+     * Gets the number of infected people.<BR>
+     * This includes green that have been infected.<BR>
+     * It is illegal for strategies to access this.
+     *
+     * @return the number of infected people
+     */
     public int getInfected() {
         Utils.negateStrategyAccess();
         return infected;
     }
 
+    /**
+     * Gets the number of green people.<BR>
+     * It is illegal for strategies to access this.
+     *
+     * @return the number of green people
+     */
     public int getGreenCount() {
         Utils.negateStrategyAccess();
         return greenCount;
     }
 
+    /**
+     * Gets the number of yellow people.<BR>
+     * It is illegal for strategies to access this.
+     *
+     * @return the number of yellow people
+     */
     public int getYellowCount() {
         Utils.negateStrategyAccess();
         return yellowCount;
     }
 
+    /**
+     * Gets the number of red people.<BR>
+     * It is illegal for strategies to access this.
+     *
+     * @return the number of red people
+     */
     public int getRedCount() {
         Utils.negateStrategyAccess();
         return redCount;
     }
 
+    /**
+     * Gets the number of blue people.<BR>
+     * It is illegal for strategies to access this.
+     *
+     * @return the number of blue people
+     */
     public int getBlueCount() {
         Utils.negateStrategyAccess();
         return blueCount;
     }
 
+    /**
+     * Gets the number of black people.<BR>
+     * It is illegal for strategies to access this.
+     *
+     * @return the number of black people
+     */
     public int getBlackCount() {
         return blackCount;
     }
@@ -175,9 +297,21 @@ public final class Simulator {
      * Enum for the possible outcomes of a day execution.
      */
     public enum Outcome {
+        /**
+         * This is the outcome for when nothing relevant happens.
+         */
         NOTHING,
+        /**
+         * This is the outcome for when there are no more infected.
+         */
         ALL_HEALED,
+        /**
+         * The outcome for when the whole population dies.
+         */
         ALL_DEAD,
+        /**
+         * The outcome for when resources become 0 (or lower).
+         */
         ECONOMIC_COLLAPSE
     }
 
@@ -270,12 +404,14 @@ public final class Simulator {
     }
 
     /**
-     * Execute a day in the simulator.
-     * This method will:
-     * -make the people that have to move move and meet other people
-     * -adjust resources
-     * -make the disease status proceed for every one that has the disease
+     * Execute a day in the simulator.<BR>
+     * This method will:<BR>
+     * <ul>
+     *     <li>Make the people that can move, meet other people</li>
+     *     <li>Make the disease status proceed for every one that has the disease</li>
+     *     <li>Adjust resources according to who moved and who got cures</li>
      *
+     * @see Outcome
      * @return the outcome of this day execution.
      */
     public synchronized Outcome executeDay() {
@@ -423,7 +559,8 @@ public final class Simulator {
     }
 
     /**
-     * This method makes two people meet, and try to infect one in case the other one is at a disease state for which he can infect other people.
+     * This method makes two people meet,
+     * and try to infect one in case the other one is at a disease state for which he can infect other people.
      *
      * @param person1 the first person for this encounter
      * @param person2 the second person for this encounter
@@ -442,7 +579,11 @@ public final class Simulator {
     }
 
     /**
-     * This method test the virus inside a Person, the virus will only be detected if the person it's already at a stage at which he can infect other people.
+     * This method test the virus inside a {@link Person}.<BR>
+     * The virus will only be detected if the Person it's already at a stage at which he can infect other people.<BR>
+     * <BR>
+     * <b>NOTE:</b> This method usually consume resources,
+     * but if the person to test already has {@link Person#symptoms} it will not waste resources.
      *
      * @param person the person to test
      * @return true if the virus is found, false if it's not found
@@ -456,7 +597,9 @@ public final class Simulator {
 
 
     /**
-     * TODO: JAVADOC
+     * Unlink this Simulator from any data it has.<BR>
+     * On certain JVM versions it can allow for faster Garbage collection.<BR>
+     * It allows for lower RAM usages on multiple simulations, at the expenses of performances.
      */
     public synchronized void dispose() {
         //#region strategies
