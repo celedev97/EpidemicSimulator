@@ -39,7 +39,7 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                             for (int y = 0; y < (findEncounters(key, i).size()); y++) {
                                 Person p = findEncounters(key, i).get(y);
                                 if (simulator.getResources() >= simulator.testPrice) {
-                                    if (p.getColor() == Color.RED) {
+                                    if (simulator.testVirus(p)) { //RED?
                                         personClean(p);
                                     } else if(!check.contains(p)) {
                                         if(!simulator.testVirus(p)){

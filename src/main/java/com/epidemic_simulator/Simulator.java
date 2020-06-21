@@ -416,21 +416,6 @@ public final class Simulator {
             }
         });
 
-        /* TODO: remove, this was meant to test sync issues
-        if(yellowCount <0 || redCount <0 || (greenCount+yellowCount+redCount+blueCount+blackCount) < startingPopulation){
-            int realGreens = (int)population.stream().filter(person -> person.getColor() == Color.GREEN).count();
-            int realYellows = (int)population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
-            int realReds = (int)population.stream().filter(person -> person.getColor() == Color.RED).count();
-            int realBlues = (int)population.stream().filter(person -> person.getColor() == Color.BLUE).count();
-            int realBlacks = (int)population.stream().filter(person -> person.getColor() == Color.BLACK).count();
-
-            if((greenCount+yellowCount+redCount+blueCount+blackCount)< startingPopulation){
-                throw new RuntimeException("WTF?");
-            }
-            throw new RuntimeException("Holy moly!");
-        }
-        */
-
         return outcome;
     }
 
