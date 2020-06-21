@@ -9,25 +9,24 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FullControlledLockdownAndStopSpread extends Strategy {
-    private int percentualOfStop;
     private int sintomatici=0;
     private int limite=0;
     private ArrayList<Person> check;
 
     public FullControlledLockdownAndStopSpread(Simulator simulator,int percentualOfStop) {
         super(simulator);
-        this.percentualOfStop=percentualOfStop;
         this.limite=(simulator.getAlivePopulation().size()*percentualOfStop)/100;
         check=new ArrayList<>();
     }
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
-        int data_check = 0;
+        int dataCheck = 0; //@PAOLETTO: questo dataCheck a cosa ti serviva? Perché nel caso dell'if gli viene assegnato simulator.getDay ma non viene più usato,
+                            //invece nel caso dell'else viene usato solo nella somma (ma essendo per forza inizializzato a 0 è inutile)
         if(sintomatici>=this.limite){
-            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" CASE CONFIRMED ->PROCEED TO THE FULL LOCKDOWN FROM TODAY!");
+            super.output("MAXIMUM LIMIT REACHED: "+sintomatici+" CONFIRMED CASES -> PROCEED TO FULL LOCKDOWN FROM TODAY!");
             HashMap<Person,List<Person>>person;
-            data_check=simulator.getDay();
+            dataCheck=simulator.getDay();
             for (int i = 0; i < simulator.getDay(); i++) {
                 person=findEncounters(i);
                 for (Person key:person.keySet()) {
@@ -55,9 +54,9 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                 }
             }
             this.sintomatici=0;
-            super.output(check.size()+" PERSON STILL TO CHECK...");
+            super.output(check.size()+" PEOPLE STILL TO CHECK...");
         }
-        else if(simulator.getDay()==(data_check+simulator.canInfectDay+1) && check.size()>0) {
+        else if(simulator.getDay()==(dataCheck+simulator.canInfectDay+1) && !check.isEmpty()) {
             int count=0;
             int count2=0;
             for (Person p : check) {
@@ -69,9 +68,8 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                 p.canMove = true;
                 check.remove(p);
             }
-            super.output(count+" PERSON INFECTED AND "+count2+" PERSON FREE!");
+            super.output(count+" PEOPLE INFECTED AND "+count2+" FREE PEOPLE!");
         }
-        return;
     }
 
 

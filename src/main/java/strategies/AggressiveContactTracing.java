@@ -42,7 +42,6 @@ public class AggressiveContactTracing extends Strategy {
                 //if he was not already tested then i test him, and release him if he's clear
                 }else if(!simulator.testVirus(key)){
                     System.out.println(key + " RELEASE!");
-                    //super.output(key + " RELEASE!");
                     toRemove.add(key);
                     key.canMove = true;
                 //if he's not clean it means he's infected, so i put him on quarantine till the day that he will heal.
@@ -59,7 +58,7 @@ public class AggressiveContactTracing extends Strategy {
             }
         }
         //remove the ones i had to remove inside the for
-        toRemove.forEach(person -> quarantineMap.remove(person));
+        toRemove.forEach(quarantineMap::remove);
         //add the new quarantined
         toQuarantine.forEach(this::quarantine);
 
@@ -70,7 +69,6 @@ public class AggressiveContactTracing extends Strategy {
     @Override
     public void personClean(Person person) {
         System.out.println("DAY ("+simulator.getDay()+"): "+ person + " IS NOW CLEAN!");
-        //super.output("DAY ("+simulator.getDay()+"): "+ person + " IS NOW CLEAN!");
         immunes.add(person);
         person.canMove = true;
     }
@@ -86,7 +84,6 @@ public class AggressiveContactTracing extends Strategy {
         for (Person contact : findEncounters(person, daysBackward)){
             if(!immunes.contains(contact) && !positives.contains(contact)){
                 System.out.println("QUARANTINED: " + contact + "("+simulator.getDay()+") FOR ("+simulator.canInfectDay+" days)");
-                //super.output("QUARANTINED: " + contact + "("+simulator.getDay()+") FOR ("+simulator.canInfectDay+" days)");
                 outputMap.put(contact, simulator.canInfectDay);
                 contact.canMove = false;
             }
@@ -98,7 +95,6 @@ public class AggressiveContactTracing extends Strategy {
             quarantineMap.put(person, simulator.canInfectDay);
             person.canMove = false;
             System.out.println("QUARANTINED: " + person + "("+simulator.getDay()+") FOR ("+days+" days)");
-            //super.output("QUARANTINED: " + person + "("+simulator.getDay()+") FOR ("+days+" days)");
         }
     }
 

@@ -17,16 +17,9 @@ public class ContactTracingFailSafe extends AggressiveContactTracing {
         super.afterExecuteDay(outcome);
 
         if(simulator.getResources() <= resourcesMinimum){
-            super.output("TRIGGERED EMERGENCY LOCKDOWN!!!");
+            super.output("EMERGENCY LOCKDOWN TRIGGERED!!!");
             resourcesMinimum = 0;
             simulator.getAlivePopulation().forEach(person -> quarantine(person, simulator.canInfectDay));
         }
     }
-
-    @Override
-    public void personHasSymptoms(Person person) {
-        super.personHasSymptoms(person);
-    }
-
-
 }
