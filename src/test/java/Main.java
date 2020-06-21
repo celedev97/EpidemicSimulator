@@ -12,15 +12,16 @@ public class Main {
 
         for (int i = 0; i < simulators; i++) {
             //create simulator
-            Simulator simulator = new Simulator(100000, 4499999,5,.3, 50,50,50,45);
+            Simulator simulator = new Simulator(100000, 4499999, 5, .3, 50, 50, 50, 45);
             //link strategy
             StopEpidemyOnFirstRed strategy = new StopEpidemyOnFirstRed(simulator);
 
-            while(simulator.executeDay() == Simulator.Outcome.NOTHING){}
+            while (simulator.executeDay() == Simulator.Outcome.NOTHING) {
+            }
             System.out.println(i);
         }
 
-        System.out.println("time per simulator: " + ((System.currentTimeMillis() - startTime)/simulators) + "ms");
+        System.out.println("time per simulator: " + ((System.currentTimeMillis() - startTime) / simulators) + "ms");
     }
 
 }

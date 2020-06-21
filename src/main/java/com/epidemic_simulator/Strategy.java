@@ -104,13 +104,16 @@ public abstract class Strategy implements SimulatorCallBack {
     }
 
     @Override
-    public void afterExecuteDay(Simulator.Outcome outcome) {}
+    public void afterExecuteDay(Simulator.Outcome outcome) {
+    }
 
     @Override
-    public void personClean(Person person) {}
+    public void personClean(Person person) {
+    }
 
     @Override
-    public void personHasSymptoms(Person person) {}
+    public void personHasSymptoms(Person person) {
+    }
 
     /**
      * Output a log string to temporary output that TODO: complete
@@ -119,9 +122,9 @@ public abstract class Strategy implements SimulatorCallBack {
      */
     public void output(String text) {
         System.out.println(text);
-        if(log.length() == 0)
+        if (log.length() == 0)
             this.log = text;
-        else{
+        else {
             this.log += "\n" + text;
         }
     }

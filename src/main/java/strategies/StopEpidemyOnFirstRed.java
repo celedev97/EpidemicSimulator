@@ -5,40 +5,34 @@ import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 
 public class StopEpidemyOnFirstRed extends Strategy {
-    private int sintomatici=0;
-    private int controllo=0;
-    private int data_check = 0;
+    private int controllo = 0;
+    private int dataCheck = 0;
 
-    public StopEpidemyOnFirstRed(Simulator simulator){
+    public StopEpidemyOnFirstRed(Simulator simulator) {
         super(simulator);
     }
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
-        if(this.controllo==0){
-            data_check=simulator.getDay();
-            //System.out.println("DATA: "+data_check+" CANINFECTDAY: "+simulator.canInfectDay+" SYMPTOMSMAXDAY: "+simulator.developSymptomsMaxDay);
-            //System.out.println("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
-            super.output("BEGINING OF THE LOCKDOWN UNTIL: "+((data_check+simulator.canInfectDay+1))+" DAY!");
-            for (Person p:simulator.getAlivePopulation()) {
+        if (this.controllo == 0) {
+            dataCheck = simulator.getDay();
+            super.output("BEGINING OF THE LOCKDOWN UNTIL DAY: " + (dataCheck + simulator.canInfectDay + 1) + "!");
+            for (Person p : simulator.getAlivePopulation()) {
                 p.canMove = false;
             }
             this.controllo++;
         }
-        //System.out.println(this.controllo>0&&simulator.getDay()==(data_check+simulator.canInfectDay+simulator.developSymptomsMaxDay));
-        if(this.controllo>0&&simulator.getDay()==((data_check+simulator.canInfectDay+1))){
-            //System.out.println("START OF THE CONTROLL!");
-            super.output("START OF THE CONTROLL!");
-            int count=0;
-            for (Person p:simulator.getAlivePopulation()){
-                if(!simulator.testVirus(p)){
+        if (this.controllo > 0 && simulator.getDay() == (dataCheck + simulator.canInfectDay + 1)) {
+            super.output("START OF THE CONTROL!");
+            int count = 0;
+            for (Person p : simulator.getAlivePopulation()) {
+                if (!simulator.testVirus(p)) {
                     count++;
                     p.canMove = true;
                 }
             }
-            //System.out.println(count+" persone rimesse in libertà!");
-            super.output("RESULT: "+count+" PEOPLE FREED!");
-            data_check=0;
+            super.output("RESULT: " + count + " PEOPLE FREED!");
+            dataCheck = 0;
         }
     }
 }

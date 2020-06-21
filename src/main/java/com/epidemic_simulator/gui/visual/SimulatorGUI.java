@@ -73,7 +73,7 @@ public class SimulatorGUI extends JFrame {
 
     private final int MINIMUM_DAY_TIME = 10000;
 
-    public SimulatorGUI(JFrame settingsFrame, Simulator simulator){
+    public SimulatorGUI(JFrame settingsFrame, Simulator simulator) {
         super("Epidemic simulator - Visual Simulator");
         this.settingsFrame = settingsFrame;
         this.simulator = simulator;
@@ -91,25 +91,25 @@ public class SimulatorGUI extends JFrame {
         int width = Engine.renderer.getWidth();
         int height = Engine.renderer.getHeight();
 
-        float nx = (float)Math.sqrt(((float)simulator.getPopulation().size())*width/height);
-        float ny = (float)Math.sqrt(((float)simulator.getPopulation().size())*height/width)+1;
+        float nx = (float) Math.sqrt(((float) simulator.getPopulation().size()) * width / height);
+        float ny = (float) Math.sqrt(((float) simulator.getPopulation().size()) * height / width) + 1;
 
 
         //calculating the world size
         float worldX = nx * 20;
         float worldY = ny * 20;
 
-        float worldDiagonal = (float)Math.sqrt((worldX*worldX) + (worldY*worldY));
+        float worldDiagonal = (float) Math.sqrt((worldX * worldX) + (worldY * worldY));
 
         //creating the persons
         drawablePersonsDictionary = new HashMap<>();
         drawablePersons = new ArrayList<>();
         int created = 0;
         creationLoop:
-        for (int y = 0; y < worldY; y+=20){
-            for (int x = 0; x < worldX; x+=20){
+        for (int y = 0; y < worldY; y += 20) {
+            for (int x = 0; x < worldX; x += 20) {
                 Person person = simulator.getPopulation().get(created);
-                DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y, worldDiagonal/4);
+                DrawablePerson drawablePerson = new DrawablePerson(this, person, x, y, worldDiagonal / 4);
                 drawablePersonsDictionary.put(person, drawablePerson);
                 drawablePersons.add(drawablePerson);
                 if (++created == simulator.getPopulation().size()) break creationLoop;
@@ -119,21 +119,21 @@ public class SimulatorGUI extends JFrame {
 
         //#region Creating and setting the camera script
         //clamping the worldX and Y to 20
-        worldX =  (int)(worldX / 20) * 20;
-        worldY =  (int)(worldY / 20) * 20;
+        worldX = (int) (worldX / 20) * 20;
+        worldY = (int) (worldY / 20) * 20;
 
         //creating the camera movement script
         CameraMove cameraScript = new CameraMove(200);
         //centering the camera
-        cameraScript.setPosition(worldX/2f, worldY/2f -10);
+        cameraScript.setPosition(worldX / 2f, worldY / 2f - 10);
         //setting the camera bounds
-        cameraScript.setBound(0,0,worldX,worldY);
+        cameraScript.setBound(0, 0, worldX, worldY);
 
         //calculating the maxCameraZoom
-        cameraScript.setScales(.2f,30f);
+        cameraScript.setScales(.2f, 30f);
 
         //setting the ideal zoom for the world size
-        Engine.camera.setScale((float)height/(worldY+20));
+        Engine.camera.setScale((float) height / (worldY + 20));
         //#endregion
 
         //linking simulator callbacks to GUI
@@ -144,9 +144,9 @@ public class SimulatorGUI extends JFrame {
         startANewDay();
     }
 
-    private void buildGUI(){
+    private void buildGUI() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize((int)(screenSize.width*.95),(int)(screenSize.height*.9));
+        setSize((int) (screenSize.width * .95), (int) (screenSize.height * .9));
 
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -174,10 +174,10 @@ public class SimulatorGUI extends JFrame {
 
         dayType = new JLabel("DAY ");
         dayFlow.add(dayType);
-        dayType.setFont(dayType.getFont ().deriveFont (30.0f));
+        dayType.setFont(dayType.getFont().deriveFont(30.0f));
         dayLabel = new JLabel("0");
         dayFlow.add(dayLabel);
-        dayLabel.setFont(dayLabel.getFont ().deriveFont (30.0f));
+        dayLabel.setFont(dayLabel.getFont().deriveFont(30.0f));
 
         //#endregion
 
@@ -203,14 +203,14 @@ public class SimulatorGUI extends JFrame {
         progressBarPanel.add(new JLabel("Resources: "), gbc);
 
         //creating progressbar
-        greenBar     = new ColoredBar(Color.GREEN, 0, simulator.getPopulation().size());
-        orangeBar    = new ColoredBar(Color.ORANGE,0, simulator.getPopulation().size());
-        blueBar      = new ColoredBar(Color.BLUE,  0, simulator.getPopulation().size());
-        blackBar     = new ColoredBar(Color.BLACK, 0, simulator.getPopulation().size());
-        resourcesBar = new ColoredBar(Color.CYAN,  0, (int)(simulator.getResources()/simulator.testPrice));
+        greenBar = new ColoredBar(Color.GREEN, 0, simulator.getPopulation().size());
+        orangeBar = new ColoredBar(Color.ORANGE, 0, simulator.getPopulation().size());
+        blueBar = new ColoredBar(Color.BLUE, 0, simulator.getPopulation().size());
+        blackBar = new ColoredBar(Color.BLACK, 0, simulator.getPopulation().size());
+        resourcesBar = new ColoredBar(Color.CYAN, 0, (int) (simulator.getResources() / simulator.testPrice));
 
         //setting values
-        greenBar.setValue(simulator.getPopulation().size()-1);
+        greenBar.setValue(simulator.getPopulation().size() - 1);
         orangeBar.setValue(1);
         blueBar.setValue(0);
         blackBar.setValue(0);
@@ -244,20 +244,20 @@ public class SimulatorGUI extends JFrame {
         peopleGraphData.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
 
         // Series
-        days            = new ArrayList<>(40);
+        days = new ArrayList<>(40);
 
-        healthyByDay    = new ArrayList<>(40);
-        infectedByDay   = new ArrayList<>(40);
-        immuneByDay     = new ArrayList<>(40);
-        deadByDay       = new ArrayList<>(40);
-        resourcesByDay  = new ArrayList<>(40);
+        healthyByDay = new ArrayList<>(40);
+        infectedByDay = new ArrayList<>(40);
+        immuneByDay = new ArrayList<>(40);
+        deadByDay = new ArrayList<>(40);
+        resourcesByDay = new ArrayList<>(40);
 
         int[] zero = new int[]{0};
 
-        XYSeries greenSerie  = peopleGraphData.addSeries("Healthy",  zero, zero);
+        XYSeries greenSerie = peopleGraphData.addSeries("Healthy", zero, zero);
         XYSeries orangeSerie = peopleGraphData.addSeries("Infected", zero, zero);
-        XYSeries blueSerie   = peopleGraphData.addSeries("Immunes",  zero, zero);
-        XYSeries blackSerie  = peopleGraphData.addSeries("Deads",    zero, zero);
+        XYSeries blueSerie = peopleGraphData.addSeries("Immunes", zero, zero);
+        XYSeries blackSerie = peopleGraphData.addSeries("Deads", zero, zero);
 
         //setting line colors
         greenSerie.setLineColor(Color.GREEN);
@@ -288,7 +288,7 @@ public class SimulatorGUI extends JFrame {
         resourcesGraphData.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         resourcesGraphData.getStyler().setYAxisMin(0.0);
 
-        XYSeries resourcesSerie  = resourcesGraphData.addSeries("Resources", zero, zero);
+        XYSeries resourcesSerie = resourcesGraphData.addSeries("Resources", zero, zero);
         resourcesSerie.setSmooth(true);
         resourcesSerie.setLineColor(Color.CYAN);
         resourcesSerie.setMarker(none);
@@ -375,12 +375,12 @@ public class SimulatorGUI extends JFrame {
         sliderBox.add(sliderLabel);
 
         //min = 0.05, max = 3.50, value = 1.00
-        speedSlider = new JSlider(JSlider.HORIZONTAL, 5, 3500,100);
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 5, 3500, 100);
         sliderBox.add(speedSlider);
         speedSlider.setMajorTickSpacing(698);
         speedSlider.setMinorTickSpacing(349);
         speedSlider.setPaintTicks(true);
-        sliderBox.setBorder(BorderFactory.createEmptyBorder(80,0,0, 0));
+        sliderBox.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));
 
         Hashtable labelTable = new Hashtable();
         labelTable.put(5, new JLabel("0,05x"));
@@ -395,17 +395,19 @@ public class SimulatorGUI extends JFrame {
 
     }
 
-    private final ChangeListener changeSpeedListener = l ->{
+    private final ChangeListener changeSpeedListener = l -> {
         speedSliderValue = speedSlider.getValue() * 0.01f;
-        dayMinimumDuration = (int)(MINIMUM_DAY_TIME /getSpeedMultiplier());
+        dayMinimumDuration = (int) (MINIMUM_DAY_TIME / getSpeedMultiplier());
     };
 
     private final SimulatorCallBack simulatorEventListener = new SimulatorCallBack() {
         @Override
-        public void personHasSymptoms(Person person) {}
+        public void personHasSymptoms(Person person) {
+        }
 
         @Override
-        public void personClean(Person person) {}
+        public void personClean(Person person) {
+        }
 
         @Override
         public void registerEncounter(Person person1, Person person2) {
@@ -417,7 +419,7 @@ public class SimulatorGUI extends JFrame {
         public void afterExecuteDay(Simulator.Outcome outcome) {
             lastDayOutCome = outcome;
 
-            dayLabel.setText(""+simulator.getDay());
+            dayLabel.setText("" + simulator.getDay());
             //resourceBar.setValue(simulator.getResources());
         }
     };
@@ -425,20 +427,20 @@ public class SimulatorGUI extends JFrame {
     public void doneMoving(DrawablePerson drawablePerson) {
         movingPersons--;
         //if there are still people that need to move
-        if(toMovePersons.size() != 0){
+        if (toMovePersons.size() != 0) {
             moveRandomPerson();
             movingPersons++;
         }
         //else if all the people did already move
-        if(movingPersons == 0){
+        if (movingPersons == 0) {
             startANewDay();
         }
     }
 
     private void startANewDay() {
-        if(doSleep){
+        if (doSleep) {
             long timePassed = System.currentTimeMillis() - lastStart;
-            while (dayMinimumDuration>timePassed){
+            while (dayMinimumDuration > timePassed) {
                 try {
                     Thread.sleep(10);
                     timePassed += 10;
@@ -457,8 +459,8 @@ public class SimulatorGUI extends JFrame {
         orangeBar.setValue(simulator.getInfected());
         blueBar.setValue(simulator.getBlueCount());
         blackBar.setValue(simulator.getBlackCount());
-        resourcesBar.setValue((int)(simulator.getResources()/simulator.testPrice));
-        resourcesBar.setString(""+simulator.getResources());
+        resourcesBar.setValue((int) (simulator.getResources() / simulator.testPrice));
+        resourcesBar.setString("" + simulator.getResources());
         //#endregion progressbar
 
         //#region graph update
@@ -469,10 +471,10 @@ public class SimulatorGUI extends JFrame {
         deadByDay.add(simulator.getBlackCount());
         resourcesByDay.add(simulator.getResources());
 
-        peopleGraphData.updateXYSeries("Healthy",  days, healthyByDay  , null);
-        peopleGraphData.updateXYSeries("Infected", days, infectedByDay , null);
-        peopleGraphData.updateXYSeries("Immunes",  days, immuneByDay   , null);
-        peopleGraphData.updateXYSeries("Deads",    days, deadByDay     , null);
+        peopleGraphData.updateXYSeries("Healthy", days, healthyByDay, null);
+        peopleGraphData.updateXYSeries("Infected", days, infectedByDay, null);
+        peopleGraphData.updateXYSeries("Immunes", days, immuneByDay, null);
+        peopleGraphData.updateXYSeries("Deads", days, deadByDay, null);
 
         resourcesGraphData.updateXYSeries("Resources", days, resourcesByDay, null);
 
@@ -498,12 +500,12 @@ public class SimulatorGUI extends JFrame {
         //#region STARTING THE BALL SIMULATION
         toMovePersons = new ArrayList<>(drawablePersons);
 
-        movingPersons = drawablePersons.size()/5;
+        movingPersons = drawablePersons.size() / 5;
 
         //if it's 0 then move them all because they are less than 5
-        movingPersons = movingPersons == 0 ? drawablePersons.size()-1 : movingPersons;
+        movingPersons = movingPersons == 0 ? drawablePersons.size() - 1 : movingPersons;
 
-        for (int i = 0; i < movingPersons; i++){
+        for (int i = 0; i < movingPersons; i++) {
             moveRandomPerson();
         }
 
@@ -519,9 +521,9 @@ public class SimulatorGUI extends JFrame {
     private WindowAdapter windowListener = new WindowAdapter() {
         @Override
         public void windowClosing(WindowEvent e) {
-           Engine.stop();
-           settingsFrame.setVisible(true);
-           simulator.dispose();
+            Engine.stop();
+            settingsFrame.setVisible(true);
+            simulator.dispose();
         }
     };
 
@@ -538,19 +540,19 @@ public class SimulatorGUI extends JFrame {
 
 }
 
-class ColoredBar extends JProgressBar{
+class ColoredBar extends JProgressBar {
     public ColoredBar(Color color, int min, int max) {
         super(min, max);
         setForeground(color);
         setBackground(Color.WHITE);
         setStringPainted(true);
-        setMinimumSize(new Dimension(150,50));
+        setMinimumSize(new Dimension(150, 50));
         setValue(getMinimum());
     }
 
     @Override
     public void setValue(int n) {
         super.setValue(n);
-        setString(""+n);
+        setString("" + n);
     }
 }

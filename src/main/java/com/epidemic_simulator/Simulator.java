@@ -40,7 +40,7 @@ public final class Simulator {
     public void setStrategy(Strategy strategy) {
         callBacks.remove(this.strategy);
         this.strategy = strategy;
-        if(strategy != null)
+        if (strategy != null)
             callBacks.add(strategy);
     }
     //#endregion
@@ -373,7 +373,7 @@ public final class Simulator {
                 person.infected = false;
                 person.canInfect = false;
                 person.symptoms = false;
-                person.canMove=true;
+                person.canMove = true;
                 //adjusting counter
                 blueCount++;
                 infected--;
@@ -419,21 +419,6 @@ public final class Simulator {
             }
         });
 
-        /* TODO: remove, this was meant to test sync issues
-        if(yellowCount <0 || redCount <0 || (greenCount+yellowCount+redCount+blueCount+blackCount) < startingPopulation){
-            int realGreens = (int)population.stream().filter(person -> person.getColor() == Color.GREEN).count();
-            int realYellows = (int)population.stream().filter(person -> person.getColor() == Color.YELLOW).count();
-            int realReds = (int)population.stream().filter(person -> person.getColor() == Color.RED).count();
-            int realBlues = (int)population.stream().filter(person -> person.getColor() == Color.BLUE).count();
-            int realBlacks = (int)population.stream().filter(person -> person.getColor() == Color.BLACK).count();
-
-            if((greenCount+yellowCount+redCount+blueCount+blackCount)< startingPopulation){
-                throw new RuntimeException("WTF?");
-            }
-            throw new RuntimeException("Holy moly!");
-        }
-        */
-
         return outcome;
     }
 
@@ -445,7 +430,7 @@ public final class Simulator {
      */
     private void encounter(Person person1, Person person2) {
         if ((person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))
-            || (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))) {
+                || (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))) {
             infected++;
             healthy--;
         }
@@ -476,7 +461,7 @@ public final class Simulator {
     public synchronized void dispose() {
         //#region strategies
         //unlinking each strategy from this simulator
-        if(strategy != null){
+        if (strategy != null) {
             strategy.dispose();
         }
 

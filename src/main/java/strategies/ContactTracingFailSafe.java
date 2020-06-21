@@ -7,7 +7,7 @@ public class ContactTracingFailSafe extends AggressiveContactTracing {
     float resourcesMinimum;
     boolean lockDown = false;
 
-    public ContactTracingFailSafe(Simulator simulator, @ParameterData(value=95,min=0,max=100) int resourcesPercentageForLockDown) {
+    public ContactTracingFailSafe(Simulator simulator, @ParameterData(value = 95, min = 0, max = 100) int resourcesPercentageForLockDown) {
         super(simulator);
         resourcesMinimum = originalResources / 100f * resourcesPercentageForLockDown;
     }
@@ -23,11 +23,4 @@ public class ContactTracingFailSafe extends AggressiveContactTracing {
             //TODO: controlla il modo in cui metti le persone in quarantena, perché la quarantena sembra durare più del normale!
         }
     }
-
-    @Override
-    public void personHasSymptoms(Person person) {
-        super.personHasSymptoms(person);
-    }
-
-
 }

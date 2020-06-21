@@ -15,7 +15,7 @@ public class StrategyForbiddenAccessException extends RuntimeException {
      *
      * @param methodName The name of the method that was called and caused this exception.
      */
-    public StrategyForbiddenAccessException(String methodName){
+    public StrategyForbiddenAccessException(String methodName) {
         super("Strategy cannot access: " + methodName);
     }
 }

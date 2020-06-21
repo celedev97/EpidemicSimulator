@@ -75,7 +75,7 @@ Il simulatore si avvale di una serie di parametri che gli vengono passati durant
 all'interno del Frame generato dalla classe **SimulatorSettings**, e li utilizza per l'esecuzione
 e il calcolo della prosecuzione della malattia giornalmente fino a quando non si 
 verificano uno dei possibili **finali** specificati dal requisito:
-- Economic Collapse: Risorse Esaurite ("Resources<0").
+- Economic Collapse: Risorse Esaurite (**"Resources<0"**).
 - All_Healed: Malattia debellata, nel quale **al più una persona** sopravvive.
 - All_Dead: La Malattia vince, ovvero **tutta** la popolazione diviene **Nera**.  
 
@@ -128,19 +128,20 @@ sul decorso e l'evoluzione della malattia.
 Ogni strategia ha lo scopo di riconoscere (ed eventualmente modificare) lo status della persona mediante
 tamponi e in funzione del suo compito e della sua struttura:
 
-- **No Strategy**: la strategia più banale, ma anche la più "Economic-Friendly": sostanzialmente
-si lascia andare la malattia per il suo normale decorso senza testare o bloccare nessuno a seguito
+- **No Strategy**: la strategia più banale,ma anche la più semplice: sostanzialmente
+si lascia andare la malattia per il suo normale decorso,senza testare o bloccare nessuno a seguito
 di un criterio imposto. Gli unici costi che si sosterebbero sarebbero quelli per mettere in cura
 un sintomatico presso un ospedale e sperare che "l'immunità di gregge" possa permettere alla 
 popolazione di "gestire" da soli il virus nel modo migliore possibile.
 
-- **Pecentage Lockdown and Stop Spread**:Una strategia che ha il semplice compito di 
+
+- **Pecentage Lockdown and Partial Stop Spread**:Una strategia che ha il semplice compito di 
 effettuare il lockdown di una certa percentuale di persone immesse da tastiera al
 primo rosso/sintomatico che si presenta;ma che in
 più consente di effettuare anche dei controlli preventivi sulla popolazione lasciata in
 movimento laddove il numero di sintomatici dovesse salire troppo,e **solo se** la percentuale
-di risorse attualmente disponibile è superiore a una certa soglia(*nel nostro
-caso del 35%*)tale che possa permettere
+di risorse attualmente disponibile è superiore a una seconda soglia immessa dall'utente(*nel nostro
+caso è consigliata una soglia dell'almeno 35%*)tale che possa permettere
 un minimo al simulatore,dopo i controlli dei tamponi,di progredire senza collassi economici.
 
 - **ContactTracingLightTest:** Da quando viene trovato il primo sintomatico, scorre tutta la popolazione in vita,
@@ -149,12 +150,12 @@ Di questi, effettua il tampone ad una percentuale data da "testPercentage",
 se positivi vengono messi in quarantena fin quando non si è sicuri abbiano debellato la malattia
 (o fino a quando non sviluppino sintomi). Il resto invece viene messo in quarantena preventiva senza controllo del tampone.
 
-- **StopEpidemyOnFirstRed:** La strategia più "aggressiva" di tutte, come suggerisce il nome. Non appena
-il simulatore abilita il flag "FirstRed" (quindi non appena la prima persona presenterà i sintomi), la strategia
+- **StopEpidemyOnFirstRed:** La strategia più "potente" di tutte, dato che si attiva fin dal principio
+dell'epidemia.Non appena il simulatore abilita il flag "FirstRed" (quindi non appena la prima persona presenterà i sintomi), la strategia
 entrerà in azione sottoponendo tutta la popolazione ad un lockdown preventivo che dia il tempo a tutti i
-*potenziali* infetti di, eventualmente, presentare sintomi o di avere il virus in circolo e rilevabile.
+*potenziali* infetti di, eventualmente, presentare sintomi o di avere il virus in circolo,e quindi rilevabile da tampone.
 Scaduto l'intervallo di "lockdown" si prosegue con un tampone a tutti coloro che ancora non hanno
-presentato dei sintomi, rimettendo così in libertà tutti e solo gli individui sani.
+presentato dei sintomi, rimettendo così in libertà esclusivamente gli individui sani.
 
 - **Medium Controlled Lockdown:** Questa Strategia è stata pensata per effettuare dei 
 Lockdown preventivi,e contenuti,in funzione del numero dei sintomatici attualmente
@@ -177,15 +178,24 @@ infetti,tali persone vengono inserite in un'apposita struttura dati:**check**,e 
 il periodo minimo di incubazione prima di essere testati da un tampone ed,eventualmente,
 rilasciati.
 Se la strategia durante il corso della sua esecuzione dovesse notare che le risorse 
-scendono al di sotto una certa soglia(*nel nostro caso del 45%*),viene effettuato in ogni
+scendono al di sotto una certa soglia immessa dall'utente in percentuale
+(*nel nostro caso se ne consiglia pari al 45%*),viene effettuato in ogni
 caso il controllo sulle persone contenute in **check**,anche se l'intervallo di incubazione
-non viene raggiunto,rilasciando i sani rilevati e tenendo fermi eventuali asintomatici,abilitando
+non viene raggiunto;rilasciando i sani rilevati e tenendo fermi eventuali asintomatici,abilitando
 infine un **flag booleano** che non faccia più attivare la strategia,e lasci andare ormai il tutto per il
 suo normale decorso.
 Seguendo questa formula riusciamo sempre a effettuare lockdown più eterogenei e regolati
 in funzione del numero effettivo di sintomatici che riscontriamo nel decorso dell'epidemia,ed
 eventualmente riusciamo anche ad avere una sorta  di "safe-mode" laddove il tutto stia 
 richiedendo uno sforzo eccessivo,in termini di risorse.
+
+- **Aggressive Contact Tracing:** una strategia,come da nome,estremamente pressante,in quanto prevede
+per ogni rosso rilevato dal simulatore,la quarantena di tutte le persone incontrate dall'infetto
+in questione per un certo numero di giorni minimi affinchè possa poi essere testato(*ogni
+persona viene messa in "Quarantine" a patto che non sia già stata messa sotto controllo ad
+un sintomatico precedente o a patto che quest'ultima non sia immune*).
+Finito l'intervallo si effettuerà per ogni persona in quarantena un TestVirus/Tampone per verificarne 
+l'infettività o meno,e svuotando la lista delle persone da controllare.
 
 ### Interfaccia grafica
 
