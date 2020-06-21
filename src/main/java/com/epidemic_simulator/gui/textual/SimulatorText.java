@@ -10,14 +10,23 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * The type Simulator text.
+ */
 public class SimulatorText extends JFrame {
-    Simulator simulator;
-    JFrame settingsFrame;
+    private Simulator simulator;
+    private JFrame settingsFrame;
 
-    JTextPane output;
-    JScrollPane outputScroll;
-    JButton exitButton;
+    private JTextPane output;
+    private JScrollPane outputScroll;
+    private JButton exitButton;
 
+    /**
+     * Instantiates a new Simulator text.
+     *
+     * @param settingsFrame The JFrame from which this SimulatorText was launched.
+     * @param simulator     The simulator that this SimulatorText will use to run the simulation.
+     */
     public SimulatorText(JFrame settingsFrame, Simulator simulator) {
         super("Epidemic simulator - Textual Simulator");
         this.settingsFrame = settingsFrame;
@@ -178,6 +187,12 @@ public class SimulatorText extends JFrame {
 
     }
 
+    /**
+     * A main used just for testing purposes.<BR>
+     * It launches a {@link SimulatorSettings} and click its startTextButton.
+     *
+     * @param args the console arguments (unused)
+     */
     public static void main(String[] args) {
         //fake main that just start a Setting window and call the start button
         SimulatorSettings settings = new SimulatorSettings();

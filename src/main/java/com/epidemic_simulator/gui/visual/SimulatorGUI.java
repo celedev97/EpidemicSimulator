@@ -21,11 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
+/**
+ * The type Simulator gui.
+ */
 public class SimulatorGUI extends JFrame {
-    JFrame settingsFrame;
 
-    JLabel dayLabel;
-    JLabel dayType;
+    private JFrame settingsFrame;
+
+    private JLabel dayLabel;
 
     //#region Visual simulation data
     private Simulator simulator;
@@ -39,11 +42,11 @@ public class SimulatorGUI extends JFrame {
     //#endregion
 
     //#region ProgressBar
-    ColoredBar greenBar;
-    ColoredBar orangeBar;
-    ColoredBar blueBar;
-    ColoredBar blackBar;
-    ColoredBar resourcesBar;
+    private ColoredBar greenBar;
+    private ColoredBar orangeBar;
+    private ColoredBar blueBar;
+    private ColoredBar blackBar;
+    private ColoredBar resourcesBar;
     //#endregion
 
     //#region graph
@@ -63,7 +66,7 @@ public class SimulatorGUI extends JFrame {
 
     //#endregion
 
-    JSlider speedSlider;
+    private JSlider speedSlider;
     private float speedSliderValue;
     private long dayMinimumDuration;
 
@@ -73,6 +76,12 @@ public class SimulatorGUI extends JFrame {
 
     private final int MINIMUM_DAY_TIME = 10000;
 
+    /**
+     * Instantiates a new Simulator GUI.
+     *
+     * @param settingsFrame The settings frame that instantiated this SimulatorGUI
+     * @param simulator     The Simulator that will be used for this simulation.
+     */
     public SimulatorGUI(JFrame settingsFrame, Simulator simulator) {
         super("Epidemic simulator - Visual Simulator");
         this.settingsFrame = settingsFrame;
@@ -172,7 +181,7 @@ public class SimulatorGUI extends JFrame {
         JPanel dayFlow = new JPanel();
         firstRow.add(dayFlow);
 
-        dayType = new JLabel("DAY ");
+        JLabel dayType = new JLabel("DAY ");
         dayFlow.add(dayType);
         dayType.setFont(dayType.getFont().deriveFont(30.0f));
         dayLabel = new JLabel("0");
@@ -424,7 +433,13 @@ public class SimulatorGUI extends JFrame {
         }
     };
 
-    public void doneMoving(DrawablePerson drawablePerson) {
+    /**
+     * This method it's called by {@link DrawablePerson}s
+     * to signal to this class that they already met all their targets and that they're back to their starting position
+     *
+     * @param drawablePerson the drawable person
+     */
+    protected void doneMoving(DrawablePerson drawablePerson) {
         movingPersons--;
         //if there are still people that need to move
         if (toMovePersons.size() != 0) {
@@ -528,11 +543,21 @@ public class SimulatorGUI extends JFrame {
     };
 
 
-    public float getSpeedMultiplier() {
+    /**
+     * Get the speed multiplier float from the JSlider using for regulating the speed.
+     *
+     * @return the speed multiplier
+     */
+    protected float getSpeedMultiplier() {
         return speedSliderValue;
     }
 
-    //fake main that just start a Setting window and call the start button, useful for testing purposes
+    /**
+     * A main used just for testing purposes.<BR>
+     * It just start a Setting window and call the start button for the visual simulator.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         SimulatorSettings settings = new SimulatorSettings();
         settings.startGUIButtonListener.actionPerformed(null);
@@ -540,7 +565,18 @@ public class SimulatorGUI extends JFrame {
 
 }
 
+/**
+ * A colored progress bar.<BR>
+ * It is not really different from a {@link JProgressBar} and it's used just to simplify the code.
+ */
 class ColoredBar extends JProgressBar {
+    /**
+     * Instantiates a new Colored bar.
+     *
+     * @param color the color
+     * @param min   the min
+     * @param max   the max
+     */
     public ColoredBar(Color color, int min, int max) {
         super(min, max);
         setForeground(color);

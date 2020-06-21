@@ -18,8 +18,9 @@ public abstract class Strategy implements SimulatorCallBack {
     /**
      * The {@link Simulator} attached to this strategy, this should just be used to issue methods from the simulator.<BR>
      * <b>Setting this variable to something else will not unlink this strategy from the old Simulator and it won't either link it to the new one</b>
-     * @see Simulator#setStrategy
-     * @see Simulator#addCallBack
+     *
+     * @see Simulator#setStrategy Simulator#setStrategy
+     * @see Simulator#addCallBack Simulator#addCallBack
      */
     protected Simulator simulator;
     /**
@@ -36,11 +37,12 @@ public abstract class Strategy implements SimulatorCallBack {
      */
     protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 
+
+    //#region Annotations
     /**
      * ParameterData is an {@link Annotation} used to specify the data of a numeric parameter of a Strategy.<BR>
      * It is used by the {@link com.epidemic_simulator.gui.SimulatorSettings} for building the GUI dynamically.
      */
-    //#region Annotations
     @Documented @Target(ElementType.PARAMETER) @Retention(RUNTIME)
     public @interface ParameterData {
         /**
@@ -67,7 +69,7 @@ public abstract class Strategy implements SimulatorCallBack {
 
         /**
          * The step of the value for this parameter.<BR>
-         * <b>NOTE:</b> If it's set to 1 this parameter will act as an integer.
+         * <b>NOTE:</b> If it's set to a value that can be cast to integer without precision loss this parameter will act as an integer.
          *
          * @return the max
          */
@@ -116,9 +118,9 @@ public abstract class Strategy implements SimulatorCallBack {
     }
 
     /**
-     * Output a log string to temporary output that TODO: complete
+     * Output a log string to temporary output that can be issued via {@link #clearOutput()}
      *
-     * @param text the text
+     * @param text the text to append to the log.
      */
     public void output(String text) {
         System.out.println(text);
@@ -130,7 +132,8 @@ public abstract class Strategy implements SimulatorCallBack {
     }
 
     /**
-     * Clear output string.TODO: complete
+     * Clear output string and returns it.<BR>
+     * This should be the correct way to get input data from a {@link Strategy}
      *
      * @return the string
      */
@@ -141,8 +144,8 @@ public abstract class Strategy implements SimulatorCallBack {
     }
 
     /**
-     * Register that the person1 and the person2 met today
-     * <b></b>NOTE: This should ONLY be used by the Simulator!!!
+     * Register that the person1 and the person2 met today<BR>
+     * <b>NOTE:</b> This should <b>ONLY</b> be used by the {@link Simulator}!!!
      *
      * @param person1 The first person
      * @param person2 The second person
@@ -163,8 +166,7 @@ public abstract class Strategy implements SimulatorCallBack {
 
 
     /**
-     * TODO: complete
-     * Find the list of people that a person has met in the last days
+     * Find the {@link List} of people that a {@link Person} has met in the last days
      *
      * @param person       The person that should be used for the research
      * @param previousDays The number of days that should be looked up (NOTE: if days = 1 you will only search today)
@@ -185,16 +187,6 @@ public abstract class Strategy implements SimulatorCallBack {
 
 
     //#region private overload of findEncounters for internal use
-
-    /**
-     * TODO: complete
-     * Find the encounters of a person from the encounter dictionary of a day
-     * NOTE: It's equal to encounterDictionary.get(person), but it performs some additional error checking
-     *
-     * @param encounterDictionary The encounter dictionary in which the person should be searched
-     * @param person              The person to search
-     * @return The list of the people that this person has met
-     */
     private List<Person> findEncounters(HashMap<Person, List<Person>> encounterDictionary, Person person) {
         if (!encounterDictionary.containsKey(person)) {
             ArrayList<Person> temp = new ArrayList<>();
@@ -205,9 +197,8 @@ public abstract class Strategy implements SimulatorCallBack {
     }
 
     /**
-     * TODO: complete
      * Find the dictionary of the encounters for a single day
-     * NOTE: this is the same as doing encounters.get(dayNum), but it performs some additional error checking
+     * NOTE: this is the same as doing {@code encounters.get(dayNum)}, but it performs some additional error checking
      *
      * @param dayNum the number of the day that should be looked up
      * @return The dictionary of the encounters for that day

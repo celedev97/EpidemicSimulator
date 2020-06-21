@@ -9,6 +9,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The type Drawable person.
+ */
 public class DrawablePerson extends GameObject {
     private static final Random rand = new Random();
 
@@ -19,25 +22,45 @@ public class DrawablePerson extends GameObject {
 
     private final int POSITION_PRECISION = 2;
 
+
     //GUI CONTROL
+    /**
+     * The simulatorGUI that will be called after this Person has completed their encounters.
+     */
     protected SimulatorGUI simulatorGUI;
+    /**
+     * This flag will be set from the simulatorGUI to coordinate all the movements
+     * in order to emulate the encounters of the {@link com.epidemic_simulator.Simulator}
+     */
     protected Boolean doMove = false;
 
     private final Vector startingPosition;
     private Person thisPerson;
 
+    /**
+     * A {@link java.util.List} of DrawablePersons that this person has to meet in this day.
+     */
     protected ArrayList<DrawablePerson> target;
 
     private Color color = Color.GREEN;
     private boolean innerYellow = false, canMove = false;
 
+    /**
+     * Instantiates a new Drawable person.
+     *
+     * @param simulatorGUI The simulatorGUI that will be called after this Person has completed their encounters.
+     * @param thisPerson   the Person linked to this DrawablePerson.
+     * @param x            the x coordinate of this DrawablePerson.
+     * @param y            the y coordinate of this DrawablePerson.
+     * @param speed        the speed at which this DrawablePerson will move.
+     */
     public DrawablePerson(SimulatorGUI simulatorGUI, Person thisPerson, float x, float y, float speed) {
         super(x, y);
         target = new ArrayList<>();
 
         this.simulatorGUI = simulatorGUI;
         this.thisPerson = thisPerson;
-        this.speed = speed; //TODO: USE THE SPEED VARIANT!!!
+        this.speed = speed;
         startingPosition = new Vector(position);
     }
 
@@ -103,7 +126,12 @@ public class DrawablePerson extends GameObject {
 
     }
 
-    public void updateColor() {
+    /**
+     * Update the color of this DrawablePerson.<BR>
+     * The color isn't always updated to the right color of the Person because otherwise all the colors of the DrawablePersons
+     * would change at the beginning of the day since the {@link com.epidemic_simulator.Simulator} runs way faster than the graphical simulation.
+     */
+    protected void updateColor() {
         color = thisPerson.getColor();
         innerYellow = color == Color.GREEN && thisPerson.isInfected();
         canMove = thisPerson.canMove;
