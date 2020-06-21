@@ -10,15 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-/**
- * Da quando viene trovato il primo sintomatico, scorre tutta la popolazione in vita,
- * e per ogni sintomatico trovato analizza la sua lista degli incontri nei precedenti "developSyntomsMaxDay" giorni.
- * Di queste, effettua il tampone ad una percentuale data da "testPercentage",
- * se positive vengono messe in quarantena fin quando non si è sicuri abbiano debellato la malattia
- * (o fino a quando non sviluppino sintomi).
- * Il resto invece viene messo in quarantena senza controllo del tampone.
- */
-
 public class ContactTracingLightTest extends Strategy {
 
     private int testPercentage;

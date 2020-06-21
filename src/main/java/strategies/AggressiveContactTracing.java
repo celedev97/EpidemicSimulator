@@ -8,11 +8,6 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
 
-/**
- * Simple strategy written just as a test.
- * -it put a percentage of the population in lockdown
- * -it heals every red one
- */
 
 public class AggressiveContactTracing extends Strategy {
     private final HashSet<Person> immunes = new HashSet<>();
