@@ -13,6 +13,8 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
     private int sintomatici = 0;
     private int limite = 0;
     private ArrayList<Person> check;
+    private int dataCheck = 0;
+    private boolean flag=true;
 
     public FullControlledLockdownAndStopSpread(Simulator simulator, int percentualOfStop) {
         super(simulator);
@@ -22,12 +24,11 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
-        int dataCheck = 0; //@PAOLETTO: questo dataCheck a cosa ti serviva? Perché nel caso dell'if gli viene assegnato simulator.getDay ma non viene più usato,
-        //invece nel caso dell'else viene usato solo nella somma (ma essendo per forza inizializzato a 0 è inutile)
-        if (sintomatici >= this.limite) {
+        if (sintomatici >= this.limite&&flag) {
+            flag=false;
             super.output("MAXIMUM LIMIT REACHED: " + sintomatici + " CONFIRMED CASES -> PROCEED TO FULL LOCKDOWN FROM TODAY!");
             HashMap<Person, List<Person>> person;
-            dataCheck = simulator.getDay();
+            this.dataCheck = simulator.getDay();
             for (int i = 0; i < simulator.getDay(); i++) {
                 person = findEncounters(i);
                 for (Person key : person.keySet()) {
@@ -47,23 +48,23 @@ public class FullControlledLockdownAndStopSpread extends Strategy {
                                 return;
                             }
                         }
+                        key.canMove = false;
                     }
-                    key.canMove = false;
                 }
             }
             this.sintomatici = 0;
             super.output(check.size() + " PEOPLE STILL TO CHECK...");
-        } else if (simulator.getDay() == (dataCheck + simulator.canInfectDay + 1) && !check.isEmpty()) {
+        } else if (simulator.getDay() == (this.dataCheck + simulator.canInfectDay + 1) && !check.isEmpty()) {
             int count = 0;
             int count2 = 0;
             for (Person p : check) {
                 if (simulator.testVirus(p)) {
                     count++;
-                    check.remove(p);
+                    //check.remove(p);
                 }
                 count2++;
                 p.canMove = true;
-                check.remove(p);
+                //check.remove(p);
             }
             super.output(count + " PEOPLE INFECTED AND " + count2 + " FREE PEOPLE!");
         }
