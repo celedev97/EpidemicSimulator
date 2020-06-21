@@ -1,21 +1,23 @@
 package strategies;
+
 import com.epidemic_simulator.Person;
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 import com.epidemic_simulator.Utils;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 
-public class PercentageLockdownAndPartialStopSpread extends Strategy{
+public class PercentageLockdownAndPartialStopSpread extends Strategy {
     private int percentageOfLock;
-    private boolean flag=false;
-    private ArrayList<Person>move=new ArrayList<>();
+    private boolean flag = false;
+    private ArrayList<Person> move = new ArrayList<>();
     private int limite;
 
-    public PercentageLockdownAndPartialStopSpread(Simulator simulator, int percentageOfLock){
+    public PercentageLockdownAndPartialStopSpread(Simulator simulator, int percentageOfLock) {
         super(simulator);
-        this.percentageOfLock=percentageOfLock;
+        this.percentageOfLock = percentageOfLock;
     }
 
     @Override
@@ -28,16 +30,16 @@ public class PercentageLockdownAndPartialStopSpread extends Strategy{
             }
             flag = true;
             simulator.getAlivePopulation().stream().filter(person -> person.canMove).collect(Collectors.toCollection(() -> this.move));
-            limite=2;
+            limite = 2;
         }
-        if (flag&&simulator.getRedCount()>=limite&&simulator.getResources()>=(originalResources*35)/100){
-            for (Person p:move) {
-                if(simulator.testVirus(p)){
-                    p.canMove=false;
+        if (flag && simulator.getRedCount() >= limite && simulator.getResources() >= (originalResources * 35) / 100) {
+            for (Person p : move) {
+                if (simulator.testVirus(p)) {
+                    p.canMove = false;
                 }
             }
-            limite+=2;
-            move=simulator.getAlivePopulation().stream().filter(person -> person.canMove).collect(Collectors.toCollection(() -> this.move));
+            limite += 2;
+            move = simulator.getAlivePopulation().stream().filter(person -> person.canMove).collect(Collectors.toCollection(() -> this.move));
         }
     }
 }

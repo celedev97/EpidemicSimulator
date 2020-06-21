@@ -16,10 +16,14 @@ public abstract class Strategy implements SimulatorCallBack {
     protected HashMap<Integer, HashMap<Person, List<Person>>> encounters;
 
     //#region Annotations
-    @Documented @Target(ElementType.PARAMETER) @Retention(RUNTIME)
+    @Documented
+    @Target(ElementType.PARAMETER)
+    @Retention(RUNTIME)
     public @interface ParameterData {
         int value();
+
         int min() default Integer.MIN_VALUE;
+
         int max() default Integer.MAX_VALUE;
     }
     //#endregion
@@ -40,24 +44,27 @@ public abstract class Strategy implements SimulatorCallBack {
     }
 
     @Override
-    public void afterExecuteDay(Simulator.Outcome outcome) {}
+    public void afterExecuteDay(Simulator.Outcome outcome) {
+    }
 
     @Override
-    public void personClean(Person person) {}
+    public void personClean(Person person) {
+    }
 
     @Override
-    public void personHasSymptoms(Person person) {}
+    public void personHasSymptoms(Person person) {
+    }
 
     public void output(String text) {
         System.out.println(text);
-        if(log.length() == 0)
+        if (log.length() == 0)
             this.log = text;
-        else{
+        else {
             this.log += "\n" + text;
         }
     }
 
-    public String clearOutput(){
+    public String clearOutput() {
         String temp = this.log;
         this.log = "";
         return temp;

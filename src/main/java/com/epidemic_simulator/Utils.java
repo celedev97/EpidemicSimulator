@@ -21,7 +21,8 @@ import java.util.stream.*;
  */
 public class Utils {
 
-    private Utils(){}
+    private Utils() {
+    }
 
     /**
      * Generate a random int between 0 and maxValue(excluded)
@@ -30,7 +31,7 @@ public class Utils {
      * @return the random number
      */
     public static int random(int maxValue) {
-        return random(0,maxValue);
+        return random(0, maxValue);
     }
 
     /**
@@ -41,7 +42,7 @@ public class Utils {
      * @return the random number
      */
     public static int random(int minValue, int maxValue) {
-        return minValue + ThreadLocalRandom.current().nextInt(maxValue-minValue);
+        return minValue + ThreadLocalRandom.current().nextInt(maxValue - minValue);
     }
 
 
@@ -51,8 +52,8 @@ public class Utils {
      * @param truePercentage The percentage rate for the value true.
      * @return the boolean generated.
      */
-    public static boolean randomBool(int truePercentage){
-        return random(0,100) < truePercentage;
+    public static boolean randomBool(int truePercentage) {
+        return random(0, 100) < truePercentage;
     }
 
     /**
@@ -68,19 +69,19 @@ public class Utils {
 
         //removing package name
         int lastPoint;
-        if((lastPoint = javaName.lastIndexOf('.'))>0)
-            javaName = javaName.substring(lastPoint+1);
+        if ((lastPoint = javaName.lastIndexOf('.')) > 0)
+            javaName = javaName.substring(lastPoint + 1);
 
         //putting spaces between words
         for (int i = 0; i < javaName.length(); i++) {
             char charAtI = javaName.charAt(i);
-            if(Character.isUpperCase(charAtI))
+            if (Character.isUpperCase(charAtI))
                 output += " ";
             output += charAtI;
         }
 
         //removing first space
-        if(output.indexOf(' ') == 0)
+        if (output.indexOf(' ') == 0)
             output = output.substring(1);
 
         //making string lowercase except first character
@@ -99,9 +100,9 @@ public class Utils {
         Component[] comps = container.getComponents();
         List<JSpinner> compList = new ArrayList<>();
         for (Component comp : comps) {
-            if(comp instanceof JSpinner){
-                compList.add((JSpinner)comp);
-            }else if (comp instanceof Container){
+            if (comp instanceof JSpinner) {
+                compList.add((JSpinner) comp);
+            } else if (comp instanceof Container) {
                 compList.addAll(getJSpinners((Container) comp));
             }
         }
@@ -143,14 +144,13 @@ public class Utils {
      * @return the strategy name as a user readable string.
      */
     public static String getStrategyName(Strategy strategy) {
-        if(strategy == null)
-            return getStrategyName((Class)null);
+        if (strategy == null)
+            return getStrategyName((Class) null);
         return getStrategyName(strategy.getClass());
     }
 
     /**
      * Throw an exception if there's a strategy in the calls stack.
-     *
      */
     public static void negateStrategyAccess() {
         //TODO: TEST!!! TODO: REPLACE WITH AN ASSERTION!!!

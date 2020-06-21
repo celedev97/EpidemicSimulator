@@ -4,7 +4,7 @@ package com.epidemic_simulator.exceptions;
  * This Exception can be thrown when trying to instantiate a {@link com.epidemic_simulator.Simulator}
  * with invalid parameters (according to the project specs).
  */
-public class InvalidSimulationException extends Exception{
+public class InvalidSimulationException extends Exception {
     private final String message;
 
     @Override
@@ -15,9 +15,8 @@ public class InvalidSimulationException extends Exception{
     /**
      * Instantiates a new Invalid simulation exception.
      *
-     * @see #getMessage
-     *
      * @param message the message associated with the exception
+     * @see #getMessage
      */
     public InvalidSimulationException(String message) {
         this.message = message;

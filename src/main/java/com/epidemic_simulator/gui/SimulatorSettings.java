@@ -1,6 +1,7 @@
 package com.epidemic_simulator.gui;
 
 //INTERNAL IMPORTS
+
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 import com.epidemic_simulator.Utils;
@@ -33,7 +34,7 @@ public class SimulatorSettings extends JFrame {
     //constants
     private final int PARAMETERS_PER_ROW = 3;
     private static final String CONF_EXTENSION = ".simconf.json";
-    private static final String DEFAULT_CONF_FILE = "./configuration"+CONF_EXTENSION;
+    private static final String DEFAULT_CONF_FILE = "./configuration" + CONF_EXTENSION;
 
     //#region class fields
 
@@ -83,7 +84,7 @@ public class SimulatorSettings extends JFrame {
 
     //#endregion
 
-    public SimulatorSettings(){
+    public SimulatorSettings() {
         //#region JFrame setup
         //title
         setTitle("Epidemic simulator - Settings");
@@ -99,7 +100,7 @@ public class SimulatorSettings extends JFrame {
 
         //position
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((screenSize.width/2 - windowSize.width/2), (screenSize.height/2 - windowSize.height/2));
+        setLocation((screenSize.width / 2 - windowSize.width / 2), (screenSize.height / 2 - windowSize.height / 2));
         //#endregion
 
         buildGUI();
@@ -119,7 +120,7 @@ public class SimulatorSettings extends JFrame {
 
             @Override
             public String getDescription() {
-                return "Simulator config file (*"+CONF_EXTENSION+")";
+                return "Simulator config file (*" + CONF_EXTENSION + ")";
             }
         });
 
@@ -131,14 +132,14 @@ public class SimulatorSettings extends JFrame {
 
     }
 
-    private void buildGUI(){
+    private void buildGUI() {
         //creating main panel
         JPanel contentPane = new JPanel(new BorderLayout());
         setContentPane(contentPane);
 
         //Panel containing all the north panels
         JPanel northPanel = new JPanel();
-        northPanel.setLayout(new BoxLayout(northPanel,BoxLayout.Y_AXIS));
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
         contentPane.add(northPanel, BorderLayout.NORTH);
 
         //#region Menu
@@ -185,7 +186,7 @@ public class SimulatorSettings extends JFrame {
         //#endregion
 
         //#region State Data Panel
-        GridLayout stateDataGridLayout = new GridLayout(2,4);
+        GridLayout stateDataGridLayout = new GridLayout(2, 4);
         stateDataGridLayout.setHgap(10);
         stateDataPanel = new JPanel(stateDataGridLayout);
         stateDataPanel.setName("state");
@@ -214,7 +215,7 @@ public class SimulatorSettings extends JFrame {
         population.setName("population");
         stateDataPanel.add(population);
 
-        resources = new JSpinner(new SpinnerNumberModel((Long)0L, (Long)0L, (Long)Long.MAX_VALUE, (Long)1L));
+        resources = new JSpinner(new SpinnerNumberModel((Long) 0L, (Long) 0L, (Long) Long.MAX_VALUE, (Long) 1L));
         resources.setName("resources");
         stateDataPanel.add(resources);
 
@@ -229,7 +230,7 @@ public class SimulatorSettings extends JFrame {
         //#endregion
 
         //#region Disease Data Panel
-        GridLayout diseaseDataGridLayout = new GridLayout(2,4);
+        GridLayout diseaseDataGridLayout = new GridLayout(2, 4);
         diseaseDataGridLayout.setHgap(10);
         diseaseDataPanel = new JPanel(diseaseDataGridLayout);
         diseaseDataPanel.setName("disease");
@@ -254,19 +255,19 @@ public class SimulatorSettings extends JFrame {
         diseaseDataPanel.add(temp);
 
         //adding spinners
-        infectivity = new JSpinner(new SpinnerNumberModel(0 , 0, 100, 1));
+        infectivity = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
         infectivity.setName("infectivity");
         diseaseDataPanel.add(infectivity);
 
-        symptomaticity = new JSpinner(new SpinnerNumberModel(0 , 0, 100, 1));
+        symptomaticity = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
         symptomaticity.setName("symptomaticity");
         diseaseDataPanel.add(symptomaticity);
 
-        lethality = new JSpinner(new SpinnerNumberModel(0 , 0, 100, 1));
+        lethality = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
         lethality.setName("lethality");
         diseaseDataPanel.add(lethality);
 
-        duration = new JSpinner(new SpinnerNumberModel(6 , 6, 300, 1));
+        duration = new JSpinner(new SpinnerNumberModel(6, 6, 300, 1));
         duration.setName("duration");
         diseaseDataPanel.add(duration);
         //#endregion
@@ -283,13 +284,13 @@ public class SimulatorSettings extends JFrame {
         strategyParameters = new ArrayList<>();
 
         strategyComboBox.addItem(new SelectableStrategy(null));
-        try{
-            for(Class<? extends Strategy> clas : new Reflections("strategies").getSubTypesOf(Strategy.class)){
+        try {
+            for (Class<? extends Strategy> clas : new Reflections("strategies").getSubTypesOf(Strategy.class)) {
                 strategyComboBox.addItem(new SelectableStrategy(clas));
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this,"There was an error while trying to get the list of the strategies.", "Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "There was an error while trying to get the list of the strategies.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         //#endregion
@@ -298,7 +299,7 @@ public class SimulatorSettings extends JFrame {
         //#endregion
 
         //#region Strategy Parameters Panel
-        GridLayout strategyDataGridLayout = new GridLayout(1,PARAMETERS_PER_ROW);
+        GridLayout strategyDataGridLayout = new GridLayout(1, PARAMETERS_PER_ROW);
         strategyDataGridLayout.setHgap(10);
         strategyPanel = new JPanel(strategyDataGridLayout);
         strategyPanel.setBorder(BorderFactory.createTitledBorder("Strategy parameters"));
@@ -321,7 +322,7 @@ public class SimulatorSettings extends JFrame {
 
         //#endregion
 
-        JPanel southPanel = new JPanel(new GridLayout(1,2));
+        JPanel southPanel = new JPanel(new GridLayout(1, 2));
         startTextButton = new JButton("Start Textual Simulation (Quicker)");
         startGUIButton = new JButton("Start Visual Simulation (Slower)");
         southPanel.add(startTextButton);
@@ -332,7 +333,7 @@ public class SimulatorSettings extends JFrame {
         //#endregion
     }
 
-    private void bindGUI(){
+    private void bindGUI() {
         //Window event binding
         addWindowListener(windowAdapter);
 
@@ -357,7 +358,7 @@ public class SimulatorSettings extends JFrame {
     //#region Start Buttons listeners/methods
     public final ActionListener startTextButtonListener = e -> {
         Simulator simulator;
-        if((simulator = createSimulator()) == null) return;
+        if ((simulator = createSimulator()) == null) return;
 
         //creating simulator GUI and closing configurator
         this.setVisible(false);
@@ -366,7 +367,7 @@ public class SimulatorSettings extends JFrame {
 
     public final ActionListener startGUIButtonListener = e -> {
         Simulator simulator;
-        if((simulator = createSimulator()) == null) return;
+        if ((simulator = createSimulator()) == null) return;
 
         //creating simulator GUI and closing configurator
         this.setVisible(false);
@@ -376,22 +377,22 @@ public class SimulatorSettings extends JFrame {
     private Simulator createSimulator() {
         try {
             //creating simulator
-            Simulator simulator = new Simulator((int)population.getValue(), ((Number)resources.getValue()).longValue(), (int)testPrice.getValue(), ((Number)encountersPerDay.getValue()).doubleValue(), (int)infectivity.getValue(), (int)symptomaticity.getValue(), (int)lethality.getValue(), (int)duration.getValue());
+            Simulator simulator = new Simulator((int) population.getValue(), ((Number) resources.getValue()).longValue(), (int) testPrice.getValue(), ((Number) encountersPerDay.getValue()).doubleValue(), (int) infectivity.getValue(), (int) symptomaticity.getValue(), (int) lethality.getValue(), (int) duration.getValue());
 
             //fetching parameters from JSpinners
-            List<Object> parametersList  = strategyParameters.stream().map(parameter -> parameter.getValue()).collect(Collectors.toList());
+            List<Object> parametersList = strategyParameters.stream().map(parameter -> parameter.getValue()).collect(Collectors.toList());
 
             //adding the simulator as the first parameter
-            parametersList.add(0,simulator);
+            parametersList.add(0, simulator);
 
             //creating strategy
             Class chosenStrategy = ((SelectableStrategy) strategyComboBox.getSelectedItem()).getValue();
-            if(chosenStrategy != null)
+            if (chosenStrategy != null)
                 chosenStrategy.getConstructors()[0].newInstance(parametersList.toArray());
 
             return simulator;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
         return null;
@@ -416,9 +417,9 @@ public class SimulatorSettings extends JFrame {
         strategyComboBox.setSelectedIndex(0);
     }
 
-    private void setBestParameters(){
-        long resourcesValue = (int)duration.getValue()*(int)population.getValue() -1;
-        int testPriceValue = (int)(resourcesValue / (10*(int)population.getValue())+1);
+    private void setBestParameters() {
+        long resourcesValue = (int) duration.getValue() * (int) population.getValue() - 1;
+        int testPriceValue = (int) (resourcesValue / (10 * (int) population.getValue()) + 1);
 
         Utils.forceJSpinnerCommit(this);
 
@@ -438,9 +439,9 @@ public class SimulatorSettings extends JFrame {
         }
     };
 
-    private void readConfig(File file)  {
-        if(!file.exists()) return;
-        System.out.println("READING: "+ file.getPath());
+    private void readConfig(File file) {
+        if (!file.exists()) return;
+        System.out.println("READING: " + file.getPath());
 
         //forcing all the JSpinner to validate any possible input not yet validated (otherwise they can't be written into)
         Utils.forceJSpinnerCommit(this);
@@ -451,31 +452,31 @@ public class SimulatorSettings extends JFrame {
             fileReader.read(data);
             fileReader.close();
 
-            String jsonString = new String(data,"UTF-8");
+            String jsonString = new String(data, "UTF-8");
 
             //getting the root object
             JSONObject root = new JSONObject(jsonString);
 
             //deserialize state data
-            if(root.has(stateDataPanel.getName())){
+            if (root.has(stateDataPanel.getName())) {
                 deserializeSpinners(stateDataPanel, root.getJSONObject(stateDataPanel.getName()));
             }
 
             //deserialize disease data
-            if(root.has(diseaseDataPanel.getName())){
+            if (root.has(diseaseDataPanel.getName())) {
                 deserializeSpinners(diseaseDataPanel, root.getJSONObject(diseaseDataPanel.getName()));
             }
 
             //deserialize strategy data
-            if(root.has(strategyPanel.getName())){
+            if (root.has(strategyPanel.getName())) {
                 JSONObject strategyData = root.getJSONObject(strategyPanel.getName());
                 String selectedClass = strategyData.getString("selected");
 
                 //looking for the strategy with that name
                 int i;
-                for(i = 0; i<strategyComboBox.getItemCount(); i++){
+                for (i = 0; i < strategyComboBox.getItemCount(); i++) {
                     Class classValue = strategyComboBox.getItemAt(i).getValue();
-                    if((classValue == null && selectedClass.equals("null")) || (classValue != null && selectedClass.equals(classValue.toString())) ){
+                    if ((classValue == null && selectedClass.equals("null")) || (classValue != null && selectedClass.equals(classValue.toString()))) {
                         strategyComboBox.setSelectedIndex(i);
                         strategyComboBoxListener.actionPerformed(null);
                         break;
@@ -483,7 +484,7 @@ public class SimulatorSettings extends JFrame {
                 }
 
                 //if i found a strategy then i can load the spinners
-                if(i != strategyComboBox.getItemCount())
+                if (i != strategyComboBox.getItemCount())
                     deserializeSpinners(strategyPanel, strategyData);
 
             }
@@ -496,9 +497,9 @@ public class SimulatorSettings extends JFrame {
 
     }
 
-    private void writeFullConfig(File file){
+    private void writeFullConfig(File file) {
         //reading strategy combobox
-        Class strategyClass = ((SelectableStrategy)strategyComboBox.getSelectedItem()).getValue();
+        Class strategyClass = ((SelectableStrategy) strategyComboBox.getSelectedItem()).getValue();
         JSONObject strategyJSON = serializeSpinners(strategyPanel);
         strategyJSON.getJSONObject(strategyPanel.getName()).put("selected", strategyClass != null ? strategyClass.toString() : "null");
 
@@ -506,15 +507,15 @@ public class SimulatorSettings extends JFrame {
     }
 
     private void writeConfig(File file, JSONObject... serializableInfo) {
-        System.out.println("WRITING: "+ file.getPath());
+        System.out.println("WRITING: " + file.getPath());
         if (!file.getName().endsWith(CONF_EXTENSION))
-            file = new File(file.getAbsolutePath()+CONF_EXTENSION);
+            file = new File(file.getAbsolutePath() + CONF_EXTENSION);
 
         //creating root object
         JSONObject root = new JSONObject();
 
-        for (JSONObject setting : serializableInfo){
-            setting.keySet().forEach(s -> root.put(s,setting.get(s)));
+        for (JSONObject setting : serializableInfo) {
+            setting.keySet().forEach(s -> root.put(s, setting.get(s)));
         }
 
         try (FileWriter fileWriter = new FileWriter(file)) {
@@ -524,7 +525,7 @@ public class SimulatorSettings extends JFrame {
         }
     }
 
-    private JSONObject serializeSpinners(JPanel spinnerPanel){
+    private JSONObject serializeSpinners(JPanel spinnerPanel) {
         Utils.forceJSpinnerCommit(spinnerPanel);
 
         //get all the spinners in this
@@ -546,7 +547,7 @@ public class SimulatorSettings extends JFrame {
     private ActionListener strategyComboBoxListener = e -> {
         //#region clearing old strategy
         strategyParameters.clear();
-        for(JPanel panel : strategyParametersColumns){
+        for (JPanel panel : strategyParametersColumns) {
             panel.removeAll();
         }
         //#endregion
@@ -554,10 +555,10 @@ public class SimulatorSettings extends JFrame {
         strategyPanel.setVisible(false);
 
         //#region generating new strategy GUI
-        Class<?> strategyClass = ((SelectableStrategy)strategyComboBox.getSelectedItem()).getValue();
-        if(strategyClass != null){
+        Class<?> strategyClass = ((SelectableStrategy) strategyComboBox.getSelectedItem()).getValue();
+        if (strategyClass != null) {
             Parameter[] parameters = strategyClass.getDeclaredConstructors()[0].getParameters();
-            strategyPanel.setVisible(parameters.length>1);
+            strategyPanel.setVisible(parameters.length > 1);
 
             //populating the parameters columns with the data from parameters
             //(SKIPPING THE FIRST PARAMETER, THAT'S THE SIMULATOR)
@@ -567,7 +568,7 @@ public class SimulatorSettings extends JFrame {
                 String parameterName = Utils.javaNameToUserString(parameters[i].getName());
 
                 //calculating y and x for this parameter
-                int x = (i-1) % PARAMETERS_PER_ROW;
+                int x = (i - 1) % PARAMETERS_PER_ROW;
 
                 //creating the label
                 JLabel label = new JLabel(parameterName);
@@ -580,7 +581,7 @@ public class SimulatorSettings extends JFrame {
                 int maximum = Integer.MAX_VALUE;
 
                 Strategy.ParameterData[] parameterData = parameters[i].getAnnotationsByType(Strategy.ParameterData.class);
-                if(parameterData.length != 0){
+                if (parameterData.length != 0) {
                     value = parameterData[0].value();
                     minimum = parameterData[0].min();
                     maximum = parameterData[0].max();
@@ -588,7 +589,7 @@ public class SimulatorSettings extends JFrame {
 
                 //generating the component
                 JSpinner generatedComponent = null;
-                generatedComponent = new JSpinner(new SpinnerNumberModel(value,minimum,maximum,1));
+                generatedComponent = new JSpinner(new SpinnerNumberModel(value, minimum, maximum, 1));
                 generatedComponent.setName(parameters[i].getName());
                 generatedComponent.setAlignmentX(Component.LEFT_ALIGNMENT);
                 strategyParametersColumns[x].add(generatedComponent);
@@ -608,7 +609,7 @@ public class SimulatorSettings extends JFrame {
         @Override
         public void windowClosing(WindowEvent e) {
             writeFullConfig(new File(DEFAULT_CONF_FILE));
-            ((JFrame)e.getSource()).dispose();
+            ((JFrame) e.getSource()).dispose();
         }
     };
 
@@ -618,7 +619,7 @@ public class SimulatorSettings extends JFrame {
 
 }
 
-class SelectableStrategy{
+class SelectableStrategy {
     private Class value;
     private String humanReadableClassName;
 

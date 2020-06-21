@@ -53,23 +53,23 @@ public class CameraMove extends GameObject {
     }
 
     private void cameraZoom() {
-        if(Input.isKeyDown(KeyEvent.VK_ADD)){
-            Engine.camera.zoomIn(1+zoomSpeed*Engine.deltaTime);
+        if (Input.isKeyDown(KeyEvent.VK_ADD)) {
+            Engine.camera.zoomIn(1 + zoomSpeed * Engine.deltaTime);
         }
-        if(Input.isKeyDown(KeyEvent.VK_SUBTRACT)){
-            Engine.camera.zoomIn(1-zoomSpeed*Engine.deltaTime);
+        if (Input.isKeyDown(KeyEvent.VK_SUBTRACT)) {
+            Engine.camera.zoomIn(1 - zoomSpeed * Engine.deltaTime);
         }
         float zoom = Input.getMouseWheelRotation();
-        if(zoom != 0){
+        if (zoom != 0) {
             System.out.println(zoom);
         }
-        Engine.camera.zoomIn(1+zoom*.05f);
+        Engine.camera.zoomIn(1 + zoom * .05f);
 
         //if there's a limit on the scale
-        if(minScale != Float.MIN_VALUE){
-            if(Engine.camera.getScale()<minScale){
+        if (minScale != Float.MIN_VALUE) {
+            if (Engine.camera.getScale() < minScale) {
                 Engine.camera.setScale(minScale);
-            }else if(Engine.camera.getScale()>maxScale) {
+            } else if (Engine.camera.getScale() > maxScale) {
                 Engine.camera.setScale(maxScale);
             }
         }
@@ -80,15 +80,15 @@ public class CameraMove extends GameObject {
         Engine.camera.position.sumUpdate(Input.getArrowsVector().multiply(speed * Engine.deltaTime / Engine.camera.getScale()));
 
         //if there's a limit on the X axys
-        if(minX != Float.MIN_VALUE){
-            if(Engine.camera.position.x<minX){
+        if (minX != Float.MIN_VALUE) {
+            if (Engine.camera.position.x < minX) {
                 Engine.camera.position.x = minX;
-            }else if(Engine.camera.position.x>maxX){
+            } else if (Engine.camera.position.x > maxX) {
                 Engine.camera.position.x = maxX;
             }
-            if(Engine.camera.position.y<minY){
+            if (Engine.camera.position.y < minY) {
                 Engine.camera.position.y = minY;
-            }else if(Engine.camera.position.y>maxY){
+            } else if (Engine.camera.position.y > maxY) {
                 Engine.camera.position.y = maxY;
             }
         }

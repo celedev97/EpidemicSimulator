@@ -40,7 +40,7 @@ public class ContactTracingLightTest extends Strategy {
     }
 
     @Override
-    public void personHasSymptoms (Person person) {
+    public void personHasSymptoms(Person person) {
         super.personHasSymptoms(person);
         precautionaryQuarantine.put(person, false);
     }

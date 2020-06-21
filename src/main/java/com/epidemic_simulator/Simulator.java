@@ -37,7 +37,7 @@ public final class Simulator {
     public void setStrategy(Strategy strategy) {
         callBacks.remove(this.strategy);
         this.strategy = strategy;
-        if(strategy != null)
+        if (strategy != null)
             callBacks.add(strategy);
     }
     //#endregion
@@ -370,7 +370,7 @@ public final class Simulator {
                 person.infected = false;
                 person.canInfect = false;
                 person.symptoms = false;
-                person.canMove=true;
+                person.canMove = true;
                 //adjusting counter
                 blueCount++;
                 infected--;
@@ -442,7 +442,7 @@ public final class Simulator {
      */
     private void encounter(Person person1, Person person2) {
         if ((person1.canInfect && person2.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))
-            || (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))) {
+                || (person2.canInfect && person1.tryInfect(infectionRate, symptomsRate, deathRate, canInfectDay, developSymptomsMaxDay, diseaseDuration))) {
             infected++;
             healthy--;
         }
@@ -473,7 +473,7 @@ public final class Simulator {
     public synchronized void dispose() {
         //#region strategies
         //unlinking each strategy from this simulator
-        if(strategy != null){
+        if (strategy != null) {
             strategy.dispose();
         }
 
