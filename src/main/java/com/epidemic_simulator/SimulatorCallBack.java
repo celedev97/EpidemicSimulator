@@ -38,7 +38,7 @@ public interface SimulatorCallBack {
 
     /**
      * This method is called every time the {@link com.epidemic_simulator.Simulator} finishes the simulation of a day.<BR>
-     * It can be useful for cctivating a strategy every day,
+     * It can be useful for activating a strategy every day,
      * or for running the Simulator in another {@link java.lang.Thread}, and having callbacks.
      *
      * @param outcome the outcome
