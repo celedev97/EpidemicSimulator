@@ -50,21 +50,21 @@ public abstract class Strategy implements SimulatorCallBack {
          *
          * @return the value
          */
-        float value();
+        double value();
 
         /**
          * The minimum value of this parameter.
          *
          * @return the min
          */
-        float min() default Integer.MIN_VALUE;
+        double min() default Integer.MIN_VALUE;
 
         /**
          * The maximum value of this parameter.
          *
          * @return the max
          */
-        float max() default Integer.MAX_VALUE;
+        double max() default Integer.MAX_VALUE;
 
 
         /**
@@ -73,7 +73,7 @@ public abstract class Strategy implements SimulatorCallBack {
          *
          * @return the max
          */
-        float step() default 1;
+        double step() default 1;
     }
     //#endregion
 

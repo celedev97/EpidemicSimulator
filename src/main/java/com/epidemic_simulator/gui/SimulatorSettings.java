@@ -593,22 +593,28 @@ public class SimulatorSettings extends JFrame {
                 strategyParametersColumns[x].add(label);
 
                 //getting the default value
-                int value = 0;
-                int minimum = Integer.MIN_VALUE;
-                int maximum = Integer.MAX_VALUE;
+                double value = 0;
+                double minimum = Integer.MIN_VALUE;
+                double maximum = Integer.MAX_VALUE;
+                double step = 1;
 
                 Strategy.ParameterData[] parameterData = parameters[i].getAnnotationsByType(Strategy.ParameterData.class);
 
                 if(parameterData.length != 0){
-                    //TODO: ADATTA STO COSO AHO!
-                    value = (int) parameterData[0].value();
-                    minimum = (int) parameterData[0].min();
-                    maximum = (int) parameterData[0].max();
+                    value = parameterData[0].value();
+                    minimum = parameterData[0].min();
+                    maximum = parameterData[0].max();
+                    step = parameterData[0].step();
                 }
 
                 //generating the component
                 JSpinner generatedComponent = null;
-                generatedComponent = new JSpinner(new SpinnerNumberModel(value, minimum, maximum, 1));
+                if(step == (int)step){
+                    generatedComponent = new JSpinner(new SpinnerNumberModel((int)value, (int)minimum, (int)maximum, (int)step));
+                }else{
+                    generatedComponent = new JSpinner(new SpinnerNumberModel(value, minimum, maximum, step));
+                }
+
                 generatedComponent.setName(parameters[i].getName());
                 generatedComponent.setAlignmentX(Component.LEFT_ALIGNMENT);
                 strategyParametersColumns[x].add(generatedComponent);
