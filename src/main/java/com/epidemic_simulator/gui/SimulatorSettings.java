@@ -1,7 +1,6 @@
 package com.epidemic_simulator.gui;
 
 //INTERNAL IMPORTS
-
 import com.epidemic_simulator.Simulator;
 import com.epidemic_simulator.Strategy;
 import com.epidemic_simulator.Utils;
@@ -15,7 +14,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 //JSON/FILE
-import javassist.tools.reflect.Reflection;
 import org.json.*;
 import org.reflections.Reflections;
 
@@ -28,8 +26,13 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+/**
+ * The Simulator Settings, it is the main JFrame of this Project's GUI.<BR>
+ * It is able to instantiate {@link Simulator}s and launch visual/textual simulators.<BR>
+ * It can also find the Strategies available trough {@link org.reflections.Reflections}
+ * and altering its GUI in order to allow for dynamic constructor parameters.
+ */
 public class SimulatorSettings extends JFrame {
     //constants
     private final int PARAMETERS_PER_ROW = 3;
@@ -84,6 +87,9 @@ public class SimulatorSettings extends JFrame {
 
     //#endregion
 
+    /**
+     * Instantiates a new Simulator settings.
+     */
     public SimulatorSettings() {
         //#region JFrame setup
         //title
@@ -355,7 +361,13 @@ public class SimulatorSettings extends JFrame {
         startTextButton.grabFocus();
     }
 
+
     //#region Start Buttons listeners/methods
+    /**
+     * The start textual simulator button listener.<BR>
+     * It is public for testing purposes.<BR>
+     * (ex: automation of user actions trough faking buttons clicks)
+     */
     public final ActionListener startTextButtonListener = e -> {
         Simulator simulator;
         if ((simulator = createSimulator()) == null) return;
@@ -365,6 +377,11 @@ public class SimulatorSettings extends JFrame {
         new SimulatorText(this, simulator);
     };
 
+    /**
+     * The start visual simulator button listener.<BR>
+     * It is public for testing purposes.<BR>
+     * (ex: automation of user actions trough faking buttons clicks)
+     */
     public final ActionListener startGUIButtonListener = e -> {
         Simulator simulator;
         if ((simulator = createSimulator()) == null) return;
@@ -615,21 +632,39 @@ public class SimulatorSettings extends JFrame {
         }
     };
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments (unused)
+     */
     public static void main(String[] args) {
         new SimulatorSettings();
     }
 
 }
 
+/**
+ * SelectableStrategy is just a wrapper for a Strategy Class and its name in a user readable format.
+ */
 class SelectableStrategy {
     private Class value;
     private String humanReadableClassName;
 
+    /**
+     * Gets value.
+     *
+     * @return the value
+     */
     public Class getValue() {
         return value;
     }
 
-    public SelectableStrategy(Class<?> value) {
+    /**
+     * Instantiates a new Selectable strategy.
+     *
+     * @param value the Class of the Strategy
+     */
+    public SelectableStrategy(Class<? extends Strategy> value) {
         this.value = value;
         humanReadableClassName = Utils.getStrategyName(value);
     }

@@ -410,6 +410,7 @@ public final class Simulator {
      *     <li>Make the people that can move, meet other people</li>
      *     <li>Make the disease status proceed for every one that has the disease</li>
      *     <li>Adjust resources according to who moved and who got cures</li>
+     * </ul>
      *
      * @see Outcome
      * @return the outcome of this day execution.

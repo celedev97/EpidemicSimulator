@@ -3,10 +3,6 @@ package com.epidemic_simulator;
 import java.awt.*;
 
 /**
-<<<<<<< HEAD
-=======
- * /**
->>>>>>> 0e8b8fdf02586d244cc4db07f5ed0c0c2231889a
  * An object that represent a person and their health status.
  */
 public class Person {
