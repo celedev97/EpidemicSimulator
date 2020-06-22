@@ -17,7 +17,7 @@ public class ContactTracingLightTest extends Strategy {
     public final Map<Person, Boolean> precautionaryQuarantine;
     public final Map<Person, Integer> quarantineStartDay;
 
-    public ContactTracingLightTest(Simulator simulator, int testPercentage) {
+    public ContactTracingLightTest(Simulator simulator, @ParameterData(value = 0, max = 100, min = 0) int testPercentage) {
         super(simulator);
         this.testPercentage = testPercentage;
 
