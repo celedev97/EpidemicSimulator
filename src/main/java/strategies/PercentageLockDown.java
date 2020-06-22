@@ -8,10 +8,7 @@ import com.epidemic_simulator.Utils;
 import java.util.ArrayList;
 
 public class PercentageLockDown extends Strategy {
-
-    private boolean activated = false;
-
-    private int percentage;
+    private final int percentage;
 
     public PercentageLockDown(Simulator simulator, @ParameterData(value = 30, max = 100, min = 0) int percentage) {
         super(simulator);
@@ -20,10 +17,9 @@ public class PercentageLockDown extends Strategy {
 
     @Override
     public void afterExecuteDay(Simulator.Outcome outcome) {
-        activated = true;
         ArrayList<Person> notQuarantinedPopulation = new ArrayList<>(simulator.getAlivePopulation());
         int toQuarantine = notQuarantinedPopulation.size() * percentage / 100;
-        for (int i = 0; i < toQuarantine; i++) {
+        for (int i = toQuarantine -1; i >= 0 ; i--) {
             int extracted = Utils.random(notQuarantinedPopulation.size());
             notQuarantinedPopulation.get(extracted).canMove = false;
             notQuarantinedPopulation.remove(i);

@@ -19,7 +19,24 @@ public final class Simulator {
 
     //#region callbacks
     private Strategy strategy = null;
-    private final ArrayList<SimulatorCallBack> callBacks;
+
+    private final ArrayList<SimulatorCallBack> callBacks = new ArrayList<>();
+    private final ArrayList<SimulatorCallBack> callBacksToAdd = new ArrayList<>();
+    private final ArrayList<SimulatorCallBack> callBacksToRemove = new ArrayList<>();
+
+
+    private ArrayList<SimulatorCallBack> getCallBacks() {
+        if(callBacksToAdd.size() != 0){
+            callBacks.addAll(callBacksToAdd);
+            callBacksToAdd.clear();
+        }
+        if(callBacksToRemove.size() != 0){
+            callBacks.removeAll(callBacksToRemove);
+            callBacksToRemove.clear();
+        }
+        return callBacks;
+    }
+
 
     /**
      * Add a callback to the list of callbacks that will have their methods called in the right situations.
@@ -32,7 +49,7 @@ public final class Simulator {
             if (strategy != null) throw new RuntimeException("You can't add multiple strategies to the same simulator");
             setStrategy((Strategy)callBack);
         }else {
-            callBacks.add(callBack);
+            callBacksToAdd.add(callBack);
         }
     }
 
@@ -45,7 +62,7 @@ public final class Simulator {
         if (callBack == strategy) {
             strategy = null;
         }
-        callBacks.remove(callBack);
+        callBacksToRemove.add(callBack);
     }
 
     /**
@@ -63,10 +80,10 @@ public final class Simulator {
      * @param strategy the strategy to link
      */
     public void setStrategy(Strategy strategy) {
-        callBacks.remove(this.strategy);
+        removeCallBack(this.strategy);
         this.strategy = strategy;
         if (strategy != null)
-            callBacks.add(strategy);
+            callBacksToAdd.add(strategy);
     }
     //#endregion
 
@@ -392,9 +409,6 @@ public final class Simulator {
 
         //#endregion
 
-        //Initializing callback lists
-        callBacks = new ArrayList<>();
-
         //initializing counters
         greenCount = healthy = startingPopulation - 1;
         yellowCount = infected = 1;
@@ -475,7 +489,7 @@ public final class Simulator {
                 firstRed = true;
 
                 //Execute all the simulation operation on the Person
-                callBacks.forEach(simulatorCallBack -> {
+                getCallBacks().forEach(simulatorCallBack -> {
                     synchronized (simulatorCallBack) {
                         simulatorCallBack.personHasSymptoms(person);
                     }
@@ -521,7 +535,7 @@ public final class Simulator {
                 } else {
                     redCount--;
                     person.canMove = true;
-                    callBacks.forEach(simulatorCallBack -> {
+                    getCallBacks().forEach(simulatorCallBack -> {
                         if (simulatorCallBack != strategy || firstRed) {
                             synchronized (simulatorCallBack) {
                                 simulatorCallBack.personClean(person);
@@ -550,7 +564,7 @@ public final class Simulator {
 
         //calling the callbacks for the end of the day
         Outcome finalOutcome = outcome;
-        callBacks.forEach(simulatorCallBack -> {
+        getCallBacks().forEach(simulatorCallBack -> {
             if (simulatorCallBack != strategy || firstRed) {
                 simulatorCallBack.afterExecuteDay(finalOutcome);
             }
@@ -572,7 +586,7 @@ public final class Simulator {
             infected++;
             healthy--;
         }
-        callBacks.forEach(simulatorCallBack -> {
+        getCallBacks().forEach(simulatorCallBack -> {
             if (simulatorCallBack != strategy || firstRed) {
                 simulatorCallBack.registerEncounter(person1, person2);
             }
@@ -610,7 +624,8 @@ public final class Simulator {
         }
 
         //clearing my references to the callbacks
-        callBacks.clear();
+        getCallBacks().clear();
+
         //now the gc should be able to kick in and clear this Simulator and its callbacks
         //#endregion
     }
