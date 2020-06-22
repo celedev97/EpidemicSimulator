@@ -20,7 +20,6 @@ public class ContactTracingFailSafe extends AggressiveContactTracing {
             super.output("TRIGGERED EMERGENCY LOCKDOWN!!!");
             lockDown = true;
             simulator.getAlivePopulation().forEach(person -> quarantine(person, simulator.canInfectDay));
-            //TODO: controlla il modo in cui metti le persone in quarantena, perché la quarantena sembra durare più del normale!
         }
     }
 }
