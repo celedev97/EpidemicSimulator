@@ -97,7 +97,6 @@ public class SimulatorSettings extends JFrame {
 
         //size
         Dimension windowSize = new Dimension(600, 450);
-        //TODO: change window size at the end of the project, accordingly to the most complex strategy
         setSize(windowSize);
         setMinimumSize(windowSize);
 

@@ -9,12 +9,14 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Optional;
 
 /**
  * The type Simulator text.
  */
 public class SimulatorText extends JFrame {
     private Simulator simulator;
+    private Strategy strategy;
     private JFrame settingsFrame;
 
     private JTextPane output;
@@ -31,6 +33,7 @@ public class SimulatorText extends JFrame {
         super("Epidemic simulator - Textual Simulator");
         this.settingsFrame = settingsFrame;
         this.simulator = simulator;
+        this.strategy = simulator.getStrategy();
 
         buildGUI();
 
@@ -105,6 +108,7 @@ public class SimulatorText extends JFrame {
                 writeOutput("SIMULATOR REPORT : " + messages + '\n', Color.CYAN, "b");
             }
         }
+
         writeOutput("----------\n");
         writeOutput("resources : " + simulator.getResources() + '\n');
         writeOutput("R0 factor: " + simulator.getR0() + '\n');
@@ -147,7 +151,7 @@ public class SimulatorText extends JFrame {
         writeOutput("Symptomaticity: " + simulator.symptomsRate + '\n', 16);
         writeOutput("Lethality: " + simulator.deathRate + '\n', 16);
         writeOutput("Duration: " + simulator.diseaseDuration + "\n\n", 16);
-        writeOutput("Strategy used: " + Utils.getStrategyName(simulator.getStrategy()) + '\n', 16);
+        writeOutput("Strategy used: " + Utils.getStrategyName(strategy) + '\n', 16);
 
         writeOutput("\n\n" + (System.currentTimeMillis() - startTime) + " milliseconds passed");
     }
