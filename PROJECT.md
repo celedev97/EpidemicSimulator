@@ -52,6 +52,12 @@ Ogni giorno questo contatore viene aumentato, e in base al numero dei giorni pas
 alle decisioni prese nel momento dell'infezione, *-una volta raggiunto il giorno estratto
 nel passo precedente-*, cambierà lo status della persona.
 
+#### Controllo finale
+
+Dopo aver simulato gli incontri e la prosecuzione della malattia il simulatore
+effettua un ultimo controllo in funzione delle risorse e della popolazione in vita e
+ritorna l'outcome dell'esecuzione del giorno, che può essere uno dei finali specificati precedentemente.
+
 ### TestVirus
 
 Oltre a executeDay l'altro metodo pubblico fornito dal simulatore è "testVirus"
