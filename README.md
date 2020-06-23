@@ -6,7 +6,7 @@ di progetto di Metodologie di Programmazione dell'anno accademico 2019/2020.
 
 **Indice del Progetto:**
 
-- [Markdown Navigation](#epidemic-simulator)
+- [Epidemic Simulator](#epidemic-simulator)
     - [Come iniziare](#come-iniziare)
         - [IDE](#ide)
         - [Dipendenze](#Dipendenze)
@@ -23,19 +23,29 @@ di progetto di Metodologie di Programmazione dell'anno accademico 2019/2020.
     - [Autori](#autori)
     - [License](#license)
     
+## Documentazione
+
+La JavaDoc del progetto è disponibile [qui](https://fc-dev.github.io/EpidemicSimulator/)
 
 ## Come iniziare
 
-Come ottenere una copia modificabile del progetto.
+Per ottenere una copia modificabile del progetto si suggerisce di creare una
+[fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
+del repository e clonarla in locale.
+
+In alternativa è possibile clonare direttamente il repository,
+ma in quel caso non si avrà la possibilità di eseguire `git push`
+e i commit resteranno in locale.
 
 ### IDE
 
-Il progetto è stato fatto con l'IDE IntelliJ IDEA (di JetBrains),
-perciò è consigliato -anche se non indispensabile-
-utilizzare IntelliJ IDEA come IDE per la modifica e/o la compilazione del progetto.
+Il progetto è stato utilizzando lo strumento di gestione di progetti
+[Apache Maven](https://maven.apache.org/),
+perciò qualsiasi IDE Java compatibile con Maven può andare bene.
 
-IntelliJ IDEA è scaricabile gratuitamente nella sua versione community al seguente link:
-[IntelliJ IDEA](https://www.jetbrains.com/idea/)
+*(Es: [IntelliJ IDEA](https://www.jetbrains.com/idea/),
+[Eclipse](https://www.eclipse.org/downloads/),
+[NetBeans](https://netbeans.apache.org/download/))*
 
 ### Dipendenze
 
@@ -45,28 +55,29 @@ Il progetto utilizza le seguenti librerie:
 |---|---|---|
 |[JSON-java](https://github.com/stleary/JSON-java)|org.json|Salvataggio dati|
 |[XChart](https://github.com/knowm/XChart)|org.knowm.xchart|Grafici|
-|[JDaze](https://github.com/fc-dev/JDaze)|-non disponibile-|Engine di disegno|
+|[JDaze](https://github.com/fc-dev/JDaze)|dev.federicocapece.jdaze|Engine di disegno|
 |[reflections](https://github.com/ronmamo/reflections)|org.reflections|Reflection avanzata|
 
 Per ulteriori informazioni sulle versioni utilizzate riferirsi al file di progetto contenente le dipendenze:
-[EpidemicSimulator.iml](./EpidemicSimulator.iml)
+[pom.xml](./pom.xml)
 
-Si consiglia di utilizzare maven per la gestione delle dipendenze quando disponibile;
+Si consiglia di utilizzare Maven per la gestione delle dipendenze quando possibile.
 
 In caso le librerie non siano disponibili tramite maven riferirsi alla documentazione delle singole librerie per le informazioni di installazione.
 
 ### Configurazione di avvio
 
-La configurazione di avvio consigliata per il programma consiste nell'avvio del main della classe `SimulatorSettings`.
+La configurazione di avvio consigliata per il programma consiste nell'eseguire il `main` della classe `SimulatorSettings`.
+
+Sono presenti altri `main` in altre classi per motivi di test, vedere la JavaDoc per ulteriori dettagli.
 
 ### Creazione JAR
 
 A causa delle finalità del progetto **non** verranno rilasciate release.
 
-Ciononostante il progetto è fornito di un file [Manifest.MF](/src/META-INF/MANIFEST.MF) utilizzabile per creare un JAR
-per la distribuzione del programma se necessario.
-
-Per i dettagli sul metodo per creare un JAR riferirsi alla procedura specifica per il proprio IDE/OS.
+Ciononostante il [pom.xml](./pom.xml) contiene tutte le info necessarie
+per generare un file JAR funzionante tramite il comando 
+`mvn package`.
 
 ## Discussione del progetto
 
