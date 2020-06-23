@@ -94,10 +94,6 @@
 <td class="colFirst"><a href="#com.epidemic_simulator.gui.visual">com.epidemic_simulator.gui.visual</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><a href="#strategies">strategies</a></td>
-<td class="colLast">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 </li>
@@ -180,55 +176,6 @@
 <td class="colOne"><a href="../../com/epidemic_simulator/class-use/Simulator.html#com.epidemic_simulator.gui.visual">Simulator</a>
 <div class="block">The Epidemic Simulator core class, it does all the Simulation-related stuff
  by handling the prosecution of days, the encounters and the disease status of every <a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a>.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList"><a name="strategies">
-<!--   -->
-</a>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing classes, and an explanation">
-<caption><span>Classes in <a href="../../com/epidemic_simulator/package-summary.html">com.epidemic_simulator</a> used by <a href="../../strategies/package-summary.html">strategies</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colOne" scope="col">Class and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colOne"><a href="../../com/epidemic_simulator/class-use/Person.html#strategies">Person</a>
-<div class="block">An object that represent a person and their health status.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><a href="../../com/epidemic_simulator/class-use/Simulator.html#strategies">Simulator</a>
-<div class="block">The Epidemic Simulator core class, it does all the Simulation-related stuff
- by handling the prosecution of days, the encounters and the disease status of every <a href="../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator"><code>Person</code></a>.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><a href="../../com/epidemic_simulator/class-use/Simulator.Outcome.html#strategies">Simulator.Outcome</a>
-<div class="block">Enum for the possible outcomes of a day execution.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><a href="../../com/epidemic_simulator/class-use/SimulatorCallBack.html#strategies">SimulatorCallBack</a>
-<div class="block">This interface declares the methods necessary for the <a href="../../com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a> to issue ecallbacks to an object.<BR>
- <b>NOTE:</b> The Simulator only calls the methods of the SimulatorCallBacks that are registered.<BR>
- <b>NOTE:</b> The Simulator <b>never</b> calls methods of a Strategy before the first red person has been found.<BR></div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colOne"><a href="../../com/epidemic_simulator/class-use/Strategy.html#strategies">Strategy</a>
-<div class="block">An object that represent a Strategy.<BR>
- A Strategy works alongside with a <a href="../../com/epidemic_simulator/Simulator.html" title="class in com.epidemic_simulator"><code>Simulator</code></a>, in a similar way of how a <a href="../../com/epidemic_simulator/SimulatorCallBack.html" title="interface in com.epidemic_simulator"><code>SimulatorCallBack</code></a> would do.<BR>
- The main difference between a Strategy and a SimulatorCallBack is that the Strategy methods are not called before the first red is found<BR>
- The difference is only in the fact that a strategy keeps an inner log of every encounter between every person.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><a href="../../com/epidemic_simulator/class-use/Strategy.ParameterData.html#strategies">Strategy.ParameterData</a>
-<div class="block">ParameterData is an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation"><code>Annotation</code></a> used to specify the data of a numeric parameter of a Strategy.<BR>
- It is used by the <a href="../../com/epidemic_simulator/gui/SimulatorSettings.html" title="class in com.epidemic_simulator.gui"><code>SimulatorSettings</code></a> for building the GUI dynamically.</div>
 </td>
 </tr>
 </tbody>

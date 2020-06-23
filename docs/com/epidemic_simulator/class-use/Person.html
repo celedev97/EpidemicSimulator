@@ -90,10 +90,6 @@
 <td class="colFirst"><a href="#com.epidemic_simulator.gui.visual">com.epidemic_simulator.gui.visual</a></td>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
-<td class="colFirst"><a href="#strategies">strategies</a></td>
-<td class="colLast">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 </li>
@@ -260,97 +256,6 @@
               float&nbsp;speed)</code>
 <div class="block">Instantiates a new Drawable person.</div>
 </td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList"><a name="strategies">
-<!--   -->
-</a>
-<h3>Uses of <a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a> in <a href="../../../strategies/package-summary.html">strategies</a></h3>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing fields, and an explanation">
-<caption><span>Fields in <a href="../../../strategies/package-summary.html">strategies</a> with type parameters of type <a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Field and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ContactTracingLightTest.</span><code><span class="memberNameLink"><a href="../../../strategies/ContactTracingLightTest.html#precautionaryQuarantine">precautionaryQuarantine</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;</code></td>
-<td class="colLast"><span class="typeNameLabel">ContactTracingLightTest.</span><code><span class="memberNameLink"><a href="../../../strategies/ContactTracingLightTest.html#quarantineStartDay">quarantineStartDay</a></span></code>&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Methods in <a href="../../../strategies/package-summary.html">strategies</a> with parameters of type <a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ContactTracingLightTest.</span><code><span class="memberNameLink"><a href="../../../strategies/ContactTracingLightTest.html#checkQuarantine-com.epidemic_simulator.Person-int-">checkQuarantine</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person,
-               int&nbsp;currentDay)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AggressiveContactTracing.</span><code><span class="memberNameLink"><a href="../../../strategies/AggressiveContactTracing.html#personClean-com.epidemic_simulator.Person-">personClean</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">MediumControlledLockdown.</span><code><span class="memberNameLink"><a href="../../../strategies/MediumControlledLockdown.html#personClean-com.epidemic_simulator.Person-">personClean</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AggressiveContactTracing.</span><code><span class="memberNameLink"><a href="../../../strategies/AggressiveContactTracing.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ContactTracingLightTest.</span><code><span class="memberNameLink"><a href="../../../strategies/ContactTracingLightTest.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">FullControlledLockdownAndStopSpread.</span><code><span class="memberNameLink"><a href="../../../strategies/FullControlledLockdownAndStopSpread.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">MediumControlledLockdown.</span><code><span class="memberNameLink"><a href="../../../strategies/MediumControlledLockdown.html#personHasSymptoms-com.epidemic_simulator.Person-">personHasSymptoms</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AggressiveContactTracing.</span><code><span class="memberNameLink"><a href="../../../strategies/AggressiveContactTracing.html#quarantine-com.epidemic_simulator.Person-int-">quarantine</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person,
-          int&nbsp;days)</code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AggressiveContactTracing.</span><code><span class="memberNameLink"><a href="../../../strategies/AggressiveContactTracing.html#quarantineContacts-com.epidemic_simulator.Person-int-java.util.HashMap-">quarantineContacts</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person,
-                  int&nbsp;daysBackward,
-                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;outputMap)</code>&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary" border="0" cellpadding="3" cellspacing="0" summary="Use table, listing methods, and an explanation">
-<caption><span>Method parameters in <a href="../../../strategies/package-summary.html">strategies</a> with type arguments of type <a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Method and Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">ContactTracingLightTest.</span><code><span class="memberNameLink"><a href="../../../strategies/ContactTracingLightTest.html#quarantine-java.util.List-int-">quarantine</a></span>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&gt;&nbsp;encounters,
-          int&nbsp;i)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><span class="typeNameLabel">AggressiveContactTracing.</span><code><span class="memberNameLink"><a href="../../../strategies/AggressiveContactTracing.html#quarantineContacts-com.epidemic_simulator.Person-int-java.util.HashMap-">quarantineContacts</a></span>(<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>&nbsp;person,
-                  int&nbsp;daysBackward,
-                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="../../../com/epidemic_simulator/Person.html" title="class in com.epidemic_simulator">Person</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a>&gt;&nbsp;outputMap)</code>&nbsp;</td>
 </tr>
 </tbody>
 </table>

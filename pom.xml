@@ -92,6 +92,7 @@
                     <destDir>./</destDir>
 
                     <notimestamp>true</notimestamp>
+                    <excludePackageNames>strategies</excludePackageNames>
                 </configuration>
             </plugin>
         </plugins>

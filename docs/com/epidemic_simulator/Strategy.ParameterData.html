@@ -118,7 +118,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 <th class="colLast" scope="col">Required Element and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>float</code></td>
+<td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.ParameterData.html#value--">value</a></span></code>
 <div class="block">The default value of this parameter.</div>
 </td>
@@ -139,19 +139,19 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 <th class="colLast" scope="col">Optional Element and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>float</code></td>
+<td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.ParameterData.html#max--">max</a></span></code>
 <div class="block">The maximum value of this parameter.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>float</code></td>
+<td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.ParameterData.html#min--">min</a></span></code>
 <div class="block">The minimum value of this parameter.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>float</code></td>
+<td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../com/epidemic_simulator/Strategy.ParameterData.html#step--">step</a></span></code>
 <div class="block">The step of the value for this parameter.<BR>
  <b>NOTE:</b> If it's set to a value that can be cast to integer without precision loss this parameter will act as an integer.</div>
@@ -178,7 +178,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 <ul class="blockListLast">
 <li class="blockList">
 <h4>value</h4>
-<pre>public abstract&nbsp;float&nbsp;value</pre>
+<pre>public abstract&nbsp;double&nbsp;value</pre>
 <div class="block">The default value of this parameter.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -196,7 +196,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 <ul class="blockList">
 <li class="blockList">
 <h4>min</h4>
-<pre>public abstract&nbsp;float&nbsp;min</pre>
+<pre>public abstract&nbsp;double&nbsp;min</pre>
 <div class="block">The minimum value of this parameter.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -204,7 +204,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 </dl>
 <dl>
 <dt>Default:</dt>
-<dd>-2.147483648E9f</dd>
+<dd>-2.147483648E9</dd>
 </dl>
 </li>
 </ul>
@@ -217,7 +217,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 <ul class="blockList">
 <li class="blockList">
 <h4>max</h4>
-<pre>public abstract&nbsp;float&nbsp;max</pre>
+<pre>public abstract&nbsp;double&nbsp;max</pre>
 <div class="block">The maximum value of this parameter.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -225,7 +225,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 </dl>
 <dl>
 <dt>Default:</dt>
-<dd>2.147483648E9f</dd>
+<dd>2.147483647E9</dd>
 </dl>
 </li>
 </ul>
@@ -238,7 +238,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 <ul class="blockListLast">
 <li class="blockList">
 <h4>step</h4>
-<pre>public abstract&nbsp;float&nbsp;step</pre>
+<pre>public abstract&nbsp;double&nbsp;step</pre>
 <div class="block">The step of the value for this parameter.<BR>
  <b>NOTE:</b> If it's set to a value that can be cast to integer without precision loss this parameter will act as an integer.</div>
 <dl>
@@ -247,7 +247,7 @@ public static @interface <span class="memberNameLabel">Strategy.ParameterData</s
 </dl>
 <dl>
 <dt>Default:</dt>
-<dd>1.0f</dd>
+<dd>1.0</dd>
 </dl>
 </li>
 </ul>
