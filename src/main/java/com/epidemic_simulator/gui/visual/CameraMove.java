@@ -117,9 +117,12 @@ public class CameraMove extends GameObject {
     }
 
     private void cameraMovement() {
-        Engine.camera.position.sumUpdate(Input.getArrowsVector().multiply(speed * Engine.deltaTime / Engine.camera.getScale()));
+        Vector movement = Input.getArrowsVector().multiply(speed * Engine.deltaTime / Engine.camera.getScale());
+        movement.y = -movement.y;
 
-        //if there's a limit on the X axys
+        Engine.camera.position.sumUpdate(movement);
+
+        //if there's a limit on the X axis
         if (minX != Float.MIN_VALUE) {
             if (Engine.camera.position.x < minX) {
                 Engine.camera.position.x = minX;

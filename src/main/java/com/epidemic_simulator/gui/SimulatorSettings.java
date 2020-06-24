@@ -382,6 +382,10 @@ public class SimulatorSettings extends JFrame {
      * (ex: automation of user actions trough faking buttons clicks)
      */
     public final ActionListener startGUIButtonListener = e -> {
+        if((int)population.getValue()>50000){
+            JOptionPane.showMessageDialog(this, "The visual simulator doesn't support more than 50k people at the same time.\nUse the textual simulator for high population numbers.", "Impossible to start visual simulation", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         Simulator simulator;
         if ((simulator = createSimulator()) == null) return;
 

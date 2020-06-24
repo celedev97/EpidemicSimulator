@@ -502,8 +502,9 @@ public class SimulatorGUI extends JFrame {
         //#endregion
 
         if (lastDayOutCome != Simulator.Outcome.NOTHING) {
-            //TODO: invent something better instead of this shitty dialog, it blocks the colors update
-            JOptionPane.showMessageDialog(null, "OUTCOME: " + lastDayOutCome);
+            SwingUtilities.invokeLater(() ->{
+                JOptionPane.showMessageDialog(null, "OUTCOME: " + lastDayOutCome);
+            });
             return;
         }
 
