@@ -109,8 +109,8 @@ tamponi e in funzione del suo compito e della sua struttura:
 
 ### No Strategy
 
-La strategia più banale,ma anche la più semplice: sostanzialmente
-si lascia andare la malattia per il suo normale decorso,senza testare o bloccare nessuno a seguito
+La strategia più banale, ma anche la più semplice: sostanzialmente
+si lascia andare la malattia per il suo normale decorso, senza testare o bloccare nessuno a seguito
 di un criterio imposto.
 
 Gli unici costi che si sosterebbero sarebbero quelli per mettere in cura
@@ -124,105 +124,105 @@ che portano pertanto
 ### Pecentage Lockdown and Partial Stop Spread
 Una strategia che ha il semplice compito di 
 effettuare il lockdown di una certa percentuale di persone immesse da tastiera al
-primo rosso/sintomatico che si presenta;ma che in
+primo rosso/sintomatico che si presenta, ma che in
 più consente di effettuare anche dei controlli preventivi sulla popolazione lasciata in
-movimento laddove il numero di sintomatici dovesse salire troppo,e **solo se** la percentuale
-di risorse attualmente disponibile è superiore a una seconda soglia immessa dall'utente(*nel nostro
-caso è consigliata una soglia dell'almeno 35%*)tale che possa permettere
-un minimo al simulatore,dopo i controlli dei tamponi,di progredire senza collassi economici.
+movimento laddove il numero di sintomatici dovesse salire troppo e **solo se** la percentuale
+di risorse attualmente disponibile è superiore a una seconda soglia immessa dall'utente (*nel nostro
+caso è consigliata una soglia di almeno il 35%*) tale che possa permettere
+un minimo al simulatore, dopo i controlli dei tamponi, di progredire senza collassi economici.
 
 ### Contact Tracing Light Test:
-Da quando viene trovato il primo sintomatico, scorre tutta la popolazione in vita,
-e per ogni sintomatico trovato analizza la sua lista degli incontri nei precedenti "developSyntomsMaxDay" giorni.
+Da quando viene trovato il primo sintomatico, scorre tutta la popolazione in vita
+e, per ogni sintomatico trovato, analizza la sua lista degli incontri nei precedenti "developSyntomsMaxDay" giorni.
 Di questi, effettua il tampone ad una percentuale data da "testPercentage",
 se positivi vengono messi in quarantena fin quando non si è sicuri abbiano debellato la malattia
 (o fino a quando non sviluppino sintomi). Il resto invece viene messo in quarantena preventiva senza controllo del tampone.
 
-###Stop Epidemy On First Red:
+### Stop Epidemy On First Red:
 La strategia più "potente" di tutte, dato che si attiva fin dal principio
-dell'epidemia.Non appena il simulatore abilita il flag "FirstRed" (quindi non appena la prima persona presenterà i sintomi), la strategia
+dell'epidemia. Non appena il simulatore abilita il flag "FirstRed" (quindi non appena la prima persona presenterà i sintomi), la strategia
 entrerà in azione sottoponendo tutta la popolazione ad un lockdown preventivo che dia il tempo a tutti i
-*potenziali* infetti di, eventualmente, presentare sintomi o di avere il virus in circolo,e quindi rilevabile da tampone.
+*potenziali* infetti di, eventualmente, presentare sintomi o di avere il virus in circolo, quindi rilevabile da tampone.
 Scaduto l'intervallo di "lockdown" si prosegue con un tampone a tutti coloro che ancora non hanno
 presentato dei sintomi, rimettendo così in libertà esclusivamente gli individui sani.
 
-###Medium Controlled Lockdown:
+### Medium Controlled Lockdown:
 Anche questa Strategia è stata pensata per effettuare dei 
-Lockdown preventivi,e contenuti,in funzione del numero dei sintomatici attualmente
-rilevati dal simulatore,ma in maniera più contenuta e preventivata rispetto alle altre strategie.
+Lockdown preventivi (e contenuti) in funzione del numero dei sintomatici attualmente
+rilevati dal simulatore, ma in maniera più contenuta e preventivata rispetto alle altre strategie.
 
 Al momento del lancio del simulatore la strategia richiederà un certo parametro da parte
-dell'utente,dal nome di **"Percentual of Stop"**,come suggerisce il nome stesso,tale parametro serve
-a indicare quanto tempo far aspettare,in termini di percentuale di sintomatici,
+dell'utente, dal nome di **"Percentual of Stop"**: come suggerisce il nome stesso, tale parametro serve
+a indicare quanto tempo far aspettare, in termini di percentuale di sintomatici,
 la strategia prima di farla entrare in azione.
 
-Quando la soglia di limite viene superata,la strategia provvederà a calcolare una certa 
-percentuale di persone che andranno controllate,sul numero totale di individui che in quel
-preciso momento hanno la facoltà di movimento(*quindi Verdi e/o Gialli*).
+Quando la soglia di limite viene superata, la strategia provvederà a calcolare una certa 
+percentuale di persone che andranno controllate sul numero totale di individui che in quel
+preciso momento hanno la facoltà di movimento (*quindi Verdi e/o Gialli*).
 Tale percentuale viene fornita dall'utente e indica in termini di percentuale
 la dimensione di "default" di ogni blocco di persone in movimento su cui effettuare il controllo,
-a tale valore vengono sommate ulteriori "n" persone da estrarre(*dove il parametro "n" corrisponde al numero di 
+a tale valore vengono sommate ulteriori "n" persone da estrarre (*dove il parametro "n" corrisponde al numero di 
 rossi rilevati dal simulatore*).
 
-Per ognuna delle persone che ho,randomicamente,estratto ne effettuo un tampone e se risultano
-essere positive,non solo si blocca l'individuo in questione,**ma anche tutte le altre persone
-che quest'ultimo ha incontrato nei giorni precedenti**,poichè potrebbero essere dei "potenziali"
-infetti,tali persone vengono inserite in un'apposita struttura dati:**check**,e attenderanno
-il periodo minimo di incubazione prima di essere testati da un tampone ed,eventualmente,
+Per ognuna delle persone che ho (randomicamente) estratto, effettuo un tampone e se risultano
+essere positive, non solo blocco l'individuo in questione, **ma anche tutte le altre persone
+che quest'ultimo ha incontrato nei giorni precedenti**, poichè potrebbero essere dei "potenziali"
+infetti. Tali persone vengono inserite in un'apposita struttura dati, "**check**", e attenderanno
+il periodo minimo di incubazione prima di essere testati da un tampone ed eventualmente
 rilasciati.
 
 Se la strategia durante il corso della sua esecuzione dovesse notare che le risorse 
 scendono al di sotto una certa soglia immessa dall'utente in percentuale
-(*nel nostro caso se ne consiglia pari al 45%*),viene effettuato in ogni
-caso il controllo sulle persone contenute in **check**,anche se l'intervallo di incubazione
-non viene raggiunto;rilasciando i sani rilevati e tenendo fermi eventuali asintomatici,abilitando
-infine un **flag booleano** che non faccia più attivare la strategia,e lasci andare ormai il tutto per il
+(*nel nostro caso si consiglia il 45%*), viene effettuato in ogni
+caso il controllo sulle persone contenute in **check** (anche se l'intervallo di incubazione
+non viene raggiunto), rilasciando i sani rilevati, tenendo fermi eventuali asintomatici e abilitando
+infine un **flag booleano** che non faccia più attivare la strategia e lasci andare ormai il tutto per il
 suo normale decorso.
 
 Seguendo questa formula riusciamo sempre a effettuare lockdown più eterogenei e regolati
-in funzione del numero effettivo di sintomatici che riscontriamo nel decorso dell'epidemia,ed
+in funzione del numero effettivo di sintomatici che riscontriamo nel decorso dell'epidemia ed
 eventualmente riusciamo anche ad avere una sorta  di "safe-mode" laddove il tutto stia 
-richiedendo uno sforzo eccessivo,in termini di risorse.
+richiedendo uno sforzo eccessivo in termini di risorse.
 
 ### Full Controlled Lockdown And Stop Spread
 La strategia in questione offre una serie di controlli in funzione
-del numero di sintomatici che si presentano(*di fatto questa rimarrà in attesa di una 
-percentuale di rossi minimi che si devono presentare,prima della sua attivazione*).
+del numero di sintomatici che si presentano (*di fatto questa rimarrà in attesa di una 
+percentuale di rossi minimi che si devono presentare, prima della sua attivazione*).
 
-Una volta entrata in azione,la strategia,provvederà ad effettuare dei tamponi sulla popolazione alla ricerca degli
-infetti,e non appena ne viene trovato uno(*a patto che non sia già stato testato in precedenza*),
+Una volta entrata in azione, la strategia provvederà ad effettuare dei tamponi sulla popolazione alla ricerca degli
+infetti e ,non appena ne viene trovato uno (*a patto che non sia già stato testato in precedenza*),
 viene fermato così come il resto delle persone che quest'ultimo ha incontrato
-nei giorni precedenti,per un certo periodo minimo e preventivo di incubazione.
+nei giorni precedenti, per un certo periodo minimo e preventivo di incubazione.
 
-Una volta messe in "check" le persone,la strategia anche dovesse presentare un nuovo caso di "n" nuovi asintomatici
-che superano la soglia di limite,non si ri-attiverà finchè non avrà finito di controllato le persone messe 
+Una volta messe in "check" le persone, la strategia (anche dovesse presentare un nuovo caso di "n" nuovi asintomatici
+che superano la soglia di limite) non si ri-attiverà finchè non avrà finito di controllato le persone messe 
 in lockdown preventivo.
 
-Una strategia funzionale ma estremamente onerosa,in quanto prevede per ogni intervento numerosi test e blocchi di altrettante numerose 
+Una strategia funzionale ma estremamente onerosa, in quanto prevede per ogni intervento numerosi test e blocchi di altrettante numerose 
 persone per ogni infetto scoperto. 
 
 ### Aggressive Contact Tracing
-Una strategia,come da nome,estremamente pressante,in quanto prevede
-per ogni rosso rilevato dal simulatore,la quarantena di tutte le persone incontrate dall'infetto
-in questione per un certo numero di giorni minimi affinchè possa poi essere testato(*ogni
+Una strategia, come da nome, estremamente pressante, in quanto prevede
+per ogni rosso rilevato dal simulatore la quarantena di tutte le persone incontrate dall'infetto
+in questione per un certo numero di giorni minimi affinchè possa poi essere testato (*ogni
 persona viene messa in "Quarantine" a patto che non sia già stata messa sotto controllo ad
 un sintomatico precedente o a patto che quest'ultima non sia immune*).
 Finito l'intervallo si effettuerà per ogni persona in quarantena un TestVirus/Tampone per verificarne 
-l'infettività o meno,e svuotando la lista delle persone da controllare.
+l'infettività o meno, eventualmente svuotando la lista delle persone da controllare.
 
 ### Contact Tracing Fail Safe
 una strategia che funge come una sorta di **estensione logica** di **"Aggressive Contact
 Tracing"**, tant'è che addirittura estende la classe stessa.
 
-Per ogni "Execution Day",del simulatore,la strategia richiama i medesimi controlli della sua superclasse,
+Per ogni "Execution Day" del simulatore, la strategia richiama i medesimi controlli della sua superclasse,
 Aggressive, **ma** aggiunge un
-controllo in più;
+controllo in più.
 
-Di fatto non appena la strategia si accorge che la percentuale di risorse sta,comunque,
-continuando a scendere ed arriva adirittura al di sotto di una
-certa soglia immessa da tastiera(*nel nostro caso se ne consiglia una percentuale pari ad almeno del 95%*)
-viene effettuato un lockdown totale e preventivo,sulla falsa riga di "StopOnFirstRed" 
-sperando di poter resistere economicamente e debellare l'epidemia non appena scade l'intervallo di lockdown,con un giro di
+Di fatto non appena la strategia si accorge che la percentuale di risorse sta comunque
+continuando a scendere ed arriva addirittura al di sotto di una
+certa soglia immessa da tastiera (*nel nostro caso si consiglia una percentuale pari ad almeno il 95%*),
+viene effettuato un lockdown totale e preventivo, sulla falsa riga di "StopOnFirstRed", 
+sperando di poter resistere economicamente e debellare l'epidemia non appena scade l'intervallo di lockdown, con un giro di
 tampone generale sulla popolazione.
 
 ## Interfaccia grafica
@@ -239,13 +239,11 @@ Per la scelta della strategia viene usato invece un ComboBox e le relative strat
 tramite Reflection, in modo che ad ogni cambio o aggiunta di strategia
 cambino anche le voci all'interno del ComboBox.
 
-Nelle strategie che prevedono anche dei parametro da inserire,
-comparirà anche degli Spinner per la loro immissione.
+Nelle strategie che prevedono anche dei parametri da inserire,
+compariranno anche degli Spinner per la loro immissione.
 
 È presente anche il controllo dei
 valori minimi e massimi dei parametri regolato tramite le Annotazioni (`ParameterData`).  
-
-![](./gui.jpg)
 
 ### Simulatore testuale
 La variante testuale del simulatore non è altro che il classico output da linea di comando,
