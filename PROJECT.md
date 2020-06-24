@@ -118,7 +118,8 @@ un sintomatico presso un ospedale e sperare che *l'immunità di gregge* possa pe
 popolazione di *gestire* da soli il virus nel modo migliore possibile.
 
 Chiaramente questa si dimostra particolarmente inefficace in casi di malattie con sintomaticità/infettività alta,
-che portano pertanto 
+che portano molto velocemente i costi di cura ad essere esageratamente alti, e se non fermate sul nascere
+causano un collasso economico.
 
 
 ### Pecentage Lockdown and Partial Stop Spread
