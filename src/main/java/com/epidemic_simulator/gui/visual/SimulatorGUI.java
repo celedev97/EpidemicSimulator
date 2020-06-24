@@ -12,6 +12,8 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.Marker;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -165,21 +167,25 @@ public class SimulatorGUI extends JFrame {
 
         contentPane.add(Engine.renderer, BorderLayout.CENTER);
 
-        //#region North panel
-        JPanel northPanel = new JPanel(new BorderLayout());
-        contentPane.add(northPanel, BorderLayout.NORTH);
-
-        JPanel leftNorthPanel = new JPanel();
-        northPanel.add(leftNorthPanel, BorderLayout.WEST);
+        //#region Data panel
+        JPanel dataPanel = new JPanel();
+        dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
+        dataPanel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        new MatteBorder(0,0,0,1, Color.BLACK),
+                        new EmptyBorder(5, 5, 5, 5)
+                )
+        );
+        contentPane.add(dataPanel, BorderLayout.WEST);
 
         //#region first row
-        JPanel firstRow = new JPanel();
-        firstRow.setLayout(new BoxLayout(firstRow, BoxLayout.Y_AXIS));
-        leftNorthPanel.add(firstRow);
+        JPanel dayAndBarBox = new JPanel();
+        dayAndBarBox.setLayout(new BoxLayout(dayAndBarBox, BoxLayout.Y_AXIS));
+        dataPanel.add(dayAndBarBox);
 
         //day panel
         JPanel dayFlow = new JPanel();
-        firstRow.add(dayFlow);
+        dayAndBarBox.add(dayFlow);
 
         JLabel dayType = new JLabel("DAY ");
         dayFlow.add(dayType);
@@ -188,13 +194,10 @@ public class SimulatorGUI extends JFrame {
         dayFlow.add(dayLabel);
         dayLabel.setFont(dayLabel.getFont().deriveFont(30.0f));
 
-        //#endregion
-
         //#region progressbar
         JPanel progressBarPanel = new JPanel(new GridBagLayout());
         progressBarPanel.setBorder(BorderFactory.createTitledBorder("Status"));
-        firstRow.add(progressBarPanel);
-        leftNorthPanel.add(firstRow);
+        dayAndBarBox.add(progressBarPanel);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.WEST;
@@ -239,6 +242,8 @@ public class SimulatorGUI extends JFrame {
         progressBarPanel.add(blackBar, gbc);
         gbc.gridy = 4;
         progressBarPanel.add(resourcesBar, gbc);
+
+        //#endregion
 
         //#endregion
 
@@ -287,7 +292,7 @@ public class SimulatorGUI extends JFrame {
         blackSerie.setSmooth(true);
 
         peopleGraphPanel = new XChartPanel<XYChart>(peopleGraphData);
-        leftNorthPanel.add(peopleGraphPanel);
+        dataPanel.add(peopleGraphPanel);
         //#endregion
 
 
@@ -303,7 +308,7 @@ public class SimulatorGUI extends JFrame {
         resourcesSerie.setMarker(none);
 
         resourcesGraphPanel = new XChartPanel<XYChart>(resourcesGraphData);
-        leftNorthPanel.add(resourcesGraphPanel);
+        dataPanel.add(resourcesGraphPanel);
 
         //#endregion
 
@@ -311,7 +316,7 @@ public class SimulatorGUI extends JFrame {
 
         JPanel parametersPanel = new JPanel(new GridBagLayout());
         parametersPanel.setBorder(BorderFactory.createTitledBorder("Starting parameters"));
-        leftNorthPanel.add(parametersPanel);
+        dataPanel.add(parametersPanel);
 
         GridBagConstraints gbcPar = new GridBagConstraints();
         gbcPar.anchor = GridBagConstraints.WEST;
@@ -397,7 +402,7 @@ public class SimulatorGUI extends JFrame {
         speedSlider.setLabelTable(labelTable);
         speedSlider.setPaintLabels(true);
 
-        northPanel.add(sliderBox, BorderLayout.CENTER);
+        dataPanel.add(sliderBox);
 
         //#endregion
 
@@ -502,8 +507,9 @@ public class SimulatorGUI extends JFrame {
         //#endregion
 
         if (lastDayOutCome != Simulator.Outcome.NOTHING) {
-            //TODO: invent something better instead of this shitty dialog, it blocks the colors update
-            JOptionPane.showMessageDialog(null, "OUTCOME: " + lastDayOutCome);
+            SwingUtilities.invokeLater(() ->{
+                JOptionPane.showMessageDialog(null, "OUTCOME: " + lastDayOutCome);
+            });
             return;
         }
 
