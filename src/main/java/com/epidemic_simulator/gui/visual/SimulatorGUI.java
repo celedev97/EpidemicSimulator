@@ -134,7 +134,7 @@ public class SimulatorGUI extends JFrame {
         worldY = (int) (worldY / 20) * 20;
 
         //creating the camera movement script
-        CameraMove cameraScript = new CameraMove(200);
+        CameraMove cameraScript = new CameraMove(350);
         //centering the camera
         cameraScript.setPosition(worldX / 2f, worldY / 2f - 10);
         //setting the camera bounds
@@ -389,7 +389,7 @@ public class SimulatorGUI extends JFrame {
         sliderBox.add(sliderLabel);
 
         //min = 0.05, max = 3.50, value = 1.00
-        speedSlider = new JSlider(JSlider.HORIZONTAL, 5, 3500, 100);
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 2500, 100);
         sliderBox.add(speedSlider);
         speedSlider.setMajorTickSpacing(698);
         speedSlider.setMinorTickSpacing(349);
@@ -397,8 +397,8 @@ public class SimulatorGUI extends JFrame {
         sliderBox.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));
 
         Hashtable labelTable = new Hashtable();
-        labelTable.put(5, new JLabel("0,05x"));
-        labelTable.put(3500, new JLabel("3.50x"));
+        labelTable.put(0, new JLabel("0,00x"));
+        labelTable.put(2500, new JLabel("2.50x"));
         speedSlider.setLabelTable(labelTable);
         speedSlider.setPaintLabels(true);
 

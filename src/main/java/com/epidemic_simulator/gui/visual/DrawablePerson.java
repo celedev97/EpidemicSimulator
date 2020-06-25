@@ -111,7 +111,7 @@ public class DrawablePerson extends GameObject {
         //drawing outer can't move circle
         if (!canMove) {
             graphics.setColor(Color.BLACK);
-            graphics.fillOval(x - halfScaledSize - 1, y - halfScaledSize - 1, scaledSize + 2, scaledSize + 2);
+            graphics.fillOval(x - halfScaledSize - (int)(1*scale), y - halfScaledSize - (int)(1*scale), scaledSize + (int)(2*scale), scaledSize + (int)(2*scale));
         }
 
         //drawing person regular color
